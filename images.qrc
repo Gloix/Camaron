@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/Images">
+        <file>UI/Images/About/camaron1.jpg</file>
+        <file>UI/Images/About/camaron2.jpg</file>
+        <file>UI/Images/About/camaron3.jpg</file>
+        <file>UI/Images/About/camaron4.jpg</file>
+        <file>UI/Images/About/camaron5.jpg</file>
+        <file>UI/Images/About/camaronfalso1.jpg</file>
+        <file>UI/Images/Icon/shrimp16x16.png</file>
+        <file>UI/Images/Icon/shrimp22x22.png</file>
+        <file>UI/Images/Icon/shrimp32x32.png</file>
+        <file>UI/Images/Icon/shrimp48x48.png</file>
+        <file>UI/Images/Icon/shrimp72x72.png</file>
+        <file>UI/Images/Icon/shrimp128x128.png</file>
+        <file>UI/Images/EvaluationStrategyIcons/cube16.ico</file>
+        <file>UI/Images/EvaluationStrategyIcons/pentagon16.ico</file>
+        <file>UI/Images/EvaluationStrategyIcons/triangle-outline-16.ico</file>
+        <file>UI/Images/About/camaronx50.jpg</file>
+        <file>UI/Images/About/camaronx100.jpg</file>
+        <file>UI/Images/About/collagecamaron.png</file>
+        <file>UI/RenderElementsIds/numberTexture.raw</file>
+    </qresource>
+</RCC>

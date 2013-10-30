@@ -1,0 +1,47 @@
+<RCC>
+    <qresource prefix="/Shaders">
+        <file>Rendering/Renderers/VertexRenderer/vr.frag</file>
+        <file>Rendering/Renderers/VertexRenderer/vr.vert</file>
+        <file>Rendering/Renderers/ShadingEffectsRender/ser.frag</file>
+        <file>Rendering/Renderers/ShadingEffectsRender/ser.vert</file>
+        <file>Rendering/Renderers/ShaderCommonFunctions/phong.su</file>
+        <file>Rendering/Renderers/ShaderCommonFunctions/phong1D.su</file>
+        <file>Rendering/Renderers/ShaderCommonFunctions/version400.su</file>
+        <file>Rendering/Renderers/PropertyValuesRenderer/pvr.frag</file>
+        <file>Rendering/Renderers/PropertyValuesRenderer/pvr.geom</file>
+        <file>Rendering/Renderers/PropertyValuesRenderer/pvr.vert</file>
+        <file>Rendering/Renderers/NormalRenderer/nr.frag</file>
+        <file>Rendering/Renderers/NormalRenderer/nr.geom</file>
+        <file>Rendering/Renderers/NormalRenderer/nr.vert</file>
+        <file>Rendering/Renderers/ModelMainRenderer/mmr.frag</file>
+        <file>Rendering/Renderers/ModelMainRenderer/mmr.geom</file>
+        <file>Rendering/Renderers/ModelMainRenderer/mmr.vert</file>
+        <file>Rendering/Renderers/ModelMainRenderer/mmrdepthpeeling.frag</file>
+        <file>Rendering/Renderers/ModelMainRenderer/simpletexture.frag</file>
+        <file>Rendering/Renderers/ModelMainRenderer/simpletexture.vert</file>
+        <file>Rendering/Renderers/GlassRenderer/grf.frag</file>
+        <file>Rendering/Renderers/GlassRenderer/grv.vert</file>
+        <file>Rendering/Renderers/DepthRenderer/drbs.frag</file>
+        <file>Rendering/Renderers/DepthRenderer/drbs.vert</file>
+        <file>Rendering/Renderers/DepthRenderer/drf.frag</file>
+        <file>Rendering/Renderers/DepthRenderer/drv.vert</file>
+        <file>Rendering/Renderers/ConvexGeometryIntersectionRenderer/cgircg.frag</file>
+        <file>Rendering/Renderers/ConvexGeometryIntersectionRenderer/cgircg.vert</file>
+        <file>Rendering/Renderers/ConvexGeometryIntersectionRenderer/cgirmm.frag</file>
+        <file>Rendering/Renderers/ConvexGeometryIntersectionRenderer/cgirmm.geom</file>
+        <file>Rendering/Renderers/ConvexGeometryIntersectionRenderer/cgirmm.vert</file>
+        <file>Rendering/Renderers/ConvexGeometryIntersectionRenderer/intersectionFunctions.vert</file>
+        <file>UI/RenderElementsIds/reids.frag</file>
+        <file>UI/RenderElementsIds/reids.geom</file>
+        <file>UI/RenderElementsIds/reids.vert</file>
+        <file>UI/CustomGLViewer/WeightedAverageShader.frag</file>
+        <file>UI/CustomGLViewer/WeightedAverageShader.vert</file>
+        <file>SelectionStrategies/MouseSelection/ms.frag</file>
+        <file>SelectionStrategies/MouseSelection/ms.geom</file>
+        <file>SelectionStrategies/MouseSelection/ms.vert</file>
+        <file>Rendering/Renderers/PhongPerPixel/ppp.frag</file>
+        <file>Rendering/Renderers/PhongPerPixel/ppp.vert</file>
+        <file>Rendering/Renderers/CartesianCoordinatesAxis/cca.frag</file>
+        <file>Rendering/Renderers/CartesianCoordinatesAxis/cca.vert</file>
+    </qresource>
+</RCC>

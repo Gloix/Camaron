@@ -1,0 +1,216 @@
+
+Angulos diedros de una superficie, se consideran 180? o 0??
+
+TODO:
+
+Export: arreglar exportacion de seleccion pa node Ele, visf, etc.
+
+Colisiones. Que el model caiga por gravedad y choque con un suelo plano? y se deforme.
+
+Selection Strategy: By Polygon Properties, By Vertex Properties, By Polihedron Properties. 
+Estas propiedades son como faces, id;
+
+evaluation strategy tengan descripcion, que se pueda ver en un popup que aparece al pasar el mouse
+
+
+Selection Strategy: Select all polyuhedron that has all it's polygons selected
+
+Operations: Dar vuelta sentido vertices en poligonos seleccionados.
+Eliminar propiedades almacenadas (para liberar memoria).
+
+
+
+Export - 
+	Node ele, selection (in progress)
+
+short cuts configurables
+
+•	Activar que se vea un eje de coordenadas XYZ graduado y centrado. [FALTA]
+•	Si se acerca la cámara a un elemento, que se dibuje su identificador. [FALTA]
+•	Seleccionar elementos a partir de la intersección de la malla con distintas geometrías: Planos, Cubos, Esferas. [FALTA]
+
+
+Config Popup para exportacion. Por ejemplo, que ofresca (si es posible) las propiedades de los elementos que podria exportar al archivo. Despues de escoger la ubicacion, se levanta el popup con la configuracion (si es que la export estrategy tiene configuracion). Si no tiene no pasa nada y se exporta tal como esta. - Para poder exportar el modelo con alguna de las propiedades calculadas
+
+BUG: Los id's de los vertices no se dibujan bien algunos, aunque los ponga todos igual a 1000 por ej. Hay unos pocos que se dibujan cortados : 00. Probar con modelo de tetrahedros spx.ts.
+* Los Polyhedros, dibujan su id por cada cara en modo GPU
+
+BUG 2: En weighted average, el color de los pixel aveces sale negro y no deberia ser asi. (Podria ser tema de precision por estar utilizando 24 bits de profundidad?)
+
+Problema: Cuando se modifica un Shader, para que se actualize hay que sacarlo de recursos y volver a agregarlo :(.
+
+TODO: Triangulos superficiales que no estan en superficie (solo los 3 vertices lo estan). Se pueden quitar en el geometry shader preguntando si el id del segundo poliedro es -1. Si no lo es, no es superficial, aunque tenga 3 vertices superficiales - se descarta la geometria.
+
+TODO: Mover las posiciones en el vector de rmodel para que queden los de triangulos superficiales primero (antes de crear el resto de los vectores), con esto, actualizar las rmodelposition de los elementos. Para movelor avanzar del ultimo hacia el primero y cuando se uiqera mover, se avanza del primer o hacia el ultimo, hasta que ambos iteradores se encuentren. El rmodel position representante para cada vertice, se deberia cambiar por la de menor posicion.
+
+
+TODO: La carga de archivos en modo de ahorro de memoria esta hecha solo para OFF y PLY (hacer los demas).
+
+BUG; Angulo solido esta malo. Existen poligonos que si deberian ser contados aunque el producto punto de su normal con la normal vertice-geocentro sea negativo o cero. En verdad todos los poligonos deberian ser contados excepto los que son vecinos al vertice observador.
+
+
+v21
+
+Corregido un bug de las etiquetas en el grafico de propiedades. Se notaba sobre todo cuando habian muchas barras y los espacios vacios de los lados crecian.
+
+El Z minimo (del los limites del modelo) no se obtenia bien en la carga de la mayoria de los ModelLoading.
+
+Agregada modalidad para abrir modelos utilizando poca RAM, con menos relaciones de vecindad y con funcionalidades desactivafdas. (SOLO OFF Y PLY)
+
+Calculo de normales, centros geometricos y vecindades de los elementos paralelizada. Esto trajo el problema de que cuando se cae en la fase de calculo de vecindades por memoria, no funciona mucho el catch de bad_alloc, para avisar que se cae por falta de memoria. Cuando falta memoria en esa fase la aplicacion se cae. Se pusieron Catch de bad_alloc en los threads, para que estos terminaran cuando saliera este tipo de excepcion, pero raramente no funciona si hay varios thread (funciona con 1 solo) :(
+
+v20
+
+Cambio de orden en que se aplican las matrices de rotacion/traslacion/escalado. Al trasladar y despues escalar, el modelo se movia mucho. Ahora pareciera que uno se acerca exactamente donde estaba apuntando la camara.
+
+El incremento de la translacion en los ejes X e Y se redujo para que no se moviera tanto a saltos
+
+Nuevo Renderer: Phong aplicado por pixel.
+Nuevo Renderer: Eje de coordenadas y bounding box.
+Se cambio el brillo por defecto a los phong a 15.
+
+Si uno cambia el tamaño de los puntos en la configuracion principal, la seleccion por mouse ya no falla.
+
+v19
+
+Panel de evaluation strategy ahora evalua Modelo (antes no hacia nada). Si no hay un modelo cargado, sale mensaje de alerta.
+Se agrego un menu de contexto a la tabla de elementos seleccionados. El menu de contexto tiene acciones para hacer resize para que se ajusten las celdas a su contenido y para que se refresquen los atributos de los elementos. La primera solucion que se hizo fue que se reajustaran los tamaños de todas las celdas cada vez que la tabla se llenara, el problema de esto es que introducia una demora de 0.5 segundos cada vez que se seleccionaban elementos (cuando se seleccionan elementos, se refresca la tabla y por lo tanto se reajustaban los elementos). El reajuste de tamaño solo es interesante normalmente cuando cambia la cantidad de propiedades almacenadas.
+
+Estrategias de evaluacion ahora tienen un icono para mostrar sobre que tipo de elementos se aplican.
+Se arreglo el DockingWidget de estrategias de evaluacion (aplicar sobre seleccion quedo pendiente)
+Se agrego al menu principal uan lista dinamica de archivos recientes.
+Se agrego about.
+Se agrego seleccion por interseccion con geometria convexa (no esta acelerada por GPU).
+Se quitaron estrategias de evaluacion sobrantes.
+Para que fuera mas facil, en la configuracion del Renderer de interseccion con geometrias convexas, se agrego un panel con 3 label clickeables. Estos labels al cliquearse ponen en el text area un ejemplo de geometria convex. Hay un label para Sphere, uno para Normals y uno para Polygons.
+Se agregaron e implementaron las estrategias de evaluacion de maximo y minimo angulo diedro; maximo y minimo angulo solido.
+
+y maaas....
+
+
+
+v18
+
+Bug corregido: cerraba doblemente los archivos -> segmentation fault en unix.
+Ahora abre archivos PLY (maoma)
+
+v17
+QWidget no pueden ser inicializados antes que una QApplication, por lo tanto, todas las cosas que utilizen un QWidget de configuracion, deben tienen un metodo para inicializarlos despues. 
+
+Depth peeling implementado para MainRenderer.
+Weighted Average y Weighted SUm implementads. Weighted average tiene una pifia en que el color calculado para lagunos pixeles es negro cuando no deberia ser asi.
+Formato local agregado
+Traslacion en EJE Z, no se nota en perspectiva ortogonal
+Cada vez que se carga un modelo, la lista de renderer se reinicia. En el caso de no existir ninguno, se coloca un Renderer llamado "No Renderer Available", el cual no hace nada. 
+A los rendere se les pasa el modelo para saber si estos son capaces de dibujarlos.
+Por ejemplo, el Tetview Renderer solo es capaz de renderizar modelos de superficie/polihedros que tengan los boundarys..
+O PropertyRenderer. Capas de visualizar modelos solo que venian con propiedades cargadas desde el archivo.
+o Renderer de textura solo si el modelo se cargo con una textura
+O renderer de color origianl solo si el modelo tenia color original.
+
+Como los poliedros estan guardando las normales por cada cara, al final, por poligono, se guardan 3 normales (muy gastador en memoria). Polihedro podria tener una funcion de glm::vec3 getInwardNormal() y glm::vec3 getOutwardNormal(), que es la normal del polygono con *-1 o *1, dependeidnedo del centro geometrico de poliedros. Con esto, pa obtener la normal con rspecto a tal poliedro, se va a tener que calcular un producto punto - un poco mas cargo computacionalmente. Pero para un modelo con 1000000 de polygonos, 
+Model Torso.ts: vamos ahorrar aproximadamente 1.000.000 * 2* sizeof(glm::vec3) bytes = 2.000.000 * 2 * 4*3 = 48.000.000 bytes?
+v16
+
+BUG: CUando se carga un modelo muy grande, despues una manzana, la seleccion por mouse queda mal, marca otra. Puede ser por el tamaño de la textura que quiza queda mal?
+
+Nuevo Glass Renderer
+Proyeccion en perspectiva ya no deforma el objeto con la deformacion de la ventan. El frustrum verticel se acomoda a la proporcion que tienen los tamaños de la ventana.
+
+v15
+
+Falta optimizaciones. Que los datos se recarguen y se suban a la CPU cuando sea necesario. Si el texto no cambio, no re hacer todo.
+
+Cache que cuando estaba ocupando una textura como buffer, la interseccion no funcionaba porque me estaba tirando los valores a [0,1]. Para que esto no pasara, hay que ponerle como formato interno a la textura RGBA_32f
+
+Se hizo la convex geometry esfera, esta funcionando
+
+Multiples rendereres. Se creo una clase para soportarlo. Primero se dibuja el primario, despues los otros. A el phong renderer y main renderer se les dieron opciones de dibujar lo que no esta seleccionado. Ahora se pueden complementar los renderer.
+RendererFactory paso a llamarse RendererRegistry.
+RendererRegistry ahora es un singleton. Los Renderer se registran automaticamente, luego se llame una funcion para que inicialize los shader cuando el contexto de OpenGL este arriba.
+
+Se borraron los shaders iniciales de prueba (HelloWorld, HelloWorld2, GSV)
+
+v14
+En progreso: Selection strategy, change selection type 
+
+Interseccion por geometrias: Se ha trabajado. Faltan detalles.
+
+Ahora las configuraciones principales estan todas en un mismo widget, organizadas por tabs. La configuracion de Ids tambien se movio ahi. Tiene la posibilidad de agregar nuevas configuraciones.
+
+Ahora hay un display configurable de los FPS.
+
+Traslacion en Z arreglada. El problema era que yo solo utilizaba una proyeccion orthogonal. Ahora es posible elegir una proyeccion en perspectiva con su respectivo FOV. Hubo que hacer arreglos con la de perspectiva. Sobre todo que un VERTEX * MVP cuando se trataba de perspectiva, el w no quedaba en 1 y habia que dividir por w, ya no es directamente multiplicar por MVPVP (solo funciona en caso ortogonal).
+
+OIT (Order independent transparency): Se vio que habian varios metodos. La idea era buscar uno que no dependienra del shader en uso. Average sum parecia ser. Pero me imagino qeu este funciona mal en el caso de que hayan objetos opacos con transparencia atras y adelante. Al final, como solucion temporal, se agrego a la configuracion principal una opcion: Dibujar en 2 pasadas usando Alpha testing. Se especifica un valor, en la primera pasada , se dibujara todo lo que tenga alpha por encima del especificado y despues en la segunda, todo lo que esta por debajo del alpha. La idea es dibujkar lo opaco o casi opaco primero con el Depth test enabled. Y despues dibujar lo transparence con el buffer de Depth en modo solo lectura. (para que no se dibuje indebidamente encima de un opaco cuando no debe, pero que un trasparente no bloquee a otro porque el mas cercano se dibujo primero). El efecto salva. Pero Hay que dibujar dos veces en vez de 1. La velocidad de dibujado decrese a la mitad! Tambien se pierde la profundidad relativa entre objetos transparentes. Todo se suma nomas.
+Se utiliza la funcion de blending de suma, ya que la suma es conmutativa y hace que sea independiente del orden.
+
+v13
+
+En progreso: Selection strategy, change selection type // no se hizo en esta version
+
+
+Reduccion en memoria:
+
+Se quitaron atributos innecesarios de las clases. Las propiedades ya no se guardan en un unordered_map, ya que este utilizaba mucha memoria, ahora se guardan en una estructura nueva. Supuestamente iba a ser unu has, pero no. Igual puede ser, pero los primos deben ser calculados al vuelo? La idea no es almacenarlos en ela estructura, ya que esto consumiria memoria.
+
+Rmodel ya no guarda un vector de los vertices, normales e indices, ya que es innecesario. Despues de enviarlos a la tarjeta de video, estos se borran.
+
+Visualizar la malla como nube de puntos (solo vértices). - Vertex Renderer
+Main Renderer, tiene pa visualizar caras externas, internas, todo y solo seleccion
+
+Mínimos y máximos de cada coordenada. (DONE)
+Número de elementos de cada tipo de poliedro que contiene la malla.(DONE)
+Número de caras/vértices/poliedros. (DONE)
+
+Expand selection DONE
+Mose selection con aceleracion funciona. Se acelera como al doble. Terminado, para polygonos y polyhedros.
+Selection por id done
+
+RVertex superficie: Antes el flag de superficie estaba activado por poligono. Ahora esta activado por vertice. Un poligono puede tener 2 vertices en superficie y los demas no, o todos en superficie. Esto provocaba problemas cuando estaban los 3 vertices en superficie, pero el poligono no: triangulo interior hacia una punta, donde todavia queda una piramide.
+
+RVertex tiene nuevo flag para marcar que es un poligono superficial.
+
+Ids: Para un triangulo, hay un attributo de id adicional. El primero corresponde al id del poligono que tiene relacion con el triangulo. El segundo, tiene relacion con el polihedro 1 que el poligono forma parte, y el 3 es el id del otro polihedro. En caso de que no esten los polhedros, el id es -1. Tambien se subio un arreglo aparte con los ids de los vertices. No se modifico el arreglo de Rmodel positions (ids antiguo) para que mouse selection siguiera funcionando bien.
+
+Fixed: En triangle, getLMid(), retornaba lmin. Tambien estaba mal ordenados.
+
+
+v12
+
+Almacenar las propiedades en ELement esta tomando demasiada memoria, ya que se almacena un string con el nombre. Ahora por cada elemento se almacena un "Area", "bla bla". Se va  a agregar a los evaluation strategy un metodo para retirar el nombre de la propiedad que usan. Luego, no será necesario guardar el nombre por todos lados. Hecho. En el modelo "torso.ts", se gastaban como 250mb por propiedad, ahora se estan gastando alrededor de 50mb.
+
+DockWidget: Cuando se cambia su contenido, se ajusta su minimumSize a 0 y la size policy es Maximum. Al reducir el minimum size, este se contrae hasta adquirir el tamaño de su contenido.
+
+Al empezar a agregar mas clases que hicieran doble dispatch, denuevo habia que agregar una funcion para cada clase en una cadena de herencia. Lo que lo hacia muy pesado. Una opcion era hacer que las clases que quisieran hacer double dispatch heredaran de una clase abstracta, y que los modelos y elementos hicieran double dispatch de esa clase abtracta.
+Esta ultima tecnica tendria problemas por el lado de que a veces una clase hace 2 o 3 double dispatch, no solo uno, entonces eso complicaria el modelado a traves de una clase base abstracta con la capacidad.
+Se opto por simplificar la logica al maximo de lado de Model/Element (y sus subclases) y dejar que simplemente hicieran doble dispatch. Luego, se creo una macro en la clase base de cada herencia, con la cual se ponen las declaraciones de las funciones y otra macro para definirlas. Con esto, solo hay que agregar una linea de codigo en caso de que aparesca un nuevo tipo. Y para agregar una nueva funcion de double dispatch, simplemente se agrega a la macro.
+
+Export - 
+	OFF, complete
+	off, selection
+	Node ele, complete
+	Node ele, selection (no alcanzo)
+
+bug: cuando mantengo shift apretado seleccionando puntualmente sin soltar shift, la screenshot no esta bien actualizada al dibujar cuadro seleccion
+
+
+Polyhedron VOlume strategy
+
+Se puede seleccionar con click y con rectangulo polyhedros. Los polihedros no cambiaron el RModel. Cuando se selecciona uno, se des-seleccionan todos los elementos de los polygonos que lo forman, a menos que un polihedro vecino (que comparta poligono, este seleccionado.) Si existe un polihedro vecino seleccionado, el poligono compartido no se des-selecciona en Rmodel.
+
+Como implentar propiedad de colores para el property renderer de los poligonos compartidos? Por el momento, se piensa agregar un nuevo paso a los Renderer. Un paso de setup para cuando a ocurrido un cambio en la seleccion. Luego, las propiedades de los poligonos por el lado del poliedro seleccionado son las que valen, si ambos poliedros estan seleccionados, da igual.
+
+
+v11 - 04/10/2012
+
+Se elimino el tiriton. Se dibujaba al variar cada tipod e angulo deneuvo. Ahora se calcula la variacion de todos los angulos y despues se dibuja. Ramses rota fluido (ya no a saltos).
+
+Ahora hay un mapa del teclado.
+
+
+Ahora se dibuja en paintEvent en vez de paintGl. Para poder dibujar utilizando comandos de opengl y las herramientas de QT. Por ejemplo, para el caso de seleccionar con un cuadro expandible. Para optimizar. Se toma una screenshot cuando se clickea con shift apretado, despues en vez de re-dibujar el modelo, se pone la screenshot en el fondo y se dibuja el nuevo tamaño de la caja
+
+
+Implementada seleccion por mouse (con click y caja) - falta definir si se podran seleccionar vertices.
+Y seleccion por click del elemento mas cercano (que no se seleccione lo de atras).

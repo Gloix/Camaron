@@ -1,0 +1,36 @@
+#include "rendererconfigpopup.h"
+#include "ui_rendererconfigpopup.h"
+
+RendererConfigPopUp::RendererConfigPopUp(QWidget *parent) :
+	QWidget(parent,Qt::Tool| Qt::Window | Qt::CustomizeWindowHint| Qt::WindowMinimizeButtonHint |Qt::WindowCloseButtonHint ),
+	ui(new Ui::RendererConfigPopUp)
+{
+	ui->setupUi(this);
+	connect(this->ui->pushButton_apply_changes, SIGNAL(clicked()), this, SLOT(applyChangesPushButtonClicked()));
+}
+
+RendererConfigPopUp::~RendererConfigPopUp()
+{
+	delete ui;
+}
+void RendererConfigPopUp::setConfigQWidget(QWidget* qwidget){
+	this->cleanConfigQWidget();
+	ui->widget_renderer_config_container->layout()->addWidget(qwidget);
+	qwidget->show();
+	this->ui->pushButton_apply_changes->setDisabled(false);
+}
+
+void RendererConfigPopUp::cleanConfigQWidget(){
+	this->ui->pushButton_apply_changes->setDisabled(true);
+	if(!this->ui->widget_renderer_config_container->layout()->isEmpty()){
+		QLayoutItem* item;
+		while ( (item = ui->widget_renderer_config_container->layout()->takeAt(0)) != 0){
+			QWidget * widget = item->widget();
+			if(widget!=0)
+				widget->hide();
+		}
+	}
+}
+void RendererConfigPopUp::applyChangesPushButtonClicked(){
+	emit applyChangesPushButton();
+}

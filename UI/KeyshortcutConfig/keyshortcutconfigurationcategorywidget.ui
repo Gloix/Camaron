@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>494</width>
-    <height>297</height>
+    <width>518</width>
+    <height>279</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -42,7 +42,16 @@
          <property name="spacing">
           <number>3</number>
          </property>
-         <property name="margin">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
           <number>0</number>
          </property>
          <item>
@@ -169,7 +178,7 @@
            </property>
           </widget>
          </item>
-         <item alignment="Qt::AlignHCenter">
+	 <item >
           <widget class="QLabel" name="label5">
            <property name="minimumSize">
             <size>

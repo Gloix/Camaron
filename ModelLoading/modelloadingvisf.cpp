@@ -4,6 +4,7 @@
 #include "Model/Element/Polygon.h"
 #include "Model/Element/triangle.h"
 #include "Model/Element/Vertex.h"
+#include "Utils/endianess.h"
 ModelLoadingVisF::ModelLoadingVisF():
 	ModelLoadingStrategy("VisF","visf")
 {
@@ -20,10 +21,14 @@ bool ModelLoadingVisF::validate(std::string filename)
 	if(!file.is_open())
 		return false;
 	file.seekg(0,std::ios::beg);
+	unsigned char endianness;
 	int n;
+	file.read((char*)&endianness,sizeof(unsigned char));
 	file.read((char*)&n,sizeof(int));
 	file.close();
-	return n<=2 && n>0;
+	return n<=2 && n>0 &&
+			(endianness == Endianess::BIG_ENDIAN ||
+			 endianness == Endianess::LITTLE_ENDIAN);
 
 }
 Model* ModelLoadingVisF::load(std::string filename){
@@ -31,8 +36,15 @@ Model* ModelLoadingVisF::load(std::string filename){
 	if(!file.is_open())
 		return (Model*)0;
 	file.seekg(0,std::ios::beg);
+	file.read((char*)&fileEndianness,sizeof(unsigned char));
 	int type;
 	file.read((char*)&type,sizeof(int));
+	if(type == vis::CONSTANTS::VERTEX_CLOUD){
+		VertexCloud* newModel = new VertexCloud(filename);
+		readVertices(newModel);
+		file.close();
+		return newModel;
+	}
 	if(type == vis::CONSTANTS::POLYGON_MESH){//polygon mesh
 		PolygonMesh* newModel = new PolygonMesh(filename);
 		readVertices(newModel);
@@ -106,12 +118,22 @@ bool ModelLoadingVisF::readVertices( VertexCloud* mesh){
 		if(i%1000==0)
 			emit setLoadedVertices(i);
 	}
+	if(fileEndianness != Endianess::findEndianness()){
+		//fix endianness
+		for(std::vector<vis::Vertex*>::size_type i = 0;i<vertices.size();i++){
+			glm::vec3& currentCoords = vertices[i]->getCoords();
+			currentCoords.x = Endianess::reverseBytes(currentCoords.x);
+			currentCoords.y = Endianess::reverseBytes(currentCoords.y);
+			currentCoords.z = Endianess::reverseBytes(currentCoords.z);
+		}
+	}
 	emit setLoadedVertices(nVertices);
 	return true;
 }
 
 bool ModelLoadingVisF::readPolygons( PolygonMesh* mesh){
 	int nPolygons;
+	unsigned char currentSystemEndianness = Endianess::findEndianness();
 	file.read((char*)&nPolygons,sizeof(int));
 	mesh->setPolygonsCount(nPolygons);
 	std::vector<vis::Polygon*>& polygons = mesh->getPolygons();
@@ -122,39 +144,78 @@ bool ModelLoadingVisF::readPolygons( PolygonMesh* mesh){
 	for(int i = 0;i<nPolygons;i++){
 		int nVertices;
 		file.read((char*)&nVertices,sizeof(int));
+		if(fileEndianness != currentSystemEndianness )
+			nVertices = Endianess::reverseBytes(nVertices);
 		vis::Polygon* newPolygon;
 		if(nVertices == 3)
 			newPolygon = new vis::Triangle(i);
 		else
 			newPolygon = new vis::Polygon(i);
 		std::vector<vis::Vertex*>& polygonVertices = newPolygon->getVertices();
-		for(int j = 0;j<nVertices;j++){
-			int vertexId;
-			file.read((char*)&vertexId,sizeof(int));
-			polygonVertices.push_back(vertices[vertexId]);
+		if(fileEndianness != currentSystemEndianness ){
+			for(int j = 0;j<nVertices;j++){
+				int vertexId;
+				file.read((char*)&vertexId,sizeof(int));
+				vertexId = Endianess::reverseBytes(vertexId);
+				polygonVertices.push_back(vertices[vertexId]);
+			}
+		}else{//same endianness
+			for(int j = 0;j<nVertices;j++){
+				int vertexId;
+				file.read((char*)&vertexId,sizeof(int));
+				polygonVertices.push_back(vertices[vertexId]);
+			}
 		}
 		polygons[i] = newPolygon;
 		if(i%5000==0)
 			emit setLoadedPolygons(i);
 	}
 	emit setLoadedPolygons(nPolygons);
-	for(int i = 0;i<nPolygons;i++){
-		int nNeighbors;
-		file.read((char*)&nNeighbors,sizeof(int));
-		vis::Polygon* pol = polygons[i];
-		std::vector<vis::Polygon*>& polygonNeighbors = pol->getNeighborPolygons();
-		for(int j = 0;j<nNeighbors;j++){
-			int neighborId;
-			file.read((char*)&neighborId,sizeof(int));
-			polygonNeighbors.push_back(polygons[neighborId]);
+	int hasNeighbors;
+	file.read((char*)&hasNeighbors,sizeof(int));
+	if(fileEndianness != currentSystemEndianness )
+		hasNeighbors = Endianess::reverseBytes(hasNeighbors);
+	if(hasNeighbors){
+		if(fileEndianness != currentSystemEndianness ){//bad endianness
+			for(int i = 0;i<nPolygons;i++){
+				int nNeighbors;
+				file.read((char*)&nNeighbors,sizeof(int));
+				nNeighbors = Endianess::reverseBytes(nNeighbors);
+				vis::Polygon* pol = polygons[i];
+				std::vector<vis::Polygon*>& polygonNeighbors = pol->getNeighborPolygons();
+				for(int j = 0;j<nNeighbors;j++){
+					int neighborId;
+					file.read((char*)&neighborId,sizeof(int));
+					neighborId = Endianess::reverseBytes(neighborId);
+					polygonNeighbors.push_back(polygons[neighborId]);
+				}
+			}
+
+		}else{//good endianness
+			for(int i = 0;i<nPolygons;i++){
+				int nNeighbors;
+				file.read((char*)&nNeighbors,sizeof(int));
+				vis::Polygon* pol = polygons[i];
+				std::vector<vis::Polygon*>& polygonNeighbors = pol->getNeighborPolygons();
+				for(int j = 0;j<nNeighbors;j++){
+					int neighborId;
+					file.read((char*)&neighborId,sizeof(int));
+					polygonNeighbors.push_back(polygons[neighborId]);
+				}
+			}
 		}
+	}else{
+		completePolygonPolygonRelations(mesh);
 	}
 	emit stageComplete(ModelLoadingProgressDialog::COMPLETED_POLYGON_POLYGON_R);
 	return true;
 }
 bool ModelLoadingVisF::readPolyhedrons( PolyhedronMesh* mesh){
+	unsigned char currentSystemEndianness = Endianess::findEndianness();
 	int nPolyhedrons;
 	file.read((char*)&nPolyhedrons,sizeof(int));
+	if(fileEndianness != currentSystemEndianness )//bad endianness
+		nPolyhedrons = Endianess::reverseBytes(nPolyhedrons);
 	mesh->setPolyhedronsCount(nPolyhedrons);
 	std::vector<vis::Polygon*>& polygons = mesh->getPolygons();
 	std::vector<vis::Polyhedron*>& polyhedrons = mesh->getPolyhedrons();
@@ -164,20 +225,40 @@ bool ModelLoadingVisF::readPolyhedrons( PolyhedronMesh* mesh){
 	emit setLoadedVertices(mesh->getVerticesCount());
 	emit setLoadedPolygons(mesh->getPolygonsCount());
 	emit stageComplete(ModelLoadingProgressDialog::COMPLETED_POLYGON_POLYGON_R);
-	for(int i = 0;i<nPolyhedrons;i++){
-		int nPolygons;
-		file.read((char*)&nPolygons,sizeof(int));
-		vis::Polyhedron* newPolyhedron = new vis::Polyhedron(i);
-		std::vector<vis::Polygon*>& polyhedronPolygons = newPolyhedron->getPolyhedronPolygons();
-		for(int j = 0;j<nPolygons;j++){
-			int polygonId;
-			file.read((char*)&polygonId,sizeof(int));
-			polyhedronPolygons.push_back(polygons[polygonId]);
+	if(fileEndianness != currentSystemEndianness ){//bad endianness
+		for(int i = 0;i<nPolyhedrons;i++){
+			int nPolygons;
+			file.read((char*)&nPolygons,sizeof(int));
+			nPolygons = Endianess::reverseBytes(nPolygons);
+			vis::Polyhedron* newPolyhedron = new vis::Polyhedron(i);
+			std::vector<vis::Polygon*>& polyhedronPolygons = newPolyhedron->getPolyhedronPolygons();
+			for(int j = 0;j<nPolygons;j++){
+				int polygonId;
+				file.read((char*)&polygonId,sizeof(int));
+				polygonId = Endianess::reverseBytes(polygonId);
+				polyhedronPolygons.push_back(polygons[polygonId]);
+			}
+			polyhedrons[i] = newPolyhedron;
+			if(i%5000==0)
+				emit setLoadedPolyhedrons(i);
 		}
-		polyhedrons[i] = newPolyhedron;
-		if(i%5000==0)
-			emit setLoadedPolyhedrons(i);
+	}else{
+		for(int i = 0;i<nPolyhedrons;i++){
+			int nPolygons;
+			file.read((char*)&nPolygons,sizeof(int));
+			vis::Polyhedron* newPolyhedron = new vis::Polyhedron(i);
+			std::vector<vis::Polygon*>& polyhedronPolygons = newPolyhedron->getPolyhedronPolygons();
+			for(int j = 0;j<nPolygons;j++){
+				int polygonId;
+				file.read((char*)&polygonId,sizeof(int));
+				polyhedronPolygons.push_back(polygons[polygonId]);
+			}
+			polyhedrons[i] = newPolyhedron;
+			if(i%5000==0)
+				emit setLoadedPolyhedrons(i);
+		}
 	}
+
 	emit setLoadedPolyhedrons(nPolyhedrons);
 	return true;
 }

@@ -15,6 +15,8 @@ class ModelLoadingVisF: public ModelLoadingStrategy
 		bool readPolygons( PolygonMesh* );
 		bool readVertices( VertexCloud* );
 		std::ifstream file;
+
+		unsigned char fileEndianness;
 };
 
 #endif // MODELLOADINGVISF_H

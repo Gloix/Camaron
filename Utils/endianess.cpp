@@ -1,4 +1,7 @@
-#include "endianess.h"
+#include "Utils/endianess.h"
+
+const unsigned char Endianess::BIG_ENDIAN = 0;
+const unsigned char Endianess::LITTLE_ENDIAN = 1;
 
 Endianess::Endianess()
 {

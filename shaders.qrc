@@ -43,5 +43,7 @@
         <file>Rendering/Renderers/PhongPerPixel/ppp.vert</file>
         <file>Rendering/Renderers/CartesianCoordinatesAxis/cca.frag</file>
         <file>Rendering/Renderers/CartesianCoordinatesAxis/cca.vert</file>
+        <file>Rendering/Renderers/HeightRenderer/height_shader.frag</file>
+        <file>Rendering/Renderers/HeightRenderer/height_shader.vert</file>
     </qresource>
 </RCC>

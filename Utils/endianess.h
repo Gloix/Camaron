@@ -7,8 +7,8 @@ class Endianess
 		template <class TYPE> static TYPE reverseBytes(const TYPE in);
 		static bool isBigEndian();
 		static unsigned char findEndianness();
-		static const unsigned char LITTLE_ENDIAN = 1;
-		static const unsigned char BIG_ENDIAN = 0;
+		static const unsigned char LITTLE_ENDIAN;
+		static const unsigned char BIG_ENDIAN;
 	private:
 		Endianess();
 };

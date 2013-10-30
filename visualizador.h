@@ -62,6 +62,7 @@ class Visualizador : public QMainWindow
 		void glVersionPopup();
 		void clearRecentFiles();
 		void getLoadedModelFromLoadingStrategy();
+        void showAxesChanged(bool value);
 	private:
 		static const unsigned int MAX_RECENT_FILES = 5;
 		void fixDockWidgetPositions();

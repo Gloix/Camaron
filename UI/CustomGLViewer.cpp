@@ -15,6 +15,7 @@
 #include "Utils/framebufferobjecthandle.h"
 #include "glm/gtx/transform.hpp"
 #include "Rendering/RModel/rmodel.h"
+#include "Rendering/Renderers/SceneHelpers.h"
 #ifndef GL_MULTISAMPLE
 #define GL_MULTISAMPLE  0x809D
 #endif
@@ -63,6 +64,7 @@ CustomGLViewer::~CustomGLViewer()
 		glDeleteTextures(1,&averageOITbackgroundTextureHandle);
 	if(averageOITdepthStencilTextureHandle)
 		glDeleteTextures(1,&averageOITdepthStencilTextureHandle);
+    SceneHelpers::reset();
 }
 void CustomGLViewer::setRenderer(Renderer * r){
 	this->renderer = r;
@@ -168,6 +170,8 @@ void CustomGLViewer::paintUsingRenderers(){
 	std::vector<Renderer*>& second = secondaryRenderers.getRenderers();
 	for(std::vector<Renderer*>::size_type i = 0;i<second.size();i++)
 		if(second[i]!=renderer)second[i]->draw(this->rmodel);
+
+    SceneHelpers::getInstance()->drawHelpers(this->rmodel);
 }
 #include <fstream>
 void CustomGLViewer::paintOpenGl3DScene(){
@@ -513,6 +517,9 @@ void CustomGLViewer::paintFrameRateDisplay(QPainter &painter,float framerate){
 	painter.drawText(rect,QString::number(framerateint/100.0f));
 }
 
+void CustomGLViewer::refreshHelpers(){
+    SceneHelpers::reset();
+}
 
 #include "Utils/openglutils.h"
 void CustomGLViewer::paintEvent(QPaintEvent *)
@@ -759,4 +766,9 @@ void CustomGLViewer::resizeOITFBOTextures(){
 																		  GL_DEPTH24_STENCIL8,
 																		  GL_DEPTH_STENCIL,
 																		  GL_UNSIGNED_INT_24_8);
+}
+
+void CustomGLViewer::setAxesVisible(bool value){
+    SceneHelpers::getInstance()->setAxesVisible(value);
+
 }

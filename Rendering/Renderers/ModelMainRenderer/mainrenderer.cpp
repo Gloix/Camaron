@@ -151,7 +151,7 @@ void MainRenderer::draw(RModel* rmodel){
 	glBindBuffer(GL_ARRAY_BUFFER, rmodel->positionDataBufferObject);
 	glVertexAttribPointer( POSITION_ATTRIBUTE, 3, GL_FLOAT, GL_FALSE, 0,
 						   (GLubyte *)NULL );
-	// Map index 1 to the color buffer
+	// Map index 1 to the flag buffer
 	glBindBuffer(GL_ARRAY_BUFFER, rmodel->vertexFlagsDataBufferObject);
 	glVertexAttribIPointer( VERTEX_FLAGS_ATTRIBUTE, 1, GL_UNSIGNED_INT, 0,
 							(GLubyte *)NULL );

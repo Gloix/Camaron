@@ -158,7 +158,10 @@ SOURCES += main.cpp\
     Model/LWElements/lwpolygon.cpp \
     Model/LWElements/lwpolyhedron.cpp \
     ModelLoading/modelloadingofflw.cpp \
-    ModelLoading/modelloadingplylw.cpp
+    ModelLoading/modelloadingplylw.cpp \
+    Rendering/Renderers/SceneHelpers.cpp \
+    Rendering/Renderers/HeightRenderer/heightrendererconfig.cpp \
+    Rendering/Renderers/HeightRenderer/heightrenderer.cpp
 
 HEADERS  += visualizador.h \
     Common/Constants.h \
@@ -305,7 +308,12 @@ HEADERS  += visualizador.h \
     Model/LWElements/lwpolygon.h \
     Model/LWElements/lwpolyhedron.h \
     ModelLoading/modelloadingofflw.h \
-    ModelLoading/modelloadingplylw.h
+    ModelLoading/modelloadingplylw.h \
+    Rendering/SimpleShaders/SimpleShader.h \
+    Rendering/Renderers/SceneHelpers.h \
+    Rendering/Renderers/HeightRenderer/heightrendererconfig.h \
+    Rendering/Renderers/HeightRenderer/heightrenderer.h \
+    Rendering/SimpleShaders/SimpleShader.h
 
 FORMS    += visualizador.ui \
     Rendering/Renderers/ModelMainRenderer/mainrendererconfig.ui \
@@ -337,7 +345,8 @@ FORMS    += visualizador.ui \
     UI/KeyshortcutConfig/keyshortcutconfigurationcategorywidget.ui \
     UI/KeyshortcutConfig/keyshortcutconfigurationitemwidget.ui \
     UI/modelloadingprogressdialog.ui \
-    Rendering/Renderers/CartesianCoordinatesAxis/cartesiancoordinatesaxisconfig.ui
+    Rendering/Renderers/CartesianCoordinatesAxis/cartesiancoordinatesaxisconfig.ui \
+    Rendering/Renderers/HeightRenderer/heightrendererconfig.ui
 
 OTHER_FILES += \
     Rendering/Renderers/ModelMainRenderer/mmr.vert \
@@ -383,7 +392,9 @@ OTHER_FILES += \
     Rendering/Renderers/PhongPerPixel/ppp.vert \
     Rendering/Renderers/PhongPerPixel/ppp.frag \
     Rendering/Renderers/CartesianCoordinatesAxis/cca.vert \
-    Rendering/Renderers/CartesianCoordinatesAxis/cca.frag
+    Rendering/Renderers/CartesianCoordinatesAxis/cca.frag \
+    Rendering/Renderers/HeightRenderer/height_shader.vert \
+    Rendering/Renderers/HeightRenderer/height_shader.frag
 RESOURCES += \
     images.qrc \
     shaders.qrc

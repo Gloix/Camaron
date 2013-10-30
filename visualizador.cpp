@@ -94,6 +94,7 @@ Visualizador::Visualizador(QWidget *parent) :
 	connect(ui->pushButton_eval_strat_desc,SIGNAL(clicked()),this,SLOT(showEvaluationStrategyDescription()));
 	connect(ui->comboBox_evalStrategies,SIGNAL(currentIndexChanged(int)),this,SLOT(changeEvaluationStrategy(int)));
 	connect(ui->actionDetected_Video_Adapter,SIGNAL(triggered()),this,SLOT(glVersionPopup()));
+    connect(ui->chkShowAxes,SIGNAL(toggled(bool)),this,SLOT(showAxesChanged(bool)));
 	modelLoadingFactory = ModelLoadingFactory::getSingletonInstance();
 	modelLoadingFactoryLW = ModelLoadingFactory::getLightWeightSingletonInstance();
 	fileFormats = getModelAcceptedExtensions(modelLoadingFactory);
@@ -449,6 +450,7 @@ void Visualizador::openModelFromFilePath(QString filename, bool addToRecentFiles
 			this->model = loaded;
 			setupEvaluationStrategiesStatics();
 			this->customGLViewer->resetCameraPosition();
+            this->customGLViewer->refreshHelpers();
 			this->selectionTableView.refreshSelectedElementsTable();
 			this->model->loadModelDataIntoRModel(this->rmodel);
 			this->selection.setRModel(rmodel);
@@ -488,6 +490,7 @@ void Visualizador::openModelFromFilePath(QString filename, bool addToRecentFiles
 }
 void Visualizador::openModelFromFilePathQThread(QString filename,bool lw){
 	try{
+        this->customGLViewer->refreshHelpers();
 		progressDialog.setModelName(FileUtils::getFileNameWithoutPath(filename.toStdString()));
 		progressDialog.setupForNewModel(vis::CONSTANTS::VERTEX_CLOUD,0);
 		progressDialog.show();
@@ -532,6 +535,7 @@ void Visualizador::getLoadedModelFromLoadingStrategy(){
 		this->model = loaded;
 		setupEvaluationStrategiesStatics();
 		this->customGLViewer->resetCameraPosition();
+        this->customGLViewer->refreshHelpers();
 		this->selectionTableView.refreshSelectedElementsTable();
 		enableAndDisableWidgets();
 		progressDialog.stageComplete(ModelLoadingProgressDialog::CAMARON_ELEMENTS_CONFIGURATED);
@@ -790,4 +794,9 @@ void Visualizador::fixDockWidgetPositions(){
 		dock->move(QPoint(dock->geometry().topLeft().x(),accum));
 		accum+=i->first;
 	}
+}
+
+void Visualizador::showAxesChanged(bool value){
+    this->customGLViewer->setAxesVisible(value);
+    this->customGLViewer->forceReRendering();
 }

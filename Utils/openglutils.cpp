@@ -195,10 +195,10 @@ void OpenGLUtils::getDepthStencilTextureToFile(std::string filename,
 	glEnable(GL_TEXTURE_2D);
 	std::cout << "Texture DepthStencil "<<filename<<", size: (" << width<<", "<<height<<")"<<std::endl;
 	glBindTexture(GL_TEXTURE_2D,texturehandle);
-//	if(stencilValue)
-//		glTexParameteri(GL_TEXTURE_2D,GL_DEPTH_STENCIL_TEXTURE_MODE,GL_STENCIL_INDEX);
-//	else
-//		glTexParameteri(GL_TEXTURE_2D,GL_DEPTH_STENCIL_TEXTURE_MODE,GL_DEPTH_COMPONENT);
+	if(stencilValue)
+		glTexParameteri(GL_TEXTURE_2D,GL_DEPTH_STENCIL_TEXTURE_MODE,GL_STENCIL_INDEX);
+	else
+		glTexParameteri(GL_TEXTURE_2D,GL_DEPTH_STENCIL_TEXTURE_MODE,GL_DEPTH_COMPONENT);
 	glGetTexImage(GL_TEXTURE_2D,0,GL_DEPTH_STENCIL,GL_UNSIGNED_INT_24_8,texContent);
 	//glGetTexImage(GL_TEXTURE_2D,0,GL_DEPTH_STENCIL,GL_UNSIGNED_BYTE,texContent);
 	for(int i = 0;i<sizet;++i)

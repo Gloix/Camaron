@@ -9,7 +9,7 @@ QT       += core gui
 QT       += opengl
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = VisualizadorQT
+TARGET = Camaron
 TEMPLATE = app
 
 QMAKE_CXXFLAGS += -std=c++0x -U__STRICT_ANSI__

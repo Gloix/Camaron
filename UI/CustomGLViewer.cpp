@@ -304,7 +304,7 @@ void CustomGLViewer::paintOpenGl3DScene(){
 				ShaderUtils::setUniformTexture(weightedAverageProgram,"TexColorsDepth",1);
 				glActiveTexture(GL_TEXTURE0+1);
 				glBindTexture(GL_TEXTURE_2D, averageOITdepthStencilTextureHandle);
-//				glTexParameteri(GL_TEXTURE_2D,GL_DEPTH_STENCIL_TEXTURE_MODE,GL_STENCIL_INDEX);
+				glTexParameteri(GL_TEXTURE_2D,GL_DEPTH_STENCIL_TEXTURE_MODE,GL_STENCIL_INDEX);
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -429,7 +429,7 @@ void CustomGLViewer::paintOpenGl3DScene(){
 				ShaderUtils::setUniformTexture(weightedAverageProgram,"TexColorsDepth",1);
 				glActiveTexture(GL_TEXTURE0+1);
 				glBindTexture(GL_TEXTURE_2D, averageOITdepthStencilTextureHandle);
-//				glTexParameteri(GL_TEXTURE_2D,GL_DEPTH_STENCIL_TEXTURE_MODE,GL_STENCIL_INDEX);
+				glTexParameteri(GL_TEXTURE_2D,GL_DEPTH_STENCIL_TEXTURE_MODE,GL_STENCIL_INDEX);
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);

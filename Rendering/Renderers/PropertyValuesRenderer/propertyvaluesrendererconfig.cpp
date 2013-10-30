@@ -15,22 +15,6 @@ PropertyValuesRendererConfig::PropertyValuesRendererConfig(QWidget *parent) :
 	this->readConfig();
 }
 //Fill combobox with evaluation strategies
-//void PropertyValuesRendererConfig::fillEvaluationStrategiesComboBox(){
-//	typedef std::map<unsigned char, EvaluationStrategy*>::iterator it_type;
-//	int nitems = 0;
-//	for(it_type iterator = evaluationStrategyRegistry->getRegistryMap()->begin(); iterator != evaluationStrategyRegistry->getRegistryMap()->end(); iterator++) {
-//		EvaluationStrategy* p = iterator->second;
-//		if(!p||!p->hasStatics())
-//			continue;
-//		int key = (int)iterator->first;
-//		this->ui->comboBox_evaluations->addItem(p->getName(), QVariant(key));
-//		if(p->hasQIcon())
-//			ui->comboBox_evaluations->setItemIcon(nitems,*p->getEvaluationStrategyQIcon());
-//		nitems++;
-//	}
-//}
-
-//Fill combobox with evaluation strategies
 void PropertyValuesRendererConfig::fillEvaluationStrategiesComboBox(){
     typedef std::map<float, unsigned char>::iterator it_type;
     int nitems = 0;
@@ -46,7 +30,6 @@ void PropertyValuesRendererConfig::fillEvaluationStrategiesComboBox(){
         nitems++;
     }
 }
-
 PropertyValuesRendererConfig::~PropertyValuesRendererConfig()
 {
 	delete ui;

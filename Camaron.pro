@@ -161,7 +161,9 @@ SOURCES += main.cpp\
     ModelLoading/modelloadingplylw.cpp \
     Rendering/Renderers/SceneHelpers.cpp \
     Rendering/Renderers/HeightRenderer/heightrendererconfig.cpp \
-    Rendering/Renderers/HeightRenderer/heightrenderer.cpp
+    Rendering/Renderers/HeightRenderer/heightrenderer.cpp \
+    EvaluationStrategies/minimuminternalangle.cpp \
+    EvaluationStrategies/maximuminternalangle.cpp
 
 HEADERS  += visualizador.h \
     Common/Constants.h \
@@ -313,7 +315,9 @@ HEADERS  += visualizador.h \
     Rendering/Renderers/SceneHelpers.h \
     Rendering/Renderers/HeightRenderer/heightrendererconfig.h \
     Rendering/Renderers/HeightRenderer/heightrenderer.h \
-    Rendering/SimpleShaders/SimpleShader.h
+    Rendering/SimpleShaders/SimpleShader.h \
+    EvaluationStrategies/minimuminternalangle.h \
+    EvaluationStrategies/maximuminternalangle.h
 
 FORMS    += visualizador.ui \
     Rendering/Renderers/ModelMainRenderer/mainrendererconfig.ui \

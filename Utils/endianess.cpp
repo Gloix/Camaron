@@ -1,7 +1,7 @@
 #include "Utils/endianess.h"
 
-const unsigned char Endianess::BIG_ENDIAN = 0;
-const unsigned char Endianess::LITTLE_ENDIAN = 1;
+const unsigned char Endianess::BIG_ENDIAN_CAMARON = 0;
+const unsigned char Endianess::LITTLE_ENDIAN_CAMARON = 1;
 
 Endianess::Endianess()
 {
@@ -16,5 +16,5 @@ bool Endianess::isBigEndian(){
 }
 
 unsigned char Endianess::findEndianness(){
-	return (Endianess::isBigEndian())?Endianess::BIG_ENDIAN:Endianess::LITTLE_ENDIAN;
+	return (Endianess::isBigEndian())?Endianess::BIG_ENDIAN_CAMARON:Endianess::LITTLE_ENDIAN_CAMARON;
 }

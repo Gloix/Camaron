@@ -27,8 +27,8 @@ bool ModelLoadingVisF::validate(std::string filename)
 	file.read((char*)&n,sizeof(int));
 	file.close();
 	return n<=2 && n>0 &&
-			(endianness == Endianess::BIG_ENDIAN ||
-			 endianness == Endianess::LITTLE_ENDIAN);
+			(endianness == Endianess::BIG_ENDIAN_CAMARON ||
+			 endianness == Endianess::LITTLE_ENDIAN_CAMARON);
 
 }
 Model* ModelLoadingVisF::load(std::string filename){

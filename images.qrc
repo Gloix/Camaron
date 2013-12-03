@@ -19,5 +19,6 @@
         <file>UI/Images/About/camaronx100.jpg</file>
         <file>UI/Images/About/collagecamaron.png</file>
         <file>UI/RenderElementsIds/numberTexture.raw</file>
+        <file>UI/Images/EvaluationStrategyIcons/tetrahedron.png</file>
     </qresource>
 </RCC>

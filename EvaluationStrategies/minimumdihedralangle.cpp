@@ -7,7 +7,7 @@ MinimumDihedralAngle::MinimumDihedralAngle():
 	EvaluationStrategy("Minimum Dihedral Angle", "Minimum Dihedral Angle")
 {
     //weight = POLYHEDRON_CRITERIA_WEIGHT_BASE + 0.565f;
-	weight = TRIANGLE_CRITERIA_WEIGHT_BASE + 0.5f;
+	weight = POLYGON_CRITERIA_WEIGHT_BASE + 0.4f;
 }
 MinimumDihedralAngle::~MinimumDihedralAngle()
 {

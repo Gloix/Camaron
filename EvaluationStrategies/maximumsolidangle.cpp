@@ -6,7 +6,7 @@
 MaximumSolidAngle::MaximumSolidAngle():
 	EvaluationStrategy("Maximum Solid Angle", "Maximum Solid Angle")
 {
-	weight = POLYHEDRON_CRITERIA_WEIGHT_BASE + 0.670f;
+	weight = POLYHEDRON_CRITERIA_WEIGHT_BASE + 0.4f;
 }
 MaximumSolidAngle::~MaximumSolidAngle()
 {

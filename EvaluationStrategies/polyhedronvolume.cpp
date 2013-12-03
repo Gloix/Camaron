@@ -5,7 +5,7 @@ PolyhedronVolume::PolyhedronVolume():
 	EvaluationStrategy("Volume", "Volume")
 {
     //weight = POLYHEDRON_CRITERIA_WEIGHT_BASE + 0.5f;
-    weight = POLYHEDRON_CRITERIA_WEIGHT_BASE + 0.57f;
+	weight = POLYHEDRON_CRITERIA_WEIGHT_BASE + 0.2f;
 }
 
 PolyhedronVolume::~PolyhedronVolume()

@@ -4,7 +4,7 @@
 PolygonArea::PolygonArea():
 	EvaluationStrategy("Area", "Area")
 {
-	weight = POLYGON_CRITERIA_WEIGHT_BASE + 0.5f;
+	weight = POLYGON_CRITERIA_WEIGHT_BASE + 0.1f;
 }
 
 PolygonArea::~PolygonArea()

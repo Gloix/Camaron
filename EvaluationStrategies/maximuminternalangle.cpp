@@ -9,7 +9,7 @@ MaximumInternalAngle::MaximumInternalAngle():
 	EvaluationStrategy("Maximum Internal Angle", "Maximum Internal Angle")
 {
 	//weight = POLYHEDRON_CRITERIA_WEIGHT_BASE + 0.565f;
-	weight = TRIANGLE_CRITERIA_WEIGHT_BASE + 0.615f;
+	weight = POLYGON_CRITERIA_WEIGHT_BASE + 0.2f;
 }
 MaximumInternalAngle::~MaximumInternalAngle()
 {

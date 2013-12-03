@@ -5,7 +5,7 @@ TriangleQualityMeasure1::TriangleQualityMeasure1():
 	EvaluationStrategy("Bhatia and Lawrence TM","Bhatia and Lawrence")
 {
     //weight = TRIANGLE_CRITERIA_WEIGHT_BASE + 0.5f;
-    weight = POLYHEDRON_CRITERIA_WEIGHT_BASE + 0.5f;
+	weight = TRIANGLE_CRITERIA_WEIGHT_BASE + 0.5f;
 }
 
 float TriangleQualityMeasure1::value( vis::Triangle* m ) {

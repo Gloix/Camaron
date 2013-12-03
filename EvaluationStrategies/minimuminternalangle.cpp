@@ -9,7 +9,7 @@ MinimumInternalAngle::MinimumInternalAngle():
 	EvaluationStrategy("Minimum Internal Angle", "Minimum Internal Angle")
 {
 	//weight = POLYHEDRON_CRITERIA_WEIGHT_BASE + 0.565f;
-	weight = TRIANGLE_CRITERIA_WEIGHT_BASE + 0.613f;
+	weight = POLYGON_CRITERIA_WEIGHT_BASE + 0.2f;
 }
 MinimumInternalAngle::~MinimumInternalAngle()
 {

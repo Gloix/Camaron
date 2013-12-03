@@ -164,7 +164,9 @@ SOURCES += main.cpp\
     Rendering/Renderers/HeightRenderer/heightrenderer.cpp \
     EvaluationStrategies/minimuminternalangle.cpp \
     EvaluationStrategies/maximuminternalangle.cpp \
-    EvaluationStrategies/tetrahedronradiusedgeratio.cpp
+    EvaluationStrategies/tetrahedronradiusedgeratio.cpp \
+    EvaluationStrategies/polygonverticescount.cpp \
+    EvaluationStrategies/polyhedronpolygonscount.cpp
 
 HEADERS  += visualizador.h \
     Common/Constants.h \
@@ -319,7 +321,9 @@ HEADERS  += visualizador.h \
     Rendering/SimpleShaders/SimpleShader.h \
     EvaluationStrategies/minimuminternalangle.h \
     EvaluationStrategies/maximuminternalangle.h \
-    EvaluationStrategies/tetrahedronradiusedgeratio.h
+    EvaluationStrategies/tetrahedronradiusedgeratio.h \
+    EvaluationStrategies/polygonverticescount.h \
+    EvaluationStrategies/polyhedronpolygonscount.h
 
 FORMS    += visualizador.ui \
     Rendering/Renderers/ModelMainRenderer/mainrendererconfig.ui \

@@ -6,7 +6,7 @@
 MinimumSolidAngle::MinimumSolidAngle():
 	EvaluationStrategy("Minimum Solid Angle", "Minimum Solid Angle")
 {
-	weight = POLYHEDRON_CRITERIA_WEIGHT_BASE + 0.688f;
+	weight = POLYHEDRON_CRITERIA_WEIGHT_BASE + 0.3f;
 }
 MinimumSolidAngle::~MinimumSolidAngle()
 {

@@ -5,7 +5,7 @@
 #include "Model/Element/Vertex.h"
 #include <QIcon>
 TetrahedronRadiusEdgeRatio::TetrahedronRadiusEdgeRatio():
-	EvaluationStrategy("Tetra. Radius Ratio", "Tetra. Radius Ratio")
+	EvaluationStrategy("Tetrahedron Radius Ratio", "Tetrahedron Radius Ratio")
 {
 	weight = POLYHEDRON_CRITERIA_WEIGHT_BASE + 2.0f;
 }

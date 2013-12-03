@@ -2,7 +2,7 @@
 #include <QIcon>
 #include "Model/Element/Polyhedron.h"
 PolyhedronPolygonsCount::PolyhedronPolygonsCount():
-	EvaluationStrategy("Polygons Count", "Polygons Count")
+	EvaluationStrategy("Faces Count", "Faces Count")
 {
 	weight = POLYHEDRON_CRITERIA_WEIGHT_BASE + 0.9f;
 }

@@ -29,7 +29,7 @@ void MainRendererConfig::readConfig(){
 	this->wireFrameColors.z = QtUtils::readFloatFromQText(ui->lineEdit_MR_b->text(),defaultColorValue);
 	this->wireFrameColors.w = QtUtils::readFloatFromQText(ui->lineEdit_MR_a->text(),defaultColorValue);
 	this->wireFrameLineWidthM = QtUtils::readIntFromQText(ui->lineEdit_MR_w->text(),1);
-	this->drawWireFrame =  Qt::Checked == this->ui->checkBox_MR_draw_w->checkState();
+	this->drawWireFrame =  this->ui->checkBox_MR_draw_w->isChecked();
 
 	//selected colors
 	this->selectedElementColors.x = QtUtils::readFloatFromQText(ui->lineEdit_MR_sr->text(),defaultColorValue);
@@ -51,5 +51,5 @@ void MainRendererConfig::readConfig(){
 	depthPeelingLayers = QtUtils::readIntFromQText(ui->line_n_layers->text(),1);
 }
 void MainRendererConfig::depthPeelingNotAvailable(){
-	ui->widget_depth_peeling->setEnabled(false);
+	ui->checkBox_depth_peeling->setEnabled(false);
 }

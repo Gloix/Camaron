@@ -1,4 +1,4 @@
-﻿#version 400
+#version 400
 in vec3 in_Position;
 
 out float height_value;

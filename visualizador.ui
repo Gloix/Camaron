@@ -29,6 +29,9 @@
    <iconset resource="images.qrc">
     <normaloff>:/Images/UI/Images/Icon/shrimp32x32.png</normaloff>:/Images/UI/Images/Icon/shrimp32x32.png</iconset>
   </property>
+  <property name="autoFillBackground">
+   <bool>true</bool>
+  </property>
   <property name="styleSheet">
    <string notr="true">#sphereIntersectionDataWidget, #cubeIntersectionDataWidget,#fromFileIntersectionWidget, #widgetUnionNew {
 	background-color: rgb(228, 232, 255) ;
@@ -41,6 +44,9 @@
      padding: 6px;
 
  }
+#Visualizador{
+	background-color: rgb(255, 255, 255);
+}
 
 .QFrame{
 background-color: rgb(255, 255, 255);
@@ -73,7 +79,7 @@ background-color: rgb(255, 255, 255);
      <x>0</x>
      <y>0</y>
      <width>876</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuVisualizador">
@@ -150,7 +156,6 @@ background-color: rgb(255, 255, 255);
     <bool>false</bool>
    </attribute>
   </widget>
-
   <widget class="QDockWidget" name="dockWidget_evaluation_strategies">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
@@ -245,7 +250,6 @@ background-color: rgb(255, 255, 255);
     </layout>
    </widget>
   </widget>
-
   <widget class="QDockWidget" name="dockWidget_selection_strategies">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -365,7 +369,6 @@ background-color: rgb(255, 255, 255);
     </layout>
    </widget>
   </widget>
-
   <widget class="QDockWidget" name="dockWidget_renderers">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
@@ -499,7 +502,6 @@ background-color: rgb(255, 255, 255);
     </layout>
    </widget>
   </widget>
-
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpen">
    <property name="text">

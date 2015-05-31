@@ -57,7 +57,7 @@ void PropertyValuesRendererConfig::readConfig(){
 	this->wireFrameColors.z = QtUtils::readFloatFromQText(ui->lineEdit_wf_b->text(),0.0f);
 	this->wireFrameColors.w = QtUtils::readFloatFromQText(ui->lineEdit_wf_a->text(),1.0f);
 	this->wireFrameLineWidth = QtUtils::readIntFromQText(ui->lineEdit_wf_w->text(),0);
-	this->drawWireFrame =  Qt::Checked == this->ui->checkBox_MR_draw_w->checkState();
+	this->drawWireFrame = this->ui->checkBox_MR_draw_w->isChecked();
 
 	//Wire frame selected colors
 	this->wireFrameSelectedColors.x = QtUtils::readFloatFromQText(ui->lineEdit_sel_r->text(),1.0f);

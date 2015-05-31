@@ -1,4 +1,4 @@
-﻿#version 400
+#version 400
 out vec4 out_Color;
 
 in float height_value;

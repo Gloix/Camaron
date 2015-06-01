@@ -64,7 +64,7 @@ CustomGLViewer::~CustomGLViewer()
 		glDeleteTextures(1,&averageOITbackgroundTextureHandle);
 	if(averageOITdepthStencilTextureHandle)
 		glDeleteTextures(1,&averageOITdepthStencilTextureHandle);
-    SceneHelpers::reset();
+	SceneHelpers::reset();
 }
 void CustomGLViewer::setRenderer(Renderer * r){
 	this->renderer = r;
@@ -171,7 +171,7 @@ void CustomGLViewer::paintUsingRenderers(){
 	for(std::vector<Renderer*>::size_type i = 0;i<second.size();i++)
 		if(second[i]!=renderer)second[i]->draw(this->rmodel);
 
-    SceneHelpers::getInstance()->drawHelpers(this->rmodel);
+	SceneHelpers::getInstance()->drawHelpers(this->rmodel);
 }
 #include <fstream>
 void CustomGLViewer::paintOpenGl3DScene(){
@@ -518,7 +518,7 @@ void CustomGLViewer::paintFrameRateDisplay(QPainter &painter,float framerate){
 }
 
 void CustomGLViewer::refreshHelpers(){
-    SceneHelpers::reset();
+	SceneHelpers::reset();
 }
 
 #include "Utils/openglutils.h"
@@ -544,7 +544,7 @@ void CustomGLViewer::paintEvent(QPaintEvent *)
 	else{
 		float secsTot = crr.getTranscurredSeconds();
 		paintFrameRateDisplay(painter,1.0f/secsTot);
-		std::cout << "CustomGLViewer::paintEvent: " << 1.0f/secsTot << " fps" << std::endl;
+		// std::cout << "CustomGLViewer::paintEvent: " << 1.0f/secsTot << " fps" << std::endl;
 	}
 	paintSelectBoxOverlay(painter);
 	painter.end();
@@ -561,8 +561,8 @@ void CustomGLViewer::applyRendererConfigChanges(){
 
 void CustomGLViewer::resizeGL(int width, int height)
 {
-	float near_cl = -0.5f;
-	float far_cl = 15.0f;
+	float near_cl = -150.0f;
+	float far_cl = 150.0f;
 	glViewport(0,0,width,height);
 	viewportSize = glm::vec2(width,height);
 	rmodel->setViewPortSize(glm::vec2(width,height),
@@ -573,7 +573,9 @@ void CustomGLViewer::resizeGL(int width, int height)
 	}
 }
 void CustomGLViewer::saveRenderedModelAsQImage(){
+	glReadBuffer(GL_FRONT);
 	screenshot = grabFrameBuffer( );
+	//glReadBuffer(GL_BACK);
 }
 void CustomGLViewer::mousePressEvent(QMouseEvent *event)
 {
@@ -769,6 +771,6 @@ void CustomGLViewer::resizeOITFBOTextures(){
 }
 
 void CustomGLViewer::setAxesVisible(bool value){
-    SceneHelpers::getInstance()->setAxesVisible(value);
+	SceneHelpers::getInstance()->setAxesVisible(value);
 
 }

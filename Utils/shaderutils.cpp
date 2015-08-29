@@ -187,6 +187,14 @@ bool ShaderUtils::setUniform(GLuint program,const char* uniformName, float val){
 	}
 	return false;
 }
+bool ShaderUtils::setUniform(GLuint program,const char* uniformName, std::vector<float> val){
+    GLint loc = glGetUniformLocation(program,uniformName);
+    if(loc >= 0){
+        glUniform1fv(loc, val.size(),val.data());
+        return true;
+    }
+    return false;
+}
 bool ShaderUtils::setUniform(GLuint program,const char* uniformName, int val){
 	GLint loc = glGetUniformLocation(program,uniformName);
 	if(loc >= 0){

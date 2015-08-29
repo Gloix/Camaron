@@ -21,6 +21,9 @@ VertexCloud::~VertexCloud()
 {
 	for( std::vector<vis::Vertex*>::size_type i = 0; i != vertices.size(); i++ )
 		delete vertices[i];
+
+    for( std::vector<VScalarDef*>::size_type i = 0; i != scalarDefs.size(); i++ )
+        delete scalarDefs[i];
 }
 
 int VertexCloud::getVerticesCount() {
@@ -39,4 +42,13 @@ bool VertexCloud::is2D(){
 void VertexCloud::set2D(bool b){
 	_2d = b;
 }
+
+void VertexCloud::addScalarDef(VScalarDef* scalarDef) {
+    scalarDefs.push_back(scalarDef);
+}
+
+std::vector<VScalarDef*> VertexCloud::getScalarDefs() {
+    return scalarDefs;
+}
+
 DOUBLE_DISPATCH_MODEL_DEF(VertexCloud)

@@ -37,6 +37,7 @@ Model* ModelLoadingPly::load(std::string filename){
 
 	PolygonMesh* loaded = new PolygonMesh(filename);
 	VertexCloud* vcloud = 0;
+    vertexProperties.clear();
 	try{
 		if(readHeader(loaded)){
 			if(loaded->getPolygonsCount()){
@@ -80,6 +81,14 @@ Model* ModelLoadingPly::load(std::string filename){
 		fileSize = 0;
 		throw ex;
 	}
+    // Delete x, y and z properties. The rest will be held by the Model object.
+    for (std::vector<VScalarDef*>::size_type i = 0; i < vertexProperties.size() ; i++ ) {
+        if( !strcmp(vertexProperties.at(i)->name, "x\0") ||
+                !strcmp(vertexProperties.at(i)->name, "y\0") ||
+                !strcmp(vertexProperties.at(i)->name, "z\0")) {
+            delete vertexProperties.at(i);
+        }
+    }
 
 	delete loaded;
 	delete[] fileBuffer;
@@ -109,31 +118,41 @@ bool ModelLoadingPly::readHeader(PolygonMesh* polygonMesh)
 			}
 		}else if( !strcmp( word, "property\0" ) ){
 			//read type
-			int propertySize = 0;
+            VScalarDef* scalarDef = new VScalarDef;
+            //int propertySize = 0;
 			scanner.readString(fileBuffer, word,false);
 			if( !strcmp( word, "char\0" ) ||
 					!strcmp( word, "uchar\0") ||
 					!strcmp( word, "uint8\0")||
 					!strcmp( word, "int8\0")){
-				propertySize = sizeof(char);
+                //propertySize = sizeof(char);
+                scalarDef->type = 'c';
 			}
 			else if( !strcmp( word, "int\0" ) ||
 					 !strcmp( word, "float\0") ||
 					 !strcmp( word, "uint\0")||
 					 !strcmp( word, "float32\0")||
 					 !strcmp( word, "int32\0")){
-				propertySize = sizeof(int);
+                //propertySize = sizeof(int);
+                scalarDef->type = 'f';
 			}
 			//property name
 			if(readingVertexProperties){
-				scanner.readString(fileBuffer, word,false);
-				if( strcmp( word, "x\0" ) &&
-						strcmp( word, "y\0")&&
-						strcmp( word, "z\0")){
+                //scanner.readString(fileBuffer, word,false);
+                scanner.readString(fileBuffer, scalarDef->name, false);
+                if( strcmp( scalarDef->name, "x\0" ) &&
+                        strcmp( scalarDef->name, "y\0") &&
+                        strcmp( scalarDef->name, "z\0")){
+                    polygonMesh->addScalarDef(scalarDef);
+                }
+                //if( strcmp( word, "x\0" ) &&
+                //		strcmp( word, "y\0")&&
+                //		strcmp( word, "z\0")){
 					//not a coordinate
-					numberOfBytesInVertexPropertiesToIgnore += propertySize;
-				}
+                    //numberOfBytesInVertexPropertiesToIgnore += propertySize;
+                //}
 			}
+            vertexProperties.push_back(scalarDef);
 
 		}else if( !strcmp( word, "end_header\0" ) ){
 			break;
@@ -196,23 +215,38 @@ bool ModelLoadingPly::readVertices( VertexCloud* pol ) {
 	v.clear();
 	v.reserve( pol->getVerticesCount() );
 	bounds.resize( 6 );
-	float x = 0.0f;
-	scanner.readFloat(fileBuffer, &x );
-	float y = 0.0f;
-	scanner.readFloat(fileBuffer, &y );
-	float z =0.0f;
-	scanner.readFloat(fileBuffer, &z );
-	v.push_back( new vis::Vertex( 0, x, y, z ) );
+
+//	float x = 0.0f;
+//    //scanner.readFloat(fileBuffer, &x );
+//	float y = 0.0f;
+//    //scanner.readFloat(fileBuffer, &y );
+//    float z = 0.0f;
+//    //scanner.readFloat(fileBuffer, &z );
+//    for( uint i = 0; i < vertexProperties.size(); i++ ) {
+//        if( !strcmp(vertexProperties.at(i).name, "x\0")) {
+//            scanner.readFloat(fileBuffer, &x);
+//        } else if( !strcmp(vertexProperties.at(i).name, "y\0")) {
+//            scanner.readFloat(fileBuffer, &y);
+//        } else if( !strcmp(vertexProperties.at(i).name, "z\0")) {
+//            scanner.readFloat(fileBuffer, &z);
+//        }
+//    }
+    float x, y, z;
+    v.push_back( readVertex(0, x, y, z) );
+    //v.push_back( new vis::Vertex( 0, x, y, z ) );
 	bounds[0] = bounds[3] = x;
 	bounds[1] = bounds[4] = y;
 	bounds[2] = bounds[5] = z;
 	scanner.skipToNextLine(fileBuffer);
 
 	for( int i = 1; i < pol->getVerticesCount(); i++ ) {
-		scanner.readFloat(fileBuffer, &x );
-		scanner.readFloat(fileBuffer, &y );
-		scanner.readFloat(fileBuffer, &z );
-		v.push_back( new vis::Vertex( i, x, y, z ) );
+//		scanner.readFloat(fileBuffer, &x );
+//		scanner.readFloat(fileBuffer, &y );
+//		scanner.readFloat(fileBuffer, &z );
+//		v.push_back( new vis::Vertex( i, x, y, z ) );
+
+        v.push_back( readVertex(i, x, y, z) );
+
 		if( bounds[0] > x )
 			bounds[0] = x;
 		else if( bounds[3] < x )
@@ -241,6 +275,39 @@ bool ModelLoadingPly::readVertices( VertexCloud* pol ) {
 #endif
 	return true;
 }
+
+vis::Vertex* ModelLoadingPly::readVertex(int id, float& x, float& y, float& z) {
+    x = 0.0f;
+    //scanner.readFloat(fileBuffer, &x );
+    y = 0.0f;
+    //scanner.readFloat(fileBuffer, &y );
+    z = 0.0f;
+    //scanner.readFloat(fileBuffer, &z );
+    std::vector<VScalar> properties;
+    for( std::vector<VScalar>::size_type i = 0; i < vertexProperties.size(); i++ ) {
+        if( !strcmp(vertexProperties.at(i)->name, "x\0")) {
+            scanner.readFloat(fileBuffer, &x);
+        } else if( !strcmp(vertexProperties.at(i)->name, "y\0")) {
+            scanner.readFloat(fileBuffer, &y);
+        } else if( !strcmp(vertexProperties.at(i)->name, "z\0")) {
+            scanner.readFloat(fileBuffer, &z);
+        } else {
+            VScalar vprop;
+            if(vertexProperties.at(i)->type == 'f') {
+                scanner.readFloat(fileBuffer, &vprop.fvalue);
+            } else if (vertexProperties.at(i)->type == 'i') {
+                scanner.readInt(fileBuffer, &vprop.ivalue);
+            }
+            properties.push_back(vprop);
+        }
+    }
+    vis::Vertex* vertex = new vis::Vertex(id, x, y, z);
+    for( unsigned int i = 0; i < properties.size(); i++) {
+        vertex->addScalarProperty(properties[i]);
+    }
+    return vertex;
+}
+
 bool ModelLoadingPly::readPolygonsBinary( PolygonMesh* pol ) {
 	unsigned char npf;
 	unsigned int pi;
@@ -301,7 +368,7 @@ bool ModelLoadingPly::readVerticesBinary( VertexCloud* pol ) {
 	bounds[0] = bounds[3] = x;
 	bounds[1] = bounds[4] = y;
 	bounds[2] = bounds[5] = z;
-	scanner.move(numberOfBytesInVertexPropertiesToIgnore);
+    scanner.move(numberOfBytesInVertexPropertiesToIgnore);
 	for( int i = 1; i < pol->getVerticesCount(); i++ ) {
 		scanner.readBinary(fileBuffer, &x );
 		scanner.readBinary(fileBuffer, &y );

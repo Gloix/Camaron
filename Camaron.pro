@@ -166,7 +166,9 @@ SOURCES += main.cpp\
     EvaluationStrategies/maximuminternalangle.cpp \
     EvaluationStrategies/tetrahedronradiusedgeratio.cpp \
     EvaluationStrategies/polygonverticescount.cpp \
-    EvaluationStrategies/polyhedronpolygonscount.cpp
+    EvaluationStrategies/polyhedronpolygonscount.cpp \
+    Rendering/Renderers/IsolineRenderer/isolinerenderer.cpp \
+    Rendering/Renderers/IsolineRenderer/isolinerendererconfig.cpp
 
 HEADERS  += visualizador.h \
     Common/Constants.h \
@@ -323,7 +325,9 @@ HEADERS  += visualizador.h \
     EvaluationStrategies/maximuminternalangle.h \
     EvaluationStrategies/tetrahedronradiusedgeratio.h \
     EvaluationStrategies/polygonverticescount.h \
-    EvaluationStrategies/polyhedronpolygonscount.h
+    EvaluationStrategies/polyhedronpolygonscount.h \
+    Rendering/Renderers/IsolineRenderer/isolinerendererconfig.h \
+    Rendering/Renderers/IsolineRenderer/isolinerenderer.h
 
 FORMS    += visualizador.ui \
     Rendering/Renderers/ModelMainRenderer/mainrendererconfig.ui \
@@ -346,6 +350,7 @@ FORMS    += visualizador.ui \
     Rendering/Renderers/ConvexGeometryIntersectionRenderer/convexgeometryintersectionconfigselection.ui \
     UI/rendererslist.ui \
     Rendering/Renderers/GlassRenderer/glassrendererconfig.ui \
+    Rendering/Renderers/IsolineRenderer/isolinerendererconfig.ui \
     Rendering/Renderers/ShaderCommonFunctions/phongconfig.ui \
     Rendering/Renderers/ShaderCommonFunctions/elementdrawnoptionconfig.ui \
     Rendering/Renderers/ShaderCommonFunctions/phong1dconfig.ui \
@@ -404,7 +409,10 @@ OTHER_FILES += \
     Rendering/Renderers/CartesianCoordinatesAxis/cca.vert \
     Rendering/Renderers/CartesianCoordinatesAxis/cca.frag \
     Rendering/Renderers/HeightRenderer/height_shader.vert \
-    Rendering/Renderers/HeightRenderer/height_shader.frag
+    Rendering/Renderers/HeightRenderer/height_shader.frag \
+    Rendering/Renderers/IsolineRenderer/ir.vert \
+    Rendering/Renderers/IsolineRenderer/ir.frag \
+    Rendering/Renderers/IsolineRenderer/ir.geom
 RESOURCES += \
     images.qrc \
     shaders.qrc

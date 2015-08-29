@@ -4,7 +4,10 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-
+union VScalar{
+    int ivalue;
+    float fvalue;
+};
 namespace vis{
 class Polygon;
 class Vertex: public Element {
@@ -17,6 +20,8 @@ class Vertex: public Element {
 		void setNormal(glm::vec3);
 		int getPos();
 		void setPos(int);
+        std::vector<VScalar>& getScalarProperties();
+        void addScalarProperty(VScalar);
 		bool isAtSurface();
 		std::vector<vis::Polygon*>& getVertexPolygons();
 		static const int NULL_POS = -999;
@@ -27,6 +32,7 @@ class Vertex: public Element {
 		glm::vec3 normal;
 		int pos;//store it's position in the vertices array (not always the same as the id)
 		std::vector<vis::Polygon*> polygons;
+        std::vector<VScalar> scalarProperties;
 };
 }
 #endif // VERTEX_H

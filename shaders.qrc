@@ -45,5 +45,8 @@
         <file>Rendering/Renderers/CartesianCoordinatesAxis/cca.vert</file>
         <file>Rendering/Renderers/HeightRenderer/height_shader.frag</file>
         <file>Rendering/Renderers/HeightRenderer/height_shader.vert</file>
+        <file>Rendering/Renderers/IsolineRenderer/ir.frag</file>
+        <file>Rendering/Renderers/IsolineRenderer/ir.vert</file>
+        <file>Rendering/Renderers/IsolineRenderer/ir.geom</file>
     </qresource>
 </RCC>

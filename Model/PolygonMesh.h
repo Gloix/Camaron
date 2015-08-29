@@ -6,6 +6,7 @@
 namespace vis{
 class Polygon;
 }
+
 class PolygonMesh: public VertexCloud
 {
 	public:

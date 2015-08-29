@@ -44,6 +44,7 @@ class ShaderUtils
 		static bool setUniform(GLuint program,const char* uniformName, int val);
 		static bool setUniform(GLuint program,const char* uniformName, float val);
 		static bool setUniform(GLuint program,const char* uniformName, bool val);
+        static bool setUniform(GLuint program,const char* uniformName, std::vector<float> val);
 		static bool setUniformTexture(GLuint program,const char* uniformName, GLuint val);
 
 		//buffers

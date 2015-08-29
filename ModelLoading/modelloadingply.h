@@ -2,9 +2,11 @@
 #define MODELLOADINGPLY_H
 #include "Utils/chararrayscanner.h"
 #include "ModelLoading/ModelLoadingStrategy.h"
+#include "Model/Element/Vertex.h"
 class PolygonMesh;
 class VertexCloud;
 class Model;
+struct VScalarDef;
 
 class ModelLoadingPly: public ModelLoadingStrategy
 {
@@ -18,10 +20,12 @@ class ModelLoadingPly: public ModelLoadingStrategy
 		bool readBody( PolygonMesh* );
 		bool readPolygons( PolygonMesh* );
 		bool readVertices( VertexCloud * );
+        vis::Vertex* readVertex(int, float&, float&, float&);
 		bool readPolygonsBinary( PolygonMesh* );
 		bool readVerticesBinary( VertexCloud * );
 		CharArrayScanner scanner;
 		int numberOfBytesInVertexPropertiesToIgnore;
+        std::vector<VScalarDef*> vertexProperties;
 		bool isBinary;
 		bool bigEndian;
 };

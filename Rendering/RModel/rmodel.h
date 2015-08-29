@@ -12,6 +12,7 @@ class LightWeightVertexCloud;
 class LightWeightPolygonMesh;
 class LightWeightPolyhedronMesh;
 class Model;
+struct VScalarDef;
 class RModel
 {
 	public:
@@ -27,6 +28,7 @@ class RModel
 
 		void loadVertexPolygonPolyhedronIds(PolygonMesh* mesh);
 		void loadVertexPositionAndNormals(VertexCloud* model);
+        void loadVertexScalarProperties(VertexCloud* model);
 
 		void refreshVertexAttributes(PolyhedronMesh*);
 		void refreshSelectedElements();
@@ -38,6 +40,8 @@ class RModel
 		std::vector<RVertexFlagAttribute> polygonGeoCenterFlagsAttribute;
 		std::vector<RVertexFlagAttribute> polyhedronGeoCenterFlagsAttribute;
 
+        std::vector<VScalarDef*> scalarDefs;
+
 		std::vector<float> bounds;
 
 		static const GLuint NULL_BUFFER = 0;
@@ -45,6 +49,7 @@ class RModel
 		GLuint positionDataBufferObject;
 		GLuint vertexNormalDataBufferObject;
 		GLuint vertexFlagsDataBufferObject;
+        GLuint vertexScalarDataBufferObject;
 		GLuint rmodelVertexPositionBufferObject;
 		//ids
 		GLuint polygonPolyhedronIdsBufferObject;

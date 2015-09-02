@@ -138,6 +138,7 @@ bool ModelLoadingPly::readHeader(PolygonMesh* polygonMesh)
 			}
 			//property name
 			if(readingVertexProperties){
+                vertexProperties.push_back(scalarDef);
                 //scanner.readString(fileBuffer, word,false);
                 scanner.readString(fileBuffer, scalarDef->name, false);
                 if( strcmp( scalarDef->name, "x\0" ) &&
@@ -152,8 +153,6 @@ bool ModelLoadingPly::readHeader(PolygonMesh* polygonMesh)
                     //numberOfBytesInVertexPropertiesToIgnore += propertySize;
                 //}
 			}
-            vertexProperties.push_back(scalarDef);
-
 		}else if( !strcmp( word, "end_header\0" ) ){
 			break;
 		}else if(!strcmp( word, "format\0" )){

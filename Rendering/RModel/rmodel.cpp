@@ -172,8 +172,7 @@ void RModel::loadVertexPositionAndNormals(VertexCloud* model){
 
 void RModel::loadVertexScalarProperties(VertexCloud* model){
     std::vector<float> floatContainer;
-    std::vector<VScalarDef*> scalarDefs = model->getScalarDefs();
-    int scalarDefsSize = scalarDefs.size();
+    int scalarDefsSize = model->getScalarDefs().size();
     floatContainer.resize(nVertices * scalarDefsSize);
     std::vector<vis::Vertex*>& vertices = model->getVertices();
     //coords

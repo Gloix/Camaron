@@ -6,8 +6,9 @@ class Vertex;
 }
 
 struct VScalarDef {
+    int index;
     char name [256];
-    char type; // i: int, f: float
+    std::vector<float> bounds;
 };
 class VertexCloud: public Model
 {
@@ -19,7 +20,7 @@ class VertexCloud: public Model
 		void setVerticesCount( int );
 		bool is2D();
         void set2D(bool);
-        std::vector<VScalarDef*> getScalarDefs();
+        std::vector<VScalarDef*> &getScalarDefs();
         void addScalarDef(VScalarDef*);
 
 		DOUBLE_DISPATCH_MODEL_DEC

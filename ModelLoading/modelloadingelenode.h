@@ -3,6 +3,7 @@
 #include "ModelLoading/ModelLoadingStrategy.h"
 #include "Utils/chararrayscanner.h"
 #include <unordered_map>
+struct VScalarDef;
 class ModelLoadingEleNode: public ModelLoadingStrategy
 {
 	public:
@@ -33,6 +34,7 @@ class ModelLoadingEleNode: public ModelLoadingStrategy
 		int numberOfAttributesPerNode;
 		int numberOfBoundaryMarkers;
 		std::unordered_map<int,int> indexVsPosition;
+        std::vector<VScalarDef*> vertexProperties;
 
 };
 

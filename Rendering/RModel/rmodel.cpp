@@ -24,6 +24,7 @@ RModel::RModel():
 	rmodelVertexPositionBufferObject = NULL_BUFFER;
     vertexScalarDataBufferObject = NULL_BUFFER;
 	polygonPolyhedronIdsBufferObject = NULL_BUFFER;
+    tetrahedronVertexIdsBufferObject = NULL_BUFFER;
 	scale = 1.0f;
 	modelType = vis::CONSTANTS::NO_MODEL;
 	originalModel = (Model*)0;
@@ -34,6 +35,7 @@ RModel::RModel():
 	recalculateNormal = true;
 	recalculateModelCameraSpaceScale = true;
 	perspectiveValue = 5.0f;
+    numberOfTetrahedrons=0;
 }
 RModel::~RModel(){
 	this->freeRAMFromVideoCardBuffer();
@@ -172,17 +174,17 @@ void RModel::loadVertexPositionAndNormals(VertexCloud* model){
 
 void RModel::loadVertexScalarProperties(VertexCloud* model){
     std::vector<float> floatContainer;
-    int scalarDefsSize = model->getScalarDefs().size();
+    std::vector<VScalarDef*>::size_type scalarDefsSize = model->getScalarDefs().size();
     floatContainer.resize(nVertices * scalarDefsSize);
     std::vector<vis::Vertex*>& vertices = model->getVertices();
     //coords
     for(std::vector<vis::Vertex*>::size_type i = 0;i<vertices.size();i++){
         vis::Vertex* currentVertex = vertices[i];
-        std::vector<VScalar> scalarProps = currentVertex->getScalarProperties();
+        //std::vector<VScalar> scalarProps = currentVertex->getScalarProperties();
         std::vector<int>& rmodelPos = currentVertex->getRmodelPositions();
         for(std::vector<vis::Vertex*>::size_type j = 0;j<rmodelPos.size();j++)
-            for(std::vector<VScalarDef>::size_type k = 0;k<scalarDefsSize;k++)
-                floatContainer[rmodelPos[j]*scalarDefsSize+k] = scalarProps[k].fvalue;
+            for(std::vector<VScalarDef*>::size_type k = 0;k<scalarDefsSize;k++)
+                floatContainer[rmodelPos[j]*scalarDefsSize+k] = currentVertex->getProperty(k);
     }
     vertexScalarDataBufferObject = ShaderUtils::createDataBuffer<float>(floatContainer);
 
@@ -231,12 +233,23 @@ void RModel::loadVertexPolygonPolyhedronIds(PolygonMesh* mesh){
 	vertexIdsBufferObject = ShaderUtils::createDataBuffer<int>(ids);
 }
 
+void RModel::loadTetrahedronVertexIds(PolyhedronMesh* mesh) {
+    std::vector<GLuint> ids;
+    std::vector<vis::Polyhedron*>& polyhedrons = mesh->getPolyhedrons();
+    for(std::vector<vis::Polyhedron*>::size_type i=0;i<polyhedrons.size();i++ ) {
+        PolyhedronUtils::getTetrahedronIndices(polyhedrons[i], ids);
+    }
+    numberOfTetrahedrons = ids.size()/4;
+    tetrahedronVertexIdsBufferObject = ShaderUtils::createDataBuffer<GLuint>(ids);
+}
+
 void RModel::loadRModelData(PolyhedronMesh* mesh){
 	this->loadRModelData((PolygonMesh*)mesh);
 	modelType = vis::CONSTANTS::POLYHEDRON_MESH;
 	std::vector<vis::Polyhedron*>& polyhedrons = mesh->getPolyhedrons();
 	for(std::vector<vis::Polyhedron*>::size_type i = 0;i<polyhedrons.size();i++)
 		PolyhedronUtils::setPolyhedronRModelPositions(polyhedrons[i]);
+    loadTetrahedronVertexIds(mesh);
 }
 void RModel::loadRModelData(LightWeightVertexCloud* vcloud){
 	this->freeRAMFromVideoCardBuffer();
@@ -309,6 +322,7 @@ void RModel::freeRAMFromVideoCardBuffer(){
     glDeleteBuffers(1,&this->vertexScalarDataBufferObject);
 	glDeleteBuffers(1,&rmodelVertexPositionBufferObject);
 	glDeleteBuffers(1,&polygonPolyhedronIdsBufferObject);
+    glDeleteBuffers(1,&tetrahedronVertexIdsBufferObject);
 	//glDeleteBuffers(1, &this->colorDataBufferObject);
 	this->positionDataBufferObject = RModel::NULL_BUFFER;
 	this->vertexFlagsDataBufferObject = RModel::NULL_BUFFER;

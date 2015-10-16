@@ -168,7 +168,9 @@ SOURCES += main.cpp\
     EvaluationStrategies/polygonverticescount.cpp \
     EvaluationStrategies/polyhedronpolygonscount.cpp \
     Rendering/Renderers/IsolineRenderer/isolinerenderer.cpp \
-    Rendering/Renderers/IsolineRenderer/isolinerendererconfig.cpp
+    Rendering/Renderers/IsolineRenderer/isolinerendererconfig.cpp \
+    Rendering/Renderers/IsosurfaceRenderer/isosurfacerenderer.cpp \
+    Rendering/Renderers/IsosurfaceRenderer/isosurfacerendererconfig.cpp \
     Rendering/Renderers/baserendererconfig.cpp
 
 HEADERS  += visualizador.h \
@@ -328,7 +330,9 @@ HEADERS  += visualizador.h \
     EvaluationStrategies/polygonverticescount.h \
     EvaluationStrategies/polyhedronpolygonscount.h \
     Rendering/Renderers/IsolineRenderer/isolinerendererconfig.h \
-    Rendering/Renderers/IsolineRenderer/isolinerenderer.h
+    Rendering/Renderers/IsolineRenderer/isolinerenderer.h \
+    Rendering/Renderers/IsosurfaceRenderer/isosurfacerendererconfig.h \
+    Rendering/Renderers/IsosurfaceRenderer/isosurfacerenderer.h \
     Rendering/Renderers/baserendererconfig.h
 
 FORMS    += visualizador.ui \
@@ -353,6 +357,7 @@ FORMS    += visualizador.ui \
     UI/rendererslist.ui \
     Rendering/Renderers/GlassRenderer/glassrendererconfig.ui \
     Rendering/Renderers/IsolineRenderer/isolinerendererconfig.ui \
+    Rendering/Renderers/IsosurfaceRenderer/isosurfacerendererconfig.ui \
     Rendering/Renderers/ShaderCommonFunctions/phongconfig.ui \
     Rendering/Renderers/ShaderCommonFunctions/elementdrawnoptionconfig.ui \
     Rendering/Renderers/ShaderCommonFunctions/phong1dconfig.ui \
@@ -414,7 +419,11 @@ OTHER_FILES += \
     Rendering/Renderers/HeightRenderer/height_shader.frag \
     Rendering/Renderers/IsolineRenderer/ir.vert \
     Rendering/Renderers/IsolineRenderer/ir.frag \
-    Rendering/Renderers/IsolineRenderer/ir.geom
+    Rendering/Renderers/IsolineRenderer/ir.geom \
+    Rendering/Renderers/IsosurfaceRenderer/is.vert \
+    Rendering/Renderers/IsosurfaceRenderer/is_gen.vert \
+    Rendering/Renderers/IsosurfaceRenderer/is.frag \
+    Rendering/Renderers/IsosurfaceRenderer/is_gen.geom
 RESOURCES += \
     images.qrc \
     shaders.qrc

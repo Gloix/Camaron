@@ -29,6 +29,7 @@ class RModel
 		void loadVertexPolygonPolyhedronIds(PolygonMesh* mesh);
 		void loadVertexPositionAndNormals(VertexCloud* model);
         void loadVertexScalarProperties(VertexCloud* model);
+        void loadTetrahedronVertexIds(PolyhedronMesh* mesh);
 
 		void refreshVertexAttributes(PolyhedronMesh*);
 		void refreshSelectedElements();
@@ -44,6 +45,8 @@ class RModel
 
 		std::vector<float> bounds;
 
+        int numberOfTetrahedrons;
+
 		static const GLuint NULL_BUFFER = 0;
 		//Main Rendering Model
 		GLuint positionDataBufferObject;
@@ -54,6 +57,7 @@ class RModel
 		//ids
 		GLuint polygonPolyhedronIdsBufferObject;
 		GLuint vertexIdsBufferObject;
+        GLuint tetrahedronVertexIdsBufferObject;
 		int getModelType();
 		void setBackgroundColor(glm::vec4);
 		glm::vec4 getBackgroundColor();

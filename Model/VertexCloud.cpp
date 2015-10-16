@@ -47,7 +47,7 @@ void VertexCloud::addScalarDef(VScalarDef* scalarDef) {
     scalarDefs.push_back(scalarDef);
 }
 
-std::vector<VScalarDef*> VertexCloud::getScalarDefs() {
+std::vector<VScalarDef*> &VertexCloud::getScalarDefs() {
     return scalarDefs;
 }
 

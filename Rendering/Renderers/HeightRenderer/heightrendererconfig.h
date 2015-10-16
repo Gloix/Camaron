@@ -4,12 +4,13 @@
 #include <GL/glew.h>
 #include <QWidget>
 #include <glm/glm.hpp>
+#include "Rendering/Renderers/baserendererconfig.h"
 
 namespace Ui {
 class HeightRendererConfig;
 }
 class RModel;
-class HeightRendererConfig : public QWidget
+class HeightRendererConfig : public BaseRendererConfig
 {
 		Q_OBJECT
 		

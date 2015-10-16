@@ -180,7 +180,7 @@ void CartesianCoordinatesAxis::applyConfigChanges(RModel*){
 	config->readConfig();
 }
 
-QWidget* CartesianCoordinatesAxis::getRendererConfigWidget(){
+BaseRendererConfig* CartesianCoordinatesAxis::getRendererConfigWidget(){
 	return config;
 }
 

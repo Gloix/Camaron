@@ -10,7 +10,7 @@ class PhongPerPixel:public Renderer
 		virtual ~PhongPerPixel();
 		virtual void glewIsReadyRenderer();
 		void draw(RModel*);
-		QWidget* getRendererConfigWidget();
+        BaseRendererConfig* getRendererConfigWidget();
 		bool hasRendererConfigWidget();
 		void applyConfigChanges(RModel* rmodel = (RModel*)0);
 	private:

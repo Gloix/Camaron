@@ -97,7 +97,7 @@ void GlassRenderer::draw(RModel* rmodel){
 	glUseProgram(0);
 }
 
-QWidget* GlassRenderer::getRendererConfigWidget(){
+BaseRendererConfig* GlassRenderer::getRendererConfigWidget(){
 	return config;
 }
 

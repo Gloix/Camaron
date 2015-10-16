@@ -97,7 +97,7 @@ void IsolineRenderer::draw(RModel* rmodel){
 	glUseProgram(0);
 
 }
-QWidget* IsolineRenderer::getRendererConfigWidget(){
+BaseRendererConfig* IsolineRenderer::getRendererConfigWidget(){
 	return config;
 }
 

@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <glm/glm.hpp>
+#include "Rendering/Renderers/baserendererconfig.h"
 namespace Ui {
 class Phong1DConfig;
 }
@@ -20,7 +21,7 @@ struct MaterialInfo1D {
 		float Ks; // Specular reflectivity
 		float Shininess; // Specular shininess factor
 };
-class Phong1DConfig : public QWidget
+class Phong1DConfig : public BaseRendererConfig
 {
 		Q_OBJECT
 		

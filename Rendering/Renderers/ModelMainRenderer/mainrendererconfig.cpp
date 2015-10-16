@@ -4,7 +4,7 @@
 #include <iostream>
 
 MainRendererConfig::MainRendererConfig(QWidget *parent) :
-	QWidget(parent),
+    BaseRendererConfig(parent),
 	ui(new Ui::MainRendererConfig)
 {
 	wireFrameLineWidthM = 2;// 2 pixel

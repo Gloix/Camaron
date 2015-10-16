@@ -69,7 +69,7 @@ void VertexRenderer::draw(RModel* rmodel){
 
 
 }
-QWidget* VertexRenderer::getRendererConfigWidget(){
+BaseRendererConfig* VertexRenderer::getRendererConfigWidget(){
 	return this->config;
 }
 

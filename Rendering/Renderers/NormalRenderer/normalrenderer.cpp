@@ -84,7 +84,7 @@ void NormalRenderer::draw(RModel* rmodel){
 	glUseProgram(0);
 
 }
-QWidget* NormalRenderer::getRendererConfigWidget(){
+BaseRendererConfig* NormalRenderer::getRendererConfigWidget(){
 	return config;
 }
 

@@ -11,7 +11,7 @@ class HeightRenderer: public Renderer
         virtual ~HeightRenderer();
 		virtual void glewIsReadyRenderer();
 		void draw(RModel*);
-		QWidget* getRendererConfigWidget();
+        BaseRendererConfig* getRendererConfigWidget();
 		bool hasRendererConfigWidget();
 		void applyConfigChanges(RModel * = (RModel*)0);
 

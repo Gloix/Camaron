@@ -3,6 +3,7 @@
 #include <string>
 #include <QWidget>
 #include <glm/glm.hpp>
+#include "Rendering/Renderers/baserendererconfig.h"
 
 #define RENDERER_WEIGHT_BASE 50.0f
 namespace vis{
@@ -20,7 +21,7 @@ class Renderer{
 		virtual void draw(RModel*);
 		virtual void rendererSelected(RModel* rmodel);
 		virtual bool rmodelChanged(RModel* rmodel);
-		virtual QWidget* getRendererConfigWidget();
+        virtual BaseRendererConfig* getRendererConfigWidget();
 		virtual bool hasRendererConfigWidget();
 		virtual void applyConfigChanges(RModel*);
 		virtual glm::mat4 getMV(RModel*);

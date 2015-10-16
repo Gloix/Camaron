@@ -2,7 +2,7 @@
 #include "ui_elementdrawnoptionconfig.h"
 
 ElementDrawnOptionConfig::ElementDrawnOptionConfig(QWidget *parent) :
-	QWidget(parent),
+    BaseRendererConfig(parent),
 	ui(new Ui::ElementDrawnOptionConfig)
 {
 	ui->setupUi(this);

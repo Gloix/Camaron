@@ -11,7 +11,7 @@ class PropertyValuesRenderer: public Renderer
 		virtual ~PropertyValuesRenderer();
 		virtual void glewIsReadyRenderer();
 		void draw(RModel*);
-		QWidget* getRendererConfigWidget();
+        BaseRendererConfig* getRendererConfigWidget();
 		bool hasRendererConfigWidget();
 		void applyConfigChanges(RModel* rmodel = (RModel*)0);
 		bool rmodelChanged(RModel* rmodel);

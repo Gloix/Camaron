@@ -3,11 +3,12 @@
 
 #include <QWidget>
 #include <glm/glm.hpp>
+#include "Rendering/Renderers/baserendererconfig.h"
 namespace Ui {
 class CartesianCoordinatesAxisConfig;
 }
 
-class CartesianCoordinatesAxisConfig : public QWidget
+class CartesianCoordinatesAxisConfig : public BaseRendererConfig
 {
 		Q_OBJECT
 		

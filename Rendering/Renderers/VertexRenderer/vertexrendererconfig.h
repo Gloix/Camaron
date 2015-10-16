@@ -3,11 +3,12 @@
 
 #include <QWidget>
 #include <glm/glm.hpp>
+#include "Rendering/Renderers/baserendererconfig.h"
 namespace Ui {
 class VertexRendererConfig;
 }
 
-class VertexRendererConfig : public QWidget
+class VertexRendererConfig : public BaseRendererConfig
 {
 		Q_OBJECT
 		

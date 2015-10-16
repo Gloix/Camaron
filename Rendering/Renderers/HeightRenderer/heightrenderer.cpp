@@ -75,7 +75,7 @@ void HeightRenderer::draw(RModel* rmodel){
     glUseProgram(0);
 }
 
-QWidget* HeightRenderer::getRendererConfigWidget(){
+BaseRendererConfig* HeightRenderer::getRendererConfigWidget(){
 	return this->config;
 }
 

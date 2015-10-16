@@ -5,11 +5,12 @@
 #include <QWidget>
 #include <glm/glm.hpp>
 #include <map>
+#include "Rendering/Renderers/baserendererconfig.h"
 namespace Ui {
 class DepthRendererConfig;
 }
 
-class DepthRendererConfig : public QWidget
+class DepthRendererConfig : public BaseRendererConfig
 {
 		Q_OBJECT
 		

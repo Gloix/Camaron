@@ -3,12 +3,13 @@
 
 #include <QWidget>
 #include <glm/glm.hpp>
+#include "Rendering/Renderers/baserendererconfig.h"
 namespace Ui {
 class PropertyValuesRendererConfig;
 }
 class EvaluationStrategyRegistry;
 class EvaluationStrategy;
-class PropertyValuesRendererConfig : public QWidget
+class PropertyValuesRendererConfig : public BaseRendererConfig
 {
 		Q_OBJECT
 		

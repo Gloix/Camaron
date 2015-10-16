@@ -5,11 +5,12 @@
 #include <glm/glm.hpp>
 #include "Rendering/Renderers/ShaderCommonFunctions/phongconfig.h"
 #include "Rendering/Renderers/ShaderCommonFunctions/elementdrawnoptionconfig.h"
+#include "Rendering/Renderers/baserendererconfig.h"
 namespace Ui {
 class ShadingEffectsRenderConfig;
 }
 
-class ShadingEffectsRenderConfig : public QWidget
+class ShadingEffectsRenderConfig : public BaseRendererConfig
 {
 	Q_OBJECT
 

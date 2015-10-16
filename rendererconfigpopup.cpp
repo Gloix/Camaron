@@ -13,10 +13,11 @@ RendererConfigPopUp::~RendererConfigPopUp()
 {
 	delete ui;
 }
-void RendererConfigPopUp::setConfigQWidget(QWidget* qwidget){
+void RendererConfigPopUp::setConfigQWidget(BaseRendererConfig* qwidget){
 	this->cleanConfigQWidget();
-	ui->widget_renderer_config_container->layout()->addWidget(qwidget);
-	qwidget->show();
+    connect(qwidget, SIGNAL(onConfigForceApply()), this, SLOT(applyChangesPushButtonClicked()));
+    ui->widget_renderer_config_container->layout()->addWidget((QWidget*) qwidget);
+    ((QWidget*)qwidget)->show();
 	this->ui->pushButton_apply_changes->setDisabled(false);
 }
 

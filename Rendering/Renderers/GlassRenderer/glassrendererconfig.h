@@ -4,11 +4,12 @@
 #include <QWidget>
 #include "Rendering/Renderers/ShaderCommonFunctions/elementdrawnoptionconfig.h"
 #include "Rendering/Renderers/ShaderCommonFunctions/phong1dconfig.h"
+#include "Rendering/Renderers/baserendererconfig.h"
 namespace Ui {
 class GlassRendererConfig;
 }
 
-class GlassRendererConfig : public QWidget
+class GlassRendererConfig : public BaseRendererConfig
 {
 		Q_OBJECT
 		

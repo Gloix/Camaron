@@ -2,7 +2,7 @@
 #include "ui_glassrendererconfig.h"
 #include "Utils/qtutils.h"
 GlassRendererConfig::GlassRendererConfig(QWidget *parent) :
-	QWidget(parent),
+    BaseRendererConfig(parent),
 	ui(new Ui::GlassRendererConfig)
 {
 	ui->setupUi(this);

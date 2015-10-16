@@ -18,8 +18,8 @@ bool Renderer::rmodelChanged(RModel* rmodel){
 			rmodel->getOriginalModel()->getModelType()!=vis::CONSTANTS::VERTEX_CLOUD&&
 			rmodel->getOriginalModel()->getModelType()!=vis::CONSTANTS::NO_MODEL;
 }
-QWidget*  Renderer::getRendererConfigWidget(){
-	return (QWidget*)0;
+BaseRendererConfig*  Renderer::getRendererConfigWidget(){
+    return (BaseRendererConfig*)0;
 }
 
 bool  Renderer::hasRendererConfigWidget(){

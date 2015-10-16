@@ -11,7 +11,7 @@ class DepthRenderer: public Renderer
 		virtual ~DepthRenderer();
 		virtual void glewIsReadyRenderer();
 		void draw(RModel*);
-		QWidget* getRendererConfigWidget();
+        BaseRendererConfig* getRendererConfigWidget();
 		bool hasRendererConfigWidget();
 		void applyConfigChanges(RModel * = (RModel*)0);
 		bool rmodelChanged(RModel* rmodel);

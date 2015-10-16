@@ -5,7 +5,7 @@
 #include "Utils/qtutils.h"
 
 PropertyValuesRendererConfig::PropertyValuesRendererConfig(QWidget *parent) :
-	QWidget(parent),
+    BaseRendererConfig(parent),
 	ui(new Ui::PropertyValuesRendererConfig)
 {
 	ui->setupUi(this);

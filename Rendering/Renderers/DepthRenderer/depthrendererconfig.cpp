@@ -2,7 +2,7 @@
 #include "ui_depthrendererconfig.h"
 #include "Utils/qtutils.h"
 DepthRendererConfig::DepthRendererConfig(QWidget *parent) :
-	QWidget(parent),
+    BaseRendererConfig(parent),
 	ui(new Ui::DepthRendererConfig)
 {
 	ui->setupUi(this);

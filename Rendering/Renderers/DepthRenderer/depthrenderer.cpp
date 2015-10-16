@@ -116,7 +116,7 @@ void DepthRenderer::draw(RModel* rmodel){
 void DepthRenderer::applyConfigChanges(RModel *){
 	config->readConfig();
 }
-QWidget* DepthRenderer::getRendererConfigWidget(){
+BaseRendererConfig* DepthRenderer::getRendererConfigWidget(){
 	return config;
 }
 

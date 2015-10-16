@@ -2,12 +2,13 @@
 #define ELEMENTDRAWNOPTIONCONFIG_H
 
 #include <QWidget>
+#include "Rendering/Renderers/baserendererconfig.h"
 
 namespace Ui {
 class ElementDrawnOptionConfig;
 }
 
-class ElementDrawnOptionConfig : public QWidget
+class ElementDrawnOptionConfig : public BaseRendererConfig
 {
 		Q_OBJECT
 		

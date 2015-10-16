@@ -3,11 +3,12 @@
 
 #include <QWidget>
 #include <glm/glm.hpp>
+#include "Rendering/Renderers/baserendererconfig.h"
 namespace Ui {
 class ConvexGeometryIntersectionRendererConfig;
 }
 class MainRendererConfig;
-class ConvexGeometryIntersectionRendererConfig : public QWidget
+class ConvexGeometryIntersectionRendererConfig : public BaseRendererConfig
 {
 		Q_OBJECT
 		

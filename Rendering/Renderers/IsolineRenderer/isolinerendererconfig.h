@@ -28,10 +28,17 @@ class IsolineRendererConfig : public BaseRendererConfig
         void setModel(RModel*);
     public slots:
         void changeScalarPropFunc(int index);
+        void changeInputType(int tabIndex);
+        void sweepValueChanged(int value);
+    signals:
+        void applyChangesPushButton();
 	private:
 		static const int NO_WIREFRAME = 0;
 		static const int COMPLETE_WIREFRAME = 1;
 		static const int SURFACE_WIREFRAME = 2;
+        static const int INPUT_VALUES_LIST = 0;
+        static const int INPUT_SWEEP = 1;
+        int currentInputType = 0;
         Ui::IsolineRendererConfig *ui;
         std::vector<VScalarDef*> scalarDefs;
         // Keep a model pointer to keep track of when the model changes.

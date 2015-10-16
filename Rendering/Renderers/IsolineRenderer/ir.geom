@@ -25,54 +25,28 @@ void isolineVertex(float v1, float v2, vec4 pos1, vec4 pos2, float val) {
     if( mult >= 0.0 && mult <= 1.0 ) {
         gl_Position = MVP*(pos1 + mult*(pos2 - pos1));
         float colorMult = (val-IsolinesSteps[0])/(IsolinesSteps[IsolinesStepsN-1]-IsolinesSteps[0]);
-        fcolor = colorMult*(GradientEndColor-GradientStartColor)+GradientStartColor;
+        fcolor = mix(GradientStartColor, GradientEndColor, colorMult);
         EmitVertex();
     }
 }
 
 void main()
 {
+    float v0 = vdata[0].ScalarValue;
+    float v1 = vdata[1].ScalarValue;
+    float v2 = vdata[2].ScalarValue;
+    vec3 vdatavec = vec3(v0, v1, v2);
+
     for (int i=0 ; i < IsolinesStepsN ; i++) {
         float val = IsolinesSteps[i];
-        float v0 = vdata[0].ScalarValue;
-        float v1 = vdata[1].ScalarValue;
-        float v2 = vdata[2].ScalarValue;
 
-        if(max(v0,max(v1,v2)) < val || min(v0,min(v1,v2)) > val) continue;
+        if(all(greaterThan(vdatavec, vec3(val))) || all(greaterThan(vec3(val),vdatavec))) continue;
         //if((v0 < val && v1 < val && v2 < val) || (v0 > val && v1 > val && v2 > val)) continue;
 
         isolineVertex(v0, v1, vdata[0].VertexPositionWS, vdata[1].VertexPositionWS, val);
         isolineVertex(v1, v2, vdata[1].VertexPositionWS, vdata[2].VertexPositionWS, val);
         isolineVertex(v2, v0, vdata[2].VertexPositionWS, vdata[0].VertexPositionWS, val);
         EndPrimitive();
-
-        /*if(v0 != v1) {
-            float mult = (val - v0)/(v1 - v0);
-            if( mult >= 0.0 && mult <= 1.0 ) {
-                gl_Position = MVP*(vdata[0].VertexPositionWS + mult*(vdata[1].VertexPositionWS - vdata[0].VertexPositionWS));
-                fcolor = GradientStartColor;
-                EmitVertex();
-            }
-        }
-
-        if(v1 != v2) {
-            float mult = (val - v1)/(v2 - v1);
-            if( mult >= 0.0 && mult <= 1.0 ) {
-                gl_Position = MVP*(vdata[1].VertexPositionWS + mult*(vdata[2].VertexPositionWS - vdata[1].VertexPositionWS));
-                fcolor = GradientStartColor;
-                EmitVertex();
-            }
-        }
-
-        if(v2 != v1) {
-            float mult = (val - v2)/(v0 - v2);
-            if( mult >= 0.0 && mult <= 1.0 ) {
-                gl_Position = MVP*(vdata[2].VertexPositionWS + mult*(vdata[0].VertexPositionWS - vdata[2].VertexPositionWS));
-                fcolor = GradientStartColor;
-                EmitVertex();
-            }
-        }
-        EndPrimitive();*/
 
     }
     //triangle

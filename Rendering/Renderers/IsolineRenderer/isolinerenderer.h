@@ -4,7 +4,6 @@
 #include <GL/glew.h>
 #include "Rendering/Renderers/IsolineRenderer/isolinerendererconfig.h"
 
-//struct VScalarDef;
 class IsolineRenderer:public Renderer
 {
 	public:

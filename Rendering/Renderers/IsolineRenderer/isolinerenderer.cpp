@@ -62,9 +62,9 @@ void IsolineRenderer::draw(RModel* rmodel){
 	ShaderUtils::setUniform(theProgram, "WireFrameOption", config->wireFrameOption);
 
     std::vector<VScalarDef*> scalarDefs = rmodel->scalarDefs;
-    int pos = std::find(scalarDefs.begin(), scalarDefs.end(), config->selectedScalarDef) - scalarDefs.begin();
-    if(pos < scalarDefs.size()) {
-        ShaderUtils::setUniform(theProgram, "SelectedScalarPropIndex", pos);
+    std::vector<VScalarDef*>::iterator pos = std::find(scalarDefs.begin(), scalarDefs.end(), config->selectedScalarDef);
+    if(pos != scalarDefs.end()) {
+        ShaderUtils::setUniform(theProgram, "SelectedScalarPropIndex", (int)(pos - scalarDefs.begin()));
     } else {
         ShaderUtils::setUniform(theProgram, "SelectedScalarPropIndex", -1);
     }

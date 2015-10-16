@@ -7,7 +7,6 @@ in float[10] VertexScalars;
 uniform int SelectedScalarPropIndex;
 uniform int WireFrameOption;
 uniform mat4 MVP;
-uniform float NormalLength;
 struct VertexData{
     vec4 VertexPosition;
     vec4 VertexPositionWS;

@@ -4,7 +4,7 @@
 #include <iostream>
 #include "Rendering/RModel/rmodel.h"
 IsolineRendererConfig::IsolineRendererConfig(QWidget *parent) :
-	QWidget(parent),
+    BaseRendererConfig(parent),
     ui(new Ui::IsolineRendererConfig)
 {
 	ui->setupUi(this);

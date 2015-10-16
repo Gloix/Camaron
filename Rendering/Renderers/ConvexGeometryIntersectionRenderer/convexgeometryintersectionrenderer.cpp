@@ -107,7 +107,7 @@ void ConvexGeometryIntersectionRenderer::drawWithConvexGeometryShader(RModel* rm
 		convexGeometry->render(rmodel->getProjectionMatrix()*lastMVMatrix);
 }
 
-QWidget* ConvexGeometryIntersectionRenderer::getRendererConfigWidget(){
+BaseRendererConfig* ConvexGeometryIntersectionRenderer::getRendererConfigWidget(){
 	return this->configRenderer;
 }
 
@@ -196,7 +196,7 @@ bool ConvexGeometryIntersectionRenderer::hasConfigWidget(){
 	return true;
 }
 
-QWidget* ConvexGeometryIntersectionRenderer::getConfigWidget(){
+BaseRendererConfig* ConvexGeometryIntersectionRenderer::getConfigWidget(){
 	return configSelection;
 }
 

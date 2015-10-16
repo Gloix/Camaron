@@ -318,7 +318,7 @@ void MainRenderer::drawWithDepthPeeling(RModel* rmodel){
 	//draw finally to screen buffer
 }
 
-QWidget* MainRenderer::getRendererConfigWidget(){
+BaseRendererConfig* MainRenderer::getRendererConfigWidget(){
 	return this->config;
 }
 

@@ -2,7 +2,7 @@
 #include "ui_vertexrendererconfig.h"
 #include "Utils/qtutils.h"
 VertexRendererConfig::VertexRendererConfig(QWidget *parent) :
-	QWidget(parent),
+    BaseRendererConfig(parent),
 	ui(new Ui::VertexRendererConfig)
 {
 	ui->setupUi(this);

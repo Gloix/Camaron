@@ -2,7 +2,7 @@
 #include "ui_normalrendererconfig.h"
 #include "Utils/qtutils.h"
 NormalRendererConfig::NormalRendererConfig(QWidget *parent) :
-	QWidget(parent),
+    BaseRendererConfig(parent),
 	ui(new Ui::NormalRendererConfig)
 {
 	ui->setupUi(this);

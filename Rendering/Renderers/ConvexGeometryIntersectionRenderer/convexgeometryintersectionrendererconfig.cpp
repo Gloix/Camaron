@@ -6,7 +6,7 @@
 #include <QFileDialog>
 #include "UI/clickableqlabel.h"
 ConvexGeometryIntersectionRendererConfig::ConvexGeometryIntersectionRendererConfig(QWidget *parent) :
-	QWidget(parent),
+    BaseRendererConfig(parent),
 	//mainRendererConfig(this),
 	ui(new Ui::ConvexGeometryIntersectionRendererConfig)
 {

@@ -46,7 +46,7 @@ void PropertyValuesRenderer::glewIsReadyRenderer(){
 	vertexPropertyValueBuffer = RModel::NULL_BUFFER;
 	this->applyConfigChanges();
 }
-QWidget* PropertyValuesRenderer::getRendererConfigWidget(){
+BaseRendererConfig* PropertyValuesRenderer::getRendererConfigWidget(){
 	return config;
 }
 

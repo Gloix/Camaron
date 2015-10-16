@@ -2,6 +2,7 @@
 #define RENDERERCONFIGPOPUP_H
 
 #include <QWidget>
+#include "Rendering/Renderers/baserendererconfig.h"
 
 namespace Ui {
 class RendererConfigPopUp;
@@ -14,7 +15,7 @@ class RendererConfigPopUp : public QWidget
 	public:
 		explicit RendererConfigPopUp(QWidget *parent = 0);
 		~RendererConfigPopUp();
-		void setConfigQWidget(QWidget*);
+        void setConfigQWidget(BaseRendererConfig*);
 		void cleanConfigQWidget();
 	public slots:
 		void applyChangesPushButtonClicked();

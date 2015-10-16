@@ -3,11 +3,12 @@
 
 #include <QWidget>
 #include <glm/glm.hpp>
+#include "Rendering/Renderers/baserendererconfig.h"
 namespace Ui {
 class NormalRendererConfig;
 }
 
-class NormalRendererConfig : public QWidget
+class NormalRendererConfig : public BaseRendererConfig
 {
 		Q_OBJECT
 		

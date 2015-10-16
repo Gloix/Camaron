@@ -5,7 +5,7 @@
 #include "Rendering/RModel/rmodel.h"
 
 HeightRendererConfig::HeightRendererConfig(QWidget *parent) :
-	QWidget(parent),
+    BaseRendererConfig(parent),
     ui(new Ui::HeightRendererConfig)
 {
 	ui->setupUi(this);

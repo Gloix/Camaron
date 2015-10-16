@@ -97,7 +97,7 @@ void ShadingEffectsRender::draw(RModel* rmodel){
 	glUseProgram(0);
 }
 
-QWidget* ShadingEffectsRender::getRendererConfigWidget(){
+BaseRendererConfig* ShadingEffectsRender::getRendererConfigWidget(){
 	return config;
 }
 

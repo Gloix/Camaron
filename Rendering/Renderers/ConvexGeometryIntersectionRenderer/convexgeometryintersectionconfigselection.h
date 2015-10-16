@@ -2,12 +2,13 @@
 #define CONVEXGEOMETRYINTERSECTIONCONFIGSELECTION_H
 
 #include <QWidget>
+#include "Rendering/Renderers/baserendererconfig.h"
 
 namespace Ui {
 class ConvexGeometryIntersectionConfigSelection;
 }
 
-class ConvexGeometryIntersectionConfigSelection : public QWidget
+class ConvexGeometryIntersectionConfigSelection : public BaseRendererConfig
 {
 		Q_OBJECT
 		

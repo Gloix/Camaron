@@ -10,7 +10,7 @@ class NormalRenderer:public Renderer
 		virtual ~NormalRenderer();
 		virtual void glewIsReadyRenderer();
 		void draw(RModel*);
-		QWidget* getRendererConfigWidget();
+        BaseRendererConfig* getRendererConfigWidget();
 		bool hasRendererConfigWidget();
 		void applyConfigChanges(RModel * = (RModel*)0);
 		bool rmodelChanged(RModel* rmodel);

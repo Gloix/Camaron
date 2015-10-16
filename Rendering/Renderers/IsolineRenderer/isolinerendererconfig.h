@@ -5,12 +5,13 @@
 #include <glm/glm.hpp>
 #include "Utils/chararrayscanner.h"
 #include "Model/PolygonMesh.h"
+#include "Rendering/Renderers/baserendererconfig.h"
 
 namespace Ui {
 class IsolineRendererConfig;
 }
 
-class IsolineRendererConfig : public QWidget
+class IsolineRendererConfig : public BaseRendererConfig
 {
 		Q_OBJECT
 		

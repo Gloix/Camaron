@@ -169,6 +169,7 @@ SOURCES += main.cpp\
     EvaluationStrategies/polyhedronpolygonscount.cpp \
     Rendering/Renderers/IsolineRenderer/isolinerenderer.cpp \
     Rendering/Renderers/IsolineRenderer/isolinerendererconfig.cpp
+    Rendering/Renderers/baserendererconfig.cpp
 
 HEADERS  += visualizador.h \
     Common/Constants.h \
@@ -328,6 +329,7 @@ HEADERS  += visualizador.h \
     EvaluationStrategies/polyhedronpolygonscount.h \
     Rendering/Renderers/IsolineRenderer/isolinerendererconfig.h \
     Rendering/Renderers/IsolineRenderer/isolinerenderer.h
+    Rendering/Renderers/baserendererconfig.h
 
 FORMS    += visualizador.ui \
     Rendering/Renderers/ModelMainRenderer/mainrendererconfig.ui \

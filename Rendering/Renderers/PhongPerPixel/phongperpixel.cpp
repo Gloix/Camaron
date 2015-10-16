@@ -90,7 +90,7 @@ void PhongPerPixel::draw(RModel* rmodel){
 	glUseProgram(0);
 }
 
-QWidget* PhongPerPixel::getRendererConfigWidget(){
+BaseRendererConfig* PhongPerPixel::getRendererConfigWidget(){
 	return config;
 }
 

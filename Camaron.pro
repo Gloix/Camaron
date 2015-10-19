@@ -171,7 +171,9 @@ SOURCES += main.cpp\
     Rendering/Renderers/IsolineRenderer/isolinerendererconfig.cpp \
     Rendering/Renderers/IsosurfaceRenderer/isosurfacerenderer.cpp \
     Rendering/Renderers/IsosurfaceRenderer/isosurfacerendererconfig.cpp \
-    Rendering/Renderers/baserendererconfig.cpp
+    Rendering/Renderers/AdditionalEdgesRenderer/additionaledgesrenderer.cpp \
+    Rendering/Renderers/baserendererconfig.cpp \
+    Model/Element/edge.cpp
 
 HEADERS  += visualizador.h \
     Common/Constants.h \
@@ -333,7 +335,9 @@ HEADERS  += visualizador.h \
     Rendering/Renderers/IsolineRenderer/isolinerenderer.h \
     Rendering/Renderers/IsosurfaceRenderer/isosurfacerendererconfig.h \
     Rendering/Renderers/IsosurfaceRenderer/isosurfacerenderer.h \
-    Rendering/Renderers/baserendererconfig.h
+    Rendering/Renderers/AdditionalEdgesRenderer/additionaledgesrenderer.h \
+    Rendering/Renderers/baserendererconfig.h \
+    Model/Element/edge.h
 
 FORMS    += visualizador.ui \
     Rendering/Renderers/ModelMainRenderer/mainrendererconfig.ui \

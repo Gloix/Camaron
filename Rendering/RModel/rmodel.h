@@ -28,6 +28,7 @@ class RModel
 
 		void loadVertexPolygonPolyhedronIds(PolygonMesh* mesh);
 		void loadVertexPositionAndNormals(VertexCloud* model);
+        void loadAdditionalEdges(VertexCloud* model);
         void loadVertexScalarProperties(VertexCloud* model);
         void loadTetrahedronVertexIds(PolyhedronMesh* mesh);
 
@@ -36,6 +37,7 @@ class RModel
 		void deleteData();
 		Model* getOriginalModel();
 		int nVertices;
+        int nAdditionalEdges;
 		std::vector<RVertexFlagAttribute> vertexFlagsAttribute;
 		std::vector<RVertexFlagAttribute> vertexGeoCenterFlagsAttribute;
 		std::vector<RVertexFlagAttribute> polygonGeoCenterFlagsAttribute;
@@ -54,6 +56,8 @@ class RModel
 		GLuint vertexFlagsDataBufferObject;
         GLuint vertexScalarDataBufferObject;
 		GLuint rmodelVertexPositionBufferObject;
+        GLuint edgeVertexPositionsDataBufferObject;
+        GLuint edgeColorDataBufferObject;
 		//ids
 		GLuint polygonPolyhedronIdsBufferObject;
 		GLuint vertexIdsBufferObject;

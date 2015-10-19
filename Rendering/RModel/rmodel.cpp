@@ -6,6 +6,7 @@
 #include "Model/lightweightpolygonmesh.h"
 #include "Model/lightweightpolyhedronmesh.h"
 #include "Model/Element/Vertex.h"
+#include "Model/Element/edge.h"
 #include "Utils/PolygonUtils.h"
 #include "Utils/polyhedronutils.h"
 #include "Utils/matrixtransformationutils.h"
@@ -25,6 +26,8 @@ RModel::RModel():
     vertexScalarDataBufferObject = NULL_BUFFER;
 	polygonPolyhedronIdsBufferObject = NULL_BUFFER;
     tetrahedronVertexIdsBufferObject = NULL_BUFFER;
+    edgeVertexPositionsDataBufferObject = NULL_BUFFER;
+    edgeColorDataBufferObject = NULL_BUFFER;
 	scale = 1.0f;
 	modelType = vis::CONSTANTS::NO_MODEL;
 	originalModel = (Model*)0;
@@ -82,6 +85,7 @@ void RModel::loadRModelData(VertexCloud* model){
 	nVertices = vertices.size();
 	positionDataBufferObject = ShaderUtils::createDataBuffer<glm::vec3>(vertices);
 	vertexFlagsDataBufferObject = ShaderUtils::createDataBuffer<RVertexFlagAttribute>(vertexFlagsAttribute);
+    loadAdditionalEdges(model);
 	originalModel = model;
     scalarDefs = model->getScalarDefs();
 }
@@ -106,11 +110,37 @@ void RModel::loadRModelData(PolygonMesh* mesh){
 	vertexFlagsDataBufferObject = ShaderUtils::createDataBuffer<RVertexFlagAttribute>(vertexFlagsAttribute);
 	loadVertexPositionAndNormals(mesh);
 	loadVertexPolygonPolyhedronIds(mesh);
+    if(mesh->getAdditionalEdges().size() != 0) {
+        loadAdditionalEdges(mesh);
+    }
     std::cout << "Loading Scalar Properties" << std::endl;
     loadVertexScalarProperties(mesh);
 	originalModel = mesh;
     scalarDefs = mesh->getScalarDefs();
 }
+
+void RModel::loadAdditionalEdges(VertexCloud* vcloud){
+    std::vector<glm::vec3> edgeContainer;
+    std::vector<glm::vec3> edgeColorContainer;
+    std::vector<vis::Edge*>& additionalEdges = vcloud->getAdditionalEdges();
+    edgeContainer.reserve(vcloud->getAdditionalEdgesCount()*2);
+    edgeColorContainer.reserve(vcloud->getAdditionalEdgesCount()*2);
+
+    for(std::vector<vis::Edge*>::size_type i = 0;i<additionalEdges.size();i++){
+        vis::Edge* currentEdge = additionalEdges[i];
+        glm::vec3& vec0 = currentEdge->getVertex0()->getCoords();
+        glm::vec3& vec1 = currentEdge->getVertex1()->getCoords();
+        glm::vec3& color = currentEdge->getColor();
+        edgeContainer.push_back(vec0);
+        edgeContainer.push_back(vec1);
+        edgeColorContainer.push_back(color);
+        edgeColorContainer.push_back(color);
+    }
+    nAdditionalEdges = vcloud->getAdditionalEdgesCount();
+    edgeVertexPositionsDataBufferObject = ShaderUtils::createDataBuffer<glm::vec3>(edgeContainer);
+    edgeColorDataBufferObject = ShaderUtils::createDataBuffer<glm::vec3>(edgeColorContainer);
+}
+
 /*void RModel::loadRModelData(PolygonMesh* mesh){
 	this->freeRAMFromVideoCardBuffer();
 	modelType = vis::CONSTANTS::POLYGON_MESH;
@@ -149,9 +179,7 @@ void RModel::loadRModelData(PolygonMesh* mesh){
 }//*/
 void RModel::loadVertexPositionAndNormals(VertexCloud* model){
 	std::vector<glm::vec3> vecContainer;
-    std::vector<float> floatContainer;
 	vecContainer.resize(nVertices);
-    floatContainer.resize(nVertices);
 	std::vector<vis::Vertex*>& vertices = model->getVertices();
 	//coords
 	for(std::vector<vis::Vertex*>::size_type i = 0;i<vertices.size();i++){
@@ -323,6 +351,8 @@ void RModel::freeRAMFromVideoCardBuffer(){
 	glDeleteBuffers(1,&rmodelVertexPositionBufferObject);
 	glDeleteBuffers(1,&polygonPolyhedronIdsBufferObject);
     glDeleteBuffers(1,&tetrahedronVertexIdsBufferObject);
+    glDeleteBuffers(1,&edgeVertexPositionsDataBufferObject);
+    glDeleteBuffers(1,&edgeColorDataBufferObject);
 	//glDeleteBuffers(1, &this->colorDataBufferObject);
 	this->positionDataBufferObject = RModel::NULL_BUFFER;
 	this->vertexFlagsDataBufferObject = RModel::NULL_BUFFER;
@@ -330,6 +360,10 @@ void RModel::freeRAMFromVideoCardBuffer(){
 	rmodelVertexPositionBufferObject = RModel::NULL_BUFFER;
 	polygonPolyhedronIdsBufferObject = RModel::NULL_BUFFER;
     vertexScalarDataBufferObject = RModel::NULL_BUFFER;
+    tetrahedronVertexIdsBufferObject = RModel::NULL_BUFFER;
+    edgeVertexPositionsDataBufferObject = RModel::NULL_BUFFER;
+    edgeColorDataBufferObject = RModel::NULL_BUFFER;
+
 }
 glm::mat4 RModel::getMV(){
 	if(recalculateMV){

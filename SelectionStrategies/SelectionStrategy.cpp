@@ -22,10 +22,12 @@ SelectionStrategy::~SelectionStrategy()
 bool SelectionStrategy::isFullFilled( vis::Vertex* ) { return false;}
 bool SelectionStrategy::isFullFilled( vis::Polygon* ) { return false;}
 bool SelectionStrategy::isFullFilled( vis::Polyhedron* ) { return false;}
+bool SelectionStrategy::isFullFilled( vis::Edge* ) { return false;}
 bool SelectionStrategy::isFullFilled( Selection* ) { return true;}
 bool SelectionStrategy::selectElement( vis::Polyhedron *, Selection* ) {return false;}
 bool SelectionStrategy::selectElement( vis::Polygon *, Selection* ) {return false;}
 bool SelectionStrategy::selectElement( vis::Vertex *, Selection* ) {return false;}
+bool SelectionStrategy::selectElement( vis::Edge *, Selection* ) {return false;}
 void SelectionStrategy::selectElement( Selection* sel) {
 	std::unordered_map<int, vis::Element*>& hash = sel->getSelectedElements();
 	std::vector<vis::Element*> erasedKeys;

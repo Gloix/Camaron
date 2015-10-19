@@ -3,6 +3,7 @@
 #include "Model/Model.h"
 namespace vis{
 class Vertex;
+class Edge;
 }
 
 struct VScalarDef {
@@ -16,8 +17,11 @@ class VertexCloud: public Model
 		VertexCloud(std::string);
 		virtual ~VertexCloud();
 		std::vector<vis::Vertex*>& getVertices();
+        std::vector<vis::Edge*>& getAdditionalEdges();
 		int getVerticesCount();
+        int getAdditionalEdgesCount();
 		void setVerticesCount( int );
+        void setAdditionalEdgesCount( int );
 		bool is2D();
         void set2D(bool);
         std::vector<VScalarDef*> &getScalarDefs();
@@ -28,7 +32,9 @@ class VertexCloud: public Model
 		bool _2d;
 		std::vector<vis::Vertex*> vertices;
 		int verticesCount;
+        int additionalEdgesCount;
         std::vector<VScalarDef*> scalarDefs;
+        std::vector<vis::Edge*> additionalEdges;
 	private:
 };
 

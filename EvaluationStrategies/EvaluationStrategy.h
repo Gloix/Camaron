@@ -14,6 +14,7 @@ class Vertex;
 class Polyhedron;
 class Polygon;
 class Triangle;
+class Edge;
 }
 class VertexCloud;
 class PolyhedronMesh;
@@ -40,6 +41,7 @@ class EvaluationStrategy
 		virtual bool isFullFilled( vis::Polygon* m );
 		virtual bool isFullFilled( vis::Triangle* m );
 		virtual bool isFullFilled( vis::Polyhedron* m );
+        virtual bool isFullFilled( vis::Edge* m );
 		float getWeight();
 		void setWeight(float);
 

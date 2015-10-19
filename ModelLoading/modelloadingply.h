@@ -20,6 +20,7 @@ class ModelLoadingPly: public ModelLoadingStrategy
 		bool readBody( PolygonMesh* );
 		bool readPolygons( PolygonMesh* );
 		bool readVertices( VertexCloud * );
+        bool readAdditionalEdges( VertexCloud * );
         vis::Vertex* readVertex(int, float&, float&, float&);
 		bool readPolygonsBinary( PolygonMesh* );
 		bool readVerticesBinary( VertexCloud * );

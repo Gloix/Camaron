@@ -52,5 +52,7 @@
         <file>Rendering/Renderers/IsosurfaceRenderer/is.vert</file>
         <file>Rendering/Renderers/IsosurfaceRenderer/is_gen.vert</file>
         <file>Rendering/Renderers/IsosurfaceRenderer/is_gen.geom</file>
+        <file>Rendering/Renderers/AdditionalEdgesRenderer/aer.frag</file>
+        <file>Rendering/Renderers/AdditionalEdgesRenderer/aer.vert</file>
     </qresource>
 </RCC>

@@ -2,6 +2,7 @@
 #include "Model/Element/Polygon.h"
 #include "Model/Element/triangle.h"
 #include "Model/Element/Vertex.h"
+#include "Model/Element/edge.h"
 #include "Model/PolygonMesh.h"
 #include "Utils/fileutils.h"
 #include "Utils/endianess.h"
@@ -58,9 +59,10 @@ Model* ModelLoadingPly::load(std::string filename){
 				//Vertex Cloud!
 				vcloud = new VertexCloud(filename);
 				vcloud->setVerticesCount(loaded->getVerticesCount());
+                vcloud->setAdditionalEdgesCount(loaded->getAdditionalEdgesCount());
 				delete loaded;
 				loaded = 0;
-				if(readVertices( vcloud ) ){
+                if(readVertices( vcloud ) && readAdditionalEdges(vcloud)){
 					delete[] fileBuffer;
 					fileSize = 0;
 					return ( Model* )vcloud;
@@ -100,10 +102,12 @@ bool ModelLoadingPly::readHeader(PolygonMesh* polygonMesh)
 	numberOfBytesInVertexPropertiesToIgnore = 0;
 	int np = 0;
 	int nf = 0;
+    int ne = 0;
 	//read number of points
 	bool in = true;
 	char word [256];
 	bool readingVertexProperties = false;
+    //bool readingEdgeProperties = false;
     int propertyIndex = 0;
 	while(in){
 		scanner.readString(fileBuffer, word,false);
@@ -112,34 +116,23 @@ bool ModelLoadingPly::readHeader(PolygonMesh* polygonMesh)
 			if( !strcmp( word, "vertex\0" ) ){
 				scanner.readInt(fileBuffer,&np );
 				readingVertexProperties = true;
-			}
-			else if( !strcmp( word, "face\0" ) ){
+                //readingEdgeProperties = false;
+            } else if( !strcmp( word, "face\0" ) ){
 				scanner.readInt(fileBuffer,&nf );
 				readingVertexProperties = false;
-			}
+                //readingEdgeProperties = false;
+            } else if( !strcmp( word, "edge\0" ) ){
+                scanner.readInt(fileBuffer,&ne );
+                //readingEdgeProperties = true;
+                readingVertexProperties = false;
+            }
+
 		}else if( !strcmp( word, "property\0" ) ){
-			//read type
-            VScalarDef* scalarDef = new VScalarDef;
-            scalarDef->index = propertyIndex++;
-            //int propertySize = 0;
-			scanner.readString(fileBuffer, word,false);
-            //if( !strcmp( word, "char\0" ) ||
-            //		!strcmp( word, "uchar\0") ||
-            //		!strcmp( word, "uint8\0")||
-            //		!strcmp( word, "int8\0")){
-                //propertySize = sizeof(char);
-            //    scalarDef->type = 'c';
-            //}
-            //else if( !strcmp( word, "int\0" ) ||
-            //		 !strcmp( word, "float\0") ||
-            //		 !strcmp( word, "uint\0")||
-            //		 !strcmp( word, "float32\0")||
-            //		 !strcmp( word, "int32\0")){
-                //propertySize = sizeof(int);
-            //    scalarDef->type = 'f';
-            //}
 			//property name
 			if(readingVertexProperties){
+                scanner.readString(fileBuffer, word,false); // Skip datatype (we'll assume float for now)
+                VScalarDef* scalarDef = new VScalarDef;
+                scalarDef->index = propertyIndex++;
                 vertexProperties.push_back(scalarDef);
                 //scanner.readString(fileBuffer, word,false);
                 scanner.readString(fileBuffer, scalarDef->name, false);
@@ -154,7 +147,7 @@ bool ModelLoadingPly::readHeader(PolygonMesh* polygonMesh)
 					//not a coordinate
                     //numberOfBytesInVertexPropertiesToIgnore += propertySize;
                 //}
-			}
+            }
 		}else if( !strcmp( word, "end_header\0" ) ){
 			break;
 		}else if(!strcmp( word, "format\0" )){
@@ -168,6 +161,7 @@ bool ModelLoadingPly::readHeader(PolygonMesh* polygonMesh)
 	}
 	polygonMesh->setPolygonsCount( nf );
 	polygonMesh->setVerticesCount( np );
+    polygonMesh->setAdditionalEdgesCount( ne );
 	emit setupProgressBarForNewModel(vis::CONSTANTS::POLYGON_MESH,np,nf,0);
 	//scanner.readInt(fileBuffer,&nf );//discard number of edges
 	if(!isBinary)
@@ -321,6 +315,34 @@ vis::Vertex* ModelLoadingPly::readVertex(int id, float& x, float& y, float& z) {
     return vertex;
 }
 
+bool ModelLoadingPly::readAdditionalEdges( VertexCloud* pol ) {
+    std::vector<vis::Edge*> &e = pol->getAdditionalEdges();
+    e.clear();
+    e.reserve(pol->getAdditionalEdgesCount());
+
+    int n0, n1;
+    int r, g, b;
+    for( int i = 0; i < pol->getAdditionalEdgesCount(); i++ ) {
+        scanner.readInt(fileBuffer, &n0);
+        scanner.readInt(fileBuffer, &n1);
+        scanner.readInt(fileBuffer, &r);
+        scanner.readInt(fileBuffer, &g);
+        scanner.readInt(fileBuffer, &b);
+        vis::Edge * edge = new vis::Edge(i, pol->getVertices()[n0],
+                       pol->getVertices()[n1],
+                       glm::vec3(r/255.0f,g/255.0f,b/255.0f));
+        e.push_back( edge );
+        scanner.skipToNextLine(fileBuffer);
+        //if(i%1000==0)
+            //emit setLoadedAdditionalEdges(i);
+    }
+
+    //emit setLoadedAdditionalEdges(pol->getAdditionalEdgesCount());
+    std::cout << "AdditionalEdgesVector: Capacity = " << e.capacity() << std::endl;
+    std::cout << "AdditionalEdgesVector: Size = " << e.size() << std::endl;
+    return true;
+}
+
 bool ModelLoadingPly::readPolygonsBinary( PolygonMesh* pol ) {
 	unsigned char npf;
 	unsigned int pi;
@@ -425,7 +447,7 @@ bool ModelLoadingPly::readBody( PolygonMesh* pol )
 			return true;
 	}else{
 
-		if( readVertices( pol ) && readPolygons( pol ) )
+        if( readVertices( pol ) && readPolygons( pol ) && readAdditionalEdges( pol ) )
 			return true;
 	}
 

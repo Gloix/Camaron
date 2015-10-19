@@ -55,6 +55,7 @@ bool EvaluationStrategy::isFullFilled( vis::Vertex* ) { return false;}
 bool EvaluationStrategy::isFullFilled( vis::Polygon* ) { return false;}
 bool EvaluationStrategy::isFullFilled( vis::Triangle* t) { return isFullFilled((vis::Polygon*)t);}
 bool EvaluationStrategy::isFullFilled( vis::Polyhedron* ) { return false;}
+bool EvaluationStrategy::isFullFilled( vis::Edge* ) { return false;}
 const char* EvaluationStrategy::getName( ){
 	return this->name.c_str();
 }

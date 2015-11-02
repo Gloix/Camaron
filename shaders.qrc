@@ -54,5 +54,7 @@
         <file>Rendering/Renderers/IsosurfaceRenderer/is_gen.geom</file>
         <file>Rendering/Renderers/AdditionalEdgesRenderer/aer.frag</file>
         <file>Rendering/Renderers/AdditionalEdgesRenderer/aer.vert</file>
+		<file>Rendering/Renderers/ScalarPropertyRenderer/spr.frag</file>
+        <file>Rendering/Renderers/ScalarPropertyRenderer/spr.vert</file>
     </qresource>
 </RCC>

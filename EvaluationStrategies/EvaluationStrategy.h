@@ -35,6 +35,7 @@ class EvaluationStrategy
 		virtual float value( vis::Polygon* m );
 		virtual float value( vis::Triangle* m );
 		virtual float value( vis::Polyhedron* m );
+        virtual float value( vis::Edge* m );
 		const char *getName( );
 		const char* getPropertyName( );
 		virtual bool isFullFilled( vis::Vertex* v );

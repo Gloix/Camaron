@@ -5,7 +5,7 @@ BaseRendererConfig::BaseRendererConfig(QWidget *parent) : QWidget(parent)
 
 }
 
-BaseRendererConfig::forceUpdate() {
+void BaseRendererConfig::forceUpdate() {
     emit onConfigForceApply();
 }
 

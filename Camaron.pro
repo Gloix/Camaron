@@ -172,6 +172,8 @@ SOURCES += main.cpp\
     Rendering/Renderers/IsosurfaceRenderer/isosurfacerenderer.cpp \
     Rendering/Renderers/IsosurfaceRenderer/isosurfacerendererconfig.cpp \
     Rendering/Renderers/AdditionalEdgesRenderer/additionaledgesrenderer.cpp \
+    Rendering/Renderers/ScalarPropertyRenderer/scalarpropertyrenderer.cpp \
+    Rendering/Renderers/ScalarPropertyRenderer/scalarpropertyrendererconfig.cpp \
     Rendering/Renderers/baserendererconfig.cpp \
     Model/Element/edge.cpp
 
@@ -336,6 +338,8 @@ HEADERS  += visualizador.h \
     Rendering/Renderers/IsosurfaceRenderer/isosurfacerendererconfig.h \
     Rendering/Renderers/IsosurfaceRenderer/isosurfacerenderer.h \
     Rendering/Renderers/AdditionalEdgesRenderer/additionaledgesrenderer.h \
+    Rendering/Renderers/ScalarPropertyRenderer/scalarpropertyrenderer.h \
+    Rendering/Renderers/ScalarPropertyRenderer/scalarpropertyrendererconfig.h \
     Rendering/Renderers/baserendererconfig.h \
     Model/Element/edge.h
 
@@ -372,7 +376,8 @@ FORMS    += visualizador.ui \
     UI/KeyshortcutConfig/keyshortcutconfigurationitemwidget.ui \
     UI/modelloadingprogressdialog.ui \
     Rendering/Renderers/CartesianCoordinatesAxis/cartesiancoordinatesaxisconfig.ui \
-    Rendering/Renderers/HeightRenderer/heightrendererconfig.ui
+    Rendering/Renderers/HeightRenderer/heightrendererconfig.ui \
+    Rendering/Renderers/ScalarPropertyRenderer/scalarpropertyrendererconfig.ui
 
 OTHER_FILES += \
     Rendering/Renderers/ModelMainRenderer/mmr.vert \
@@ -427,7 +432,9 @@ OTHER_FILES += \
     Rendering/Renderers/IsosurfaceRenderer/is.vert \
     Rendering/Renderers/IsosurfaceRenderer/is_gen.vert \
     Rendering/Renderers/IsosurfaceRenderer/is.frag \
-    Rendering/Renderers/IsosurfaceRenderer/is_gen.geom
+    Rendering/Renderers/IsosurfaceRenderer/is_gen.geom \
+    Rendering/Renderers/ScalarPropertyRenderer/spr.frag \
+    Rendering/Renderers/ScalarPropertyRenderer/spr.vert
 RESOURCES += \
     images.qrc \
     shaders.qrc

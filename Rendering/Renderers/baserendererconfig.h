@@ -11,7 +11,7 @@ class BaseRendererConfig : public QWidget
         explicit BaseRendererConfig(QWidget *parent = 0);
         //void setRendererConfigPopup(RendererConfigPopUp rendererConfigPopUp);
     protected:
-        forceUpdate();
+        void forceUpdate();
 
     signals:
         void onConfigForceApply();

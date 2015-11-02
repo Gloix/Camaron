@@ -13,6 +13,8 @@ uniform int DrawOnlySelectedElements;
 struct LineInfo {
     int Width;
     vec4 Color;
+    int SelectedWidth;
+    vec4 SelectedColor;
     int isDrawn; //1 = wire, 0 = no wire
 };
 uniform LineInfo Line;

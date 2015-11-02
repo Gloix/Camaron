@@ -51,6 +51,7 @@ float EvaluationStrategy::value( vis::Vertex* ) { return getNullValue();}
 float EvaluationStrategy::value( vis::Polygon* ) { return getNullValue();}
 float EvaluationStrategy::value( vis::Triangle* t) { return value((vis::Polygon*)t);}
 float EvaluationStrategy::value( vis::Polyhedron* ) { return getNullValue();}
+float EvaluationStrategy::value( vis::Edge* ) { return getNullValue();}
 bool EvaluationStrategy::isFullFilled( vis::Vertex* ) { return false;}
 bool EvaluationStrategy::isFullFilled( vis::Polygon* ) { return false;}
 bool EvaluationStrategy::isFullFilled( vis::Triangle* t) { return isFullFilled((vis::Polygon*)t);}

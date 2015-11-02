@@ -63,10 +63,11 @@ void IsolineRenderer::draw(RModel* rmodel){
 
     std::vector<VScalarDef*> scalarDefs = rmodel->scalarDefs;
     std::vector<VScalarDef*>::iterator pos = std::find(scalarDefs.begin(), scalarDefs.end(), config->selectedScalarDef);
+	int selectedScalarDefIndex;
     if(pos != scalarDefs.end()) {
-        ShaderUtils::setUniform(theProgram, "SelectedScalarPropIndex", (int)(pos - scalarDefs.begin()));
+		selectedScalarDefIndex = (int)(pos - scalarDefs.begin());
     } else {
-        ShaderUtils::setUniform(theProgram, "SelectedScalarPropIndex", -1);
+		return;
     }
 
 
@@ -81,8 +82,8 @@ void IsolineRenderer::draw(RModel* rmodel){
 						   (GLubyte *)NULL );
     // Map index 1 to the scalar buffer
     glBindBuffer(GL_ARRAY_BUFFER, rmodel->vertexScalarDataBufferObject);
-    glVertexAttribPointer( VERTEX_SCALARPROP, scalarDefs.size(), GL_FLOAT, GL_FALSE, 0,
-						   (GLubyte *)NULL );
+	glVertexAttribPointer( VERTEX_SCALARPROP, 1, GL_FLOAT, GL_FALSE, scalarDefs.size()*sizeof(float),
+						   (GLubyte *)selectedScalarDefIndex );
     // Map index 2 to the flags buffer
 	glBindBuffer(GL_ARRAY_BUFFER, rmodel->vertexFlagsDataBufferObject);
 	glVertexAttribIPointer( VERTEX_FLAGS, 1, GL_UNSIGNED_INT, 0,

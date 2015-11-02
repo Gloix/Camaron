@@ -102,7 +102,7 @@ bool ModelLoadingPly::readHeader(PolygonMesh* polygonMesh)
 	numberOfBytesInVertexPropertiesToIgnore = 0;
 	int np = 0;
 	int nf = 0;
-    int ne = 0;
+	int ne = 0;
 	//read number of points
 	bool in = true;
 	char word [256];
@@ -131,22 +131,15 @@ bool ModelLoadingPly::readHeader(PolygonMesh* polygonMesh)
 			//property name
 			if(readingVertexProperties){
                 scanner.readString(fileBuffer, word,false); // Skip datatype (we'll assume float for now)
-                VScalarDef* scalarDef = new VScalarDef;
-                scalarDef->index = propertyIndex++;
-                vertexProperties.push_back(scalarDef);
-                //scanner.readString(fileBuffer, word,false);
-                scanner.readString(fileBuffer, scalarDef->name, false);
-                if( strcmp( scalarDef->name, "x\0" ) &&
-                        strcmp( scalarDef->name, "y\0") &&
-                        strcmp( scalarDef->name, "z\0")){
+				VScalarDef* scalarDef = new VScalarDef;
+				scanner.readString(fileBuffer, scalarDef->name, false);
+				vertexProperties.push_back(scalarDef);
+				if( strcmp( scalarDef->name, "x\0" ) &&
+						strcmp( scalarDef->name, "y\0") &&
+						strcmp( scalarDef->name, "z\0")){
+					scalarDef->index = propertyIndex++;
                     polygonMesh->addScalarDef(scalarDef);
                 }
-                //if( strcmp( word, "x\0" ) &&
-                //		strcmp( word, "y\0")&&
-                //		strcmp( word, "z\0")){
-					//not a coordinate
-                    //numberOfBytesInVertexPropertiesToIgnore += propertySize;
-                //}
             }
 		}else if( !strcmp( word, "end_header\0" ) ){
 			break;

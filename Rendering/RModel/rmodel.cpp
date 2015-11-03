@@ -42,6 +42,9 @@ RModel::RModel():
 }
 RModel::~RModel(){
 	this->freeRAMFromVideoCardBuffer();
+	for(std::vector<RModelVScalarDef*>::size_type i=0;i<scalarDefs.size();i++) {
+		delete(scalarDefs[i]);
+	}
 }
 
 void RModel::deleteData(){

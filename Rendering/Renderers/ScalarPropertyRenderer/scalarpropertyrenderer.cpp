@@ -68,9 +68,9 @@ void ScalarPropertyRenderer::draw(RModel* rmodel){
 	glVertexAttribPointer( POSITION_ATTRIBUTE, 3, GL_FLOAT, GL_FALSE, 0,
 						   (GLubyte *)NULL );
 	// Map index 1 to the vertex scalar buffer
-	glBindBuffer(GL_ARRAY_BUFFER, rmodel->vertexScalarDataBufferObject);
-	glVertexAttribPointer( VERTEX_SCALARPROP, 1, GL_FLOAT, GL_FALSE, (int)rmodel->scalarDefs.size()*sizeof(float),
-						   (GLubyte *)config->selectedScalarDef->index);
+	glBindBuffer(GL_ARRAY_BUFFER, config->selectedScalarDef->buffer);
+	glVertexAttribPointer( VERTEX_SCALARPROP, 1, GL_FLOAT, GL_FALSE, config->selectedScalarDef->stride,
+						   (GLubyte *)config->selectedScalarDef->offset);
     if(rmodel->getModelType()== 0)//vis::CONSTANTS::VERTEX_CLOUD)
         glDrawArrays(GL_POINTS, 0, rmodel->vertexFlagsAttribute.size() );
     else

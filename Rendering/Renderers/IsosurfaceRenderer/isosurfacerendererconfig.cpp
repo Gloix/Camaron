@@ -32,7 +32,7 @@ void IsosurfaceRendererConfig::setModel(RModel* model)
             ui->horizontalSlider_sweep_value->setEnabled(true);
             for(std::vector<VScalarDef>::size_type i = 0;i<scalarDefs.size();i++){
                 scalarDefIdsMap.insert(std::make_pair(i,scalarDefs[i]));
-                ui->comboBox_prop_select->addItem(QString::fromUtf8(scalarDefs[i]->name), QVariant(i));
+				ui->comboBox_prop_select->addItem(QString::fromStdString(scalarDefs[i]->name), QVariant(i));
             }
             selectedScalarDef = scalarDefs[0];
         } else {

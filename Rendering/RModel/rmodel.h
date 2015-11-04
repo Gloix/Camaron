@@ -4,6 +4,7 @@
 #include "Rendering/RModel/RVertexFlagAttribute.h"
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <string>
 
 class VertexCloud;
 class PolygonMesh;
@@ -13,6 +14,14 @@ class LightWeightPolygonMesh;
 class LightWeightPolyhedronMesh;
 class Model;
 struct VScalarDef;
+struct RModelVScalarDef {
+	std::string name;
+	std::vector<float> bounds;
+	GLuint buffer;
+	GLsizei stride;
+	GLubyte offset;
+};
+
 class RModel
 {
 	public:
@@ -43,7 +52,7 @@ class RModel
 		std::vector<RVertexFlagAttribute> polygonGeoCenterFlagsAttribute;
 		std::vector<RVertexFlagAttribute> polyhedronGeoCenterFlagsAttribute;
 
-        std::vector<VScalarDef*> scalarDefs;
+		std::vector<RModelVScalarDef*> scalarDefs;
 
 		std::vector<float> bounds;
 
@@ -86,6 +95,7 @@ class RModel
 		bool isOrthoProjectionInUse();
 		void setViewMatrix(glm::mat4);
 	private:
+		void copyScalarDefs(VertexCloud*);
 		int modelType;
 		glm::vec3 cameraPosition;
 		glm::vec4 backgroundColor;

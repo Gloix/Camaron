@@ -7,6 +7,7 @@
 #include "Model/PolygonMesh.h"
 #include "Rendering/Renderers/baserendererconfig.h"
 
+struct RModelVScalarDef;
 namespace Ui {
 class IsosurfaceRendererConfig;
 }
@@ -21,7 +22,7 @@ class IsosurfaceRendererConfig : public BaseRendererConfig
         glm::vec4 gradientStartColor;
         glm::vec4 gradientEndColor;
 		glm::vec4 wireframeColor;
-        VScalarDef* selectedScalarDef;
+		RModelVScalarDef* selectedScalarDef;
         std::vector<float> isolevels;
 		int wireFrameOption;
 		void readConfig();
@@ -40,10 +41,10 @@ class IsosurfaceRendererConfig : public BaseRendererConfig
         static const int INPUT_SWEEP = 1;
         int currentInputType = 0;
         Ui::IsosurfaceRendererConfig *ui;
-        std::vector<VScalarDef*> scalarDefs;
+		std::vector<RModelVScalarDef*> scalarDefs;
         // Keep a model pointer to keep track of when the model changes.
         Model* model;
-        std::map<int,VScalarDef*> scalarDefIdsMap;
+		std::map<int,RModelVScalarDef*> scalarDefIdsMap;
 };
 
 #endif // ISOSURFACERENDERERCONFIG_H

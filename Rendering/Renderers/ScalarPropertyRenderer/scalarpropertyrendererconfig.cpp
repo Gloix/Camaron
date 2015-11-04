@@ -50,7 +50,7 @@ void ScalarPropertyRendererConfig::setModel(RModel* model)
 			for(std::vector<VScalarDef>::size_type i = 0;i<scalarDefs.size();i++){
 				selectedBounds[scalarDefs[i]] = scalarDefs[i]->bounds;
 				scalarDefIdsMap.insert(std::make_pair(i,scalarDefs[i]));
-				ui->comboBox_prop_select->addItem(QString::fromUtf8(scalarDefs[i]->name), QVariant(i));
+				ui->comboBox_prop_select->addItem(QString::fromStdString(scalarDefs[i]->name), QVariant(i));
 			}
 		} else {
 			ui->comboBox_prop_select->setEnabled(false);

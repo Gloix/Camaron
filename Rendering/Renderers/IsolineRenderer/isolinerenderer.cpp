@@ -52,10 +52,13 @@ void IsolineRenderer::draw(RModel* rmodel){
 	if(rmodel->positionDataBufferObject == RModel::NULL_BUFFER)
 		return;// Create and set-up the vertex array object
 	//Matrix
+	if(config->selectedScalarDef == NULL) {
+		return;
+	}
 	glUseProgram(theProgram);
 	ShaderUtils::setUniform(theProgram, "MVP",rmodel->getMVP());
-    ShaderUtils::setUniform(theProgram, "IsolinesSteps", config->isolinesSteps);
-    ShaderUtils::setUniform(theProgram, "IsolinesStepsN", (int)config->isolinesSteps.size());
+	ShaderUtils::setUniform(theProgram, "Isolevels", config->isolinesSteps);
+	ShaderUtils::setUniform(theProgram, "IsolevelsSize", (int)config->isolinesSteps.size());
     ShaderUtils::setUniform(theProgram, "GradientStartColor", config->gradientStartColor);
     ShaderUtils::setUniform(theProgram, "GradientEndColor", config->gradientEndColor);
 	ShaderUtils::setUniform(theProgram, "WireFrameColor", config->wireframeColor);

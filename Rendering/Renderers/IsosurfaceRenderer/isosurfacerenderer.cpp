@@ -187,28 +187,14 @@ void IsosurfaceRenderer::draw(RModel* rmodel){
 }
 
 void IsosurfaceRenderer::generateIsosurface(RModel* rmodel, std::vector<float> values){
-
-    //float valuess[12];
-
-    glGetError();
-    //glUseProgram(0);
-
     glUseProgram(generateProgram);
-
-    std::cout << "ErrorA " << glGetError() << std::endl;
-
-    std::cout << "ProgramID " << generateProgram << std::endl;
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, triTableTex);
 
     ShaderUtils::setUniform(generateProgram, "Isolevels", values);
-    std::cout << "ErrorB " << glGetError() << std::endl;
     ShaderUtils::setUniform(generateProgram, "IsolevelsSize", (int)values.size());
-    std::cout << "ErrorB1 " << glGetError() << std::endl;
-    //ShaderUtils::setUniformTexture(generateProgram, "triTableTex", triTableTex);
     ShaderUtils::setUniformTexture(generateProgram, "triTableTex", 0);
-    std::cout << "ErrorB2 " << glGetError() << std::endl;
 
 
 
@@ -217,15 +203,10 @@ void IsosurfaceRenderer::generateIsosurface(RModel* rmodel, std::vector<float> v
     // We don't want to rasterize anything. We just want to generate the isosurfaces.
     glEnable(GL_RASTERIZER_DISCARD);
 
-    std::cout << "ErrorC " << glGetError() << std::endl;
-
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, transformFeedback);
-    std::cout << "ErrorC1 " << glGetError() << std::endl;
 
     glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, isosurfacesBuffer);
-    std::cout << "ErrorC2 " << glGetError() << std::endl;
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rmodel->tetrahedronVertexIdsBufferObject);
-    std::cout << "ErrorC3 " << glGetError() << std::endl;
     glEnableVertexAttribArray(POSITION_ATTRIBUTE); // Vertex position
     glEnableVertexAttribArray(VERTEX_SCALARPROP); // Vertex scalars
 
@@ -233,35 +214,18 @@ void IsosurfaceRenderer::generateIsosurface(RModel* rmodel, std::vector<float> v
     glVertexAttribPointer( POSITION_ATTRIBUTE, 3, GL_FLOAT, GL_FALSE, 0,
                            (GLubyte *)NULL );
 
-    std::cout << "Error0 " << glGetError() << std::endl;
 	glBindBuffer(GL_ARRAY_BUFFER, config->selectedScalarDef->buffer);
 	glVertexAttribPointer( VERTEX_SCALARPROP, 1, GL_FLOAT, GL_FALSE, config->selectedScalarDef->stride,
 						   (GLubyte*)config->selectedScalarDef->offset);
     glBeginTransformFeedback(GL_POINTS);
-    std::cout << "Error1 " << glGetError() << std::endl;
 
-    //glGetBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, 0, 40, valuess);
-    //for (int i = 0; i < 10; i++)
-    //    std::cout << valuess[i] << std::endl;
-
-    //std::cout << "Error2 " << glGetError() << std::endl;
-
-    //glDrawElements(GL_TRIANGLES_ADJACENCY, rmodel->vertexFlagsAttribute.size(), GL_UNSIGNED_INT,
-    //               (void*)0 );
     glDrawElements(GL_LINES_ADJACENCY, rmodel->numberOfTetrahedrons*4, GL_UNSIGNED_INT,
                    (void*)0 );
-    std::cout << "Error4 " << glGetError() << std::endl;
-    glEndTransformFeedback();
-    std::cout << "Error5 " << glGetError() << std::endl;
 
-    //glGetBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, 0, 48, valuess);
-    //for (int i = 0; i < 12; i++)
-        //std::cout << valuess[i] << std::endl;
-    std::cout << "Error6 " << glGetError() << std::endl;
+    glEndTransformFeedback();
+
     glDisableVertexAttribArray(POSITION_ATTRIBUTE); // Vertex position
     glDisableVertexAttribArray(VERTEX_SCALARPROP); // Vertex selection
-    //glDisableVertexAttribArray(VERTEX_FLAGS); // Vertex selection
-    std::cout << "Error7 " << glGetError() << std::endl;
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);

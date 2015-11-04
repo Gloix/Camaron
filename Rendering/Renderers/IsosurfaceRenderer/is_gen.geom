@@ -32,55 +32,6 @@ int triTableValue(int i, int j){
 
 void main()
 {
-    /*if(vertexData[0].VertexScalar==1 && vertexData[0].VertexPosition == vec3(0,10,0)) {
-        vertexPosition = vec3(0.0);
-        scalarValue = 1;
-        EmitVertex();
-        vertexPosition = vec3(0.0,10.0,0.0);
-        scalarValue = 2;
-        EmitVertex();
-        vertexPosition = vec3(0.0,0.0,10.0);
-        scalarValue = 3;
-        EmitVertex();
-        EndPrimitive();
-    }
-    if(vertexData[1].VertexScalar==0 && vertexData[1].VertexPosition == vec3(0,0,10)) {
-        vertexPosition = vec3(2.0,0.0,0.0);
-        scalarValue = 1;
-        EmitVertex();
-        vertexPosition = vec3(2.0,10.0,0.0);
-        scalarValue = 2;
-        EmitVertex();
-        vertexPosition = vec3(2.0,0.0,10.0);
-        scalarValue = 3;
-        EmitVertex();
-        EndPrimitive();
-    }
-    if(vertexData[2].VertexScalar==1 && vertexData[2].VertexPosition == vec3(0,0,0)) {
-        vertexPosition = vec3(4.0,0.0,0.0);
-        scalarValue = 1;
-        EmitVertex();
-        vertexPosition = vec3(4.0,10.0,0.0);
-        scalarValue = 2;
-        EmitVertex();
-        vertexPosition = vec3(4.0,0.0,10.0);
-        scalarValue = 3;
-        EmitVertex();
-        EndPrimitive();
-    }
-    if(vertexData[3].VertexScalar==1 && vertexData[3].VertexPosition == vec3(10,0,0)) {
-        vertexPosition = vec3(6.0,0.0,0.0);
-        scalarValue = 1;
-        EmitVertex();
-        vertexPosition = vec3(6.0,10.0,0.0);
-        scalarValue = 2;
-        EmitVertex();
-        vertexPosition = vec3(6.0,0.0,10.0);
-        scalarValue = 3;
-        EmitVertex();
-        EndPrimitive();
-    }
-    return;*/
     for (int i=0 ; i < IsolevelsSize ; i++) {
         float isolevel = Isolevels[i];
         int tetindex = 0;

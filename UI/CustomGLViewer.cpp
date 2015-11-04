@@ -606,7 +606,7 @@ void CustomGLViewer::wheelEvent ( QWheelEvent * event ){
 	if(up)
 		this->zoom *= zoomIncrement;
 	else
-		this->zoom /= 1.1f;
+		this->zoom /= zoomIncrement;
 	forceReRendering();
 }
 

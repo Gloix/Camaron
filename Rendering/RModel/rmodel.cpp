@@ -90,8 +90,52 @@ void RModel::loadRModelData(VertexCloud* model){
 	vertexFlagsDataBufferObject = ShaderUtils::createDataBuffer<RVertexFlagAttribute>(vertexFlagsAttribute);
     loadAdditionalEdges(model);
 	originalModel = model;
-    scalarDefs = model->getScalarDefs();
+	copyScalarDefs(model);
 }
+
+void RModel::copyScalarDefs(VertexCloud* model) {
+	std::vector<VScalarDef*> modelScalarDefs = model->getScalarDefs();
+	RModelVScalarDef* rmodelVScalarDef;
+	//X
+	rmodelVScalarDef = new RModelVScalarDef;
+	rmodelVScalarDef->buffer = positionDataBufferObject;
+	rmodelVScalarDef->bounds.push_back(model->getBounds()[0]);
+	rmodelVScalarDef->bounds.push_back(model->getBounds()[3]);
+	rmodelVScalarDef->name = std::string("X");
+	rmodelVScalarDef->offset = 0;
+	rmodelVScalarDef->stride = 3*sizeof(float);
+	scalarDefs.push_back(rmodelVScalarDef);
+	//Y
+	rmodelVScalarDef = new RModelVScalarDef;
+	rmodelVScalarDef->buffer = positionDataBufferObject;
+	rmodelVScalarDef->bounds.push_back(model->getBounds()[1]);
+	rmodelVScalarDef->bounds.push_back(model->getBounds()[4]);
+	rmodelVScalarDef->name = std::string("Y");
+	rmodelVScalarDef->offset = 1*sizeof(float);
+	rmodelVScalarDef->stride = 3*sizeof(float);
+	scalarDefs.push_back(rmodelVScalarDef);
+	//Z
+	if(!model->is2D()) {
+		rmodelVScalarDef = new RModelVScalarDef;
+		rmodelVScalarDef->buffer = positionDataBufferObject;
+		rmodelVScalarDef->bounds.push_back(model->getBounds()[2]);
+		rmodelVScalarDef->bounds.push_back(model->getBounds()[5]);
+		rmodelVScalarDef->name = std::string("Z");
+		rmodelVScalarDef->offset = 2*sizeof(float);
+		rmodelVScalarDef->stride = 3*sizeof(float);
+		scalarDefs.push_back(rmodelVScalarDef);
+	}
+	for(std::vector<VScalarDef*>::size_type i = 0; i<modelScalarDefs.size(); i++ ) {
+		rmodelVScalarDef = new RModelVScalarDef;
+		rmodelVScalarDef->buffer = vertexScalarDataBufferObject;
+		rmodelVScalarDef->bounds.assign(modelScalarDefs[i]->bounds.begin(), modelScalarDefs[i]->bounds.end());
+		rmodelVScalarDef->name = std::string(modelScalarDefs[i]->name);
+		rmodelVScalarDef->offset = modelScalarDefs[i]->index*sizeof(float);
+		rmodelVScalarDef->stride = modelScalarDefs.size()*sizeof(float);
+		scalarDefs.push_back(rmodelVScalarDef);
+	}
+}
+
 void RModel::copyModelBounds(Model* model){
 	this->bounds.clear();
 	this->bounds.reserve(model->getBounds().size());
@@ -119,7 +163,7 @@ void RModel::loadRModelData(PolygonMesh* mesh){
     std::cout << "Loading Scalar Properties" << std::endl;
     loadVertexScalarProperties(mesh);
 	originalModel = mesh;
-    scalarDefs = mesh->getScalarDefs();
+	copyScalarDefs(mesh);
 }
 
 void RModel::loadAdditionalEdges(VertexCloud* vcloud){

@@ -61,16 +61,6 @@ void IsolineRenderer::draw(RModel* rmodel){
 	ShaderUtils::setUniform(theProgram, "WireFrameColor", config->wireframeColor);
 	ShaderUtils::setUniform(theProgram, "WireFrameOption", config->wireFrameOption);
 
-    std::vector<VScalarDef*> scalarDefs = rmodel->scalarDefs;
-    std::vector<VScalarDef*>::iterator pos = std::find(scalarDefs.begin(), scalarDefs.end(), config->selectedScalarDef);
-	int selectedScalarDefIndex;
-    if(pos != scalarDefs.end()) {
-		selectedScalarDefIndex = (int)(pos - scalarDefs.begin());
-    } else {
-		return;
-    }
-
-
 	//In the render function, bind to the vertex array object and call glDrawArrays to
 	// Enable the vertex attribute arrays
 	glEnableVertexAttribArray(POSITION_ATTRIBUTE); // Vertex position
@@ -81,9 +71,9 @@ void IsolineRenderer::draw(RModel* rmodel){
 	glVertexAttribPointer( POSITION_ATTRIBUTE, 3, GL_FLOAT, GL_FALSE, 0,
 						   (GLubyte *)NULL );
     // Map index 1 to the scalar buffer
-    glBindBuffer(GL_ARRAY_BUFFER, rmodel->vertexScalarDataBufferObject);
-	glVertexAttribPointer( VERTEX_SCALARPROP, 1, GL_FLOAT, GL_FALSE, scalarDefs.size()*sizeof(float),
-						   (GLubyte *)selectedScalarDefIndex );
+	glBindBuffer(GL_ARRAY_BUFFER, config->selectedScalarDef->buffer);
+	glVertexAttribPointer( VERTEX_SCALARPROP, 1, GL_FLOAT, GL_FALSE, config->selectedScalarDef->stride,
+						   (GLubyte*)config->selectedScalarDef->offset );
     // Map index 2 to the flags buffer
 	glBindBuffer(GL_ARRAY_BUFFER, rmodel->vertexFlagsDataBufferObject);
 	glVertexAttribIPointer( VERTEX_FLAGS, 1, GL_UNSIGNED_INT, 0,

@@ -11,7 +11,7 @@ namespace Ui {
 class ScalarPropertyRendererConfig;
 }
 class RModel;
-struct VScalarDef;
+struct RModelVScalarDef;
 class ScalarPropertyRendererConfig : public BaseRendererConfig
 {
 		Q_OBJECT
@@ -22,17 +22,17 @@ class ScalarPropertyRendererConfig : public BaseRendererConfig
 		void readConfig();
         bool setBoundsFromModel();
 
-		VScalarDef *selectedScalarDef;
+		RModelVScalarDef *selectedScalarDef;
         int coloring_type;
         int inverse_intensity;
 		void setModel(RModel* model);
-		std::map<VScalarDef*, std::vector<float>> selectedBounds;
+		std::map<RModelVScalarDef*, std::vector<float>> selectedBounds;
 
 	private:
 
 		Ui::ScalarPropertyRendererConfig *ui;
-		std::vector<VScalarDef*> scalarDefs;
-		std::map<int,VScalarDef*> scalarDefIdsMap;
+		std::vector<RModelVScalarDef*> scalarDefs;
+		std::map<int,RModelVScalarDef*> scalarDefIdsMap;
         RModel* rmodel;
 		Model* model;
     private slots:

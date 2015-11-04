@@ -4,7 +4,6 @@ in vec4 VertexPosition;
 in uint VertexFlags;
 in float VertexScalar;
 
-uniform int SelectedScalarPropIndex;
 uniform int WireFrameOption;
 uniform mat4 MVP;
 struct VertexData{

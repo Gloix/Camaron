@@ -233,10 +233,10 @@ void IsosurfaceRenderer::generateIsosurface(RModel* rmodel, std::vector<float> v
     glVertexAttribPointer( POSITION_ATTRIBUTE, 3, GL_FLOAT, GL_FALSE, 0,
                            (GLubyte *)NULL );
 
-    glBindBuffer(GL_ARRAY_BUFFER, rmodel->vertexScalarDataBufferObject);
-    glVertexAttribPointer( VERTEX_SCALARPROP, 1, GL_FLOAT, GL_FALSE, (int)rmodel->scalarDefs.size()*sizeof(float),
-                           (GLubyte *)config->selectedScalarDef->index);
     std::cout << "Error0 " << glGetError() << std::endl;
+	glBindBuffer(GL_ARRAY_BUFFER, config->selectedScalarDef->buffer);
+	glVertexAttribPointer( VERTEX_SCALARPROP, 1, GL_FLOAT, GL_FALSE, config->selectedScalarDef->stride,
+						   (GLubyte*)config->selectedScalarDef->offset);
     glBeginTransformFeedback(GL_POINTS);
     std::cout << "Error1 " << glGetError() << std::endl;
 

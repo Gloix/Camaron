@@ -5,7 +5,6 @@
 #include "Common/Constants.h"
 #define POSITION_ATTRIBUTE 0
 #define VERTEX_SCALARPROP 1
-//#define VERTEX_FLAGS 1
 
 int triTable[16][8] = {
     {-1, -1, -1, -1, -1, -1, -1, -1}, //0000
@@ -42,7 +41,6 @@ void IsosurfaceRenderer::glewIsReadyRenderer(){
     config = new IsosurfaceRendererConfig();
     this->ok = this->buildIsosurfaceRenderProgram() && this->buildIsosurfaceGenerationProgram();
     if(this->ok) {
-        glGetError();
         glGenTransformFeedbacks(1, &transformFeedback);
         glGenBuffers(1, &isosurfacesBuffer);
 
@@ -55,7 +53,6 @@ void IsosurfaceRenderer::glewIsReadyRenderer(){
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
         glTexImage2D( GL_TEXTURE_2D, 0, GL_R32I, 8, 16, 0,
         GL_RED_INTEGER, GL_INT, &triTable);
         std::cout << "ErrorGlewIsReadyRenderer " << glGetError() << std::endl;
@@ -88,7 +85,6 @@ bool IsosurfaceRenderer::buildIsosurfaceRenderProgram() {
 }
 
 bool IsosurfaceRenderer::buildIsosurfaceGenerationProgram() {
-    glGetError();
     ShaderLoadingData vertexShaderData(GL_VERTEX_SHADER);
     vertexShaderData.addFile("Rendering/Renderers/IsosurfaceRenderer/is_gen.vert");
     ShaderLoadingData geometryShaderData(GL_GEOMETRY_SHADER);
@@ -99,19 +95,13 @@ bool IsosurfaceRenderer::buildIsosurfaceGenerationProgram() {
     shaderList.push_back(geometryShaderData);
 
     //VertexAttributeBindingData selectAttr = {VERTEX_NORMAL, "VertexNormal"};
-    VertexAttributeBindingData positionAttr = {POSITION_ATTRIBUTE, "VertexPosition"};
-    //VertexAttributeBindingData flagAttr = {VERTEX_FLAGS, "VertexFlags"};
+	VertexAttributeBindingData positionAttr = {POSITION_ATTRIBUTE, "VertexPosition"};
     VertexAttributeBindingData scalarAttr = {VERTEX_SCALARPROP, "VertexScalar"};
     std::vector<VertexAttributeBindingData> attributeList;
     attributeList.push_back(positionAttr);
     attributeList.push_back(scalarAttr);
-    //attributeList.push_back(flagAttr);
 
     TransformFeedbackData tfData = {{"vertexPosition", "scalarValue"},GL_INTERLEAVED_ATTRIBS};
-    //tfData.varyings = ;
-    //tfData.bufferMode = GL_INTERLEAVED_ATTRIBS;
-    //const std::vector<GLchar> varyings = {"vertexPosition", "scalarValue"};
-    //glTransformFeedbackVaryings(generateProgram, 2, varyings, GL_INTERLEAVED_ATTRIBS);
 
     generateProgram = ShaderUtils::CreateProgram(shaderList,attributeList,&tfData);
     return generateProgram != ShaderUtils::FAIL_CREATING_PROGRAM;

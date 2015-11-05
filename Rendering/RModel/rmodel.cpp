@@ -96,6 +96,15 @@ void RModel::loadRModelData(VertexCloud* model){
 void RModel::copyScalarDefs(VertexCloud* model) {
 	std::vector<VScalarDef*> modelScalarDefs = model->getScalarDefs();
 	RModelVScalarDef* rmodelVScalarDef;
+	for(std::vector<VScalarDef*>::size_type i = 0; i<modelScalarDefs.size(); i++ ) {
+		rmodelVScalarDef = new RModelVScalarDef;
+		rmodelVScalarDef->buffer = vertexScalarDataBufferObject;
+		rmodelVScalarDef->bounds.assign(modelScalarDefs[i]->bounds.begin(), modelScalarDefs[i]->bounds.end());
+		rmodelVScalarDef->name = std::string(modelScalarDefs[i]->name);
+		rmodelVScalarDef->offset = modelScalarDefs[i]->index*sizeof(float);
+		rmodelVScalarDef->stride = modelScalarDefs.size()*sizeof(float);
+		scalarDefs.push_back(rmodelVScalarDef);
+	}
 	//X
 	rmodelVScalarDef = new RModelVScalarDef;
 	rmodelVScalarDef->buffer = positionDataBufferObject;
@@ -123,15 +132,6 @@ void RModel::copyScalarDefs(VertexCloud* model) {
 		rmodelVScalarDef->name = std::string("Z");
 		rmodelVScalarDef->offset = 2*sizeof(float);
 		rmodelVScalarDef->stride = 3*sizeof(float);
-		scalarDefs.push_back(rmodelVScalarDef);
-	}
-	for(std::vector<VScalarDef*>::size_type i = 0; i<modelScalarDefs.size(); i++ ) {
-		rmodelVScalarDef = new RModelVScalarDef;
-		rmodelVScalarDef->buffer = vertexScalarDataBufferObject;
-		rmodelVScalarDef->bounds.assign(modelScalarDefs[i]->bounds.begin(), modelScalarDefs[i]->bounds.end());
-		rmodelVScalarDef->name = std::string(modelScalarDefs[i]->name);
-		rmodelVScalarDef->offset = modelScalarDefs[i]->index*sizeof(float);
-		rmodelVScalarDef->stride = modelScalarDefs.size()*sizeof(float);
 		scalarDefs.push_back(rmodelVScalarDef);
 	}
 }

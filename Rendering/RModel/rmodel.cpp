@@ -51,6 +51,9 @@ void RModel::deleteData(){
 	this->freeRAMFromVideoCardBuffer();
 	vertexFlagsAttribute.clear();
 	std::vector<RVertexFlagAttribute>().swap(vertexFlagsAttribute);
+	for(std::vector<RModelVScalarDef*>::size_type i=0;i<scalarDefs.size();i++) {
+		delete(scalarDefs[i]);
+	}
     scalarDefs.clear();
 	bounds.resize(6);
 	bounds[0] = 0.0;

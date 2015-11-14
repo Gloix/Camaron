@@ -18,12 +18,12 @@ glm::vec3& vis::Vertex::getCoords(){ return coords; }
 int vis::Vertex::getPos(){ return this->pos;}
 void vis::Vertex::setPos(int npos){ this->pos = npos;}
 
-std::vector<VScalar>& vis::Vertex::getScalarProperties() {
-    return this->scalarProperties;
+float vis::Vertex::getScalarProperty(int i) {
+	return this->getProperty(i+SCALAR_PROPERTY_START_INDEX);
 }
 
-void vis::Vertex::addScalarProperty(VScalar scalar) {
-    this->scalarProperties.push_back(scalar);
+void vis::Vertex::addScalarProperty(int index, float scalar) {
+	this->addProperty(index+SCALAR_PROPERTY_START_INDEX, scalar);
 }
 
 glm::vec3& vis::Vertex::getNormal(){

@@ -149,7 +149,7 @@ bool ModelLoadingEleNode::readVertices( PolygonMesh* mesh){
         scanner.readFloat(fileBufferNode, &prop);
         //VScalar vscalar;
         //vscalar.fvalue = prop;
-        vertex->addProperty(i, prop);
+		vertex->addScalarProperty(i, prop);
         scalarDefs[i]->bounds.resize(2);
         scalarDefs[i]->bounds[0] = prop;
         scalarDefs[i]->bounds[1] = prop;
@@ -174,7 +174,7 @@ bool ModelLoadingEleNode::readVertices( PolygonMesh* mesh){
         vertex = new vis::Vertex(index,x,y,z,i);
         for(int i=0 ; i<numberOfAttributesPerNode; i++) {
             scanner.readFloat(fileBufferNode, &prop);
-            vertex->addProperty(i, prop);
+			vertex->addScalarProperty(i, prop);
             if(scalarDefs[i]->bounds[0] > prop) {
                 scalarDefs[i]->bounds[0] = prop;
             } else if(scalarDefs[i]->bounds[1] < prop) {

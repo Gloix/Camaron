@@ -295,7 +295,6 @@ vis::Vertex* ModelLoadingPly::readVertex(int id, float& x, float& y, float& z) {
         } else if( !strcmp(vertexProperties.at(i)->name, "z\0")) {
             scanner.readFloat(fileBuffer, &z);
         } else {
-            //VScalar vprop;
             float f;
             scanner.readFloat(fileBuffer, &f);
             properties.push_back(f);
@@ -303,7 +302,7 @@ vis::Vertex* ModelLoadingPly::readVertex(int id, float& x, float& y, float& z) {
     }
     vis::Vertex* vertex = new vis::Vertex(id, x, y, z);
     for( unsigned int i = 0; i < properties.size(); i++) {
-        vertex->addProperty(i,properties[i]);
+		vertex->addScalarProperty(i,properties[i]);
     }
     return vertex;
 }

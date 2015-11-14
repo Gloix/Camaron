@@ -262,7 +262,7 @@ void RModel::loadVertexScalarProperties(VertexCloud* model){
         std::vector<int>& rmodelPos = currentVertex->getRmodelPositions();
         for(std::vector<vis::Vertex*>::size_type j = 0;j<rmodelPos.size();j++)
             for(std::vector<VScalarDef*>::size_type k = 0;k<scalarDefsSize;k++)
-                floatContainer[rmodelPos[j]*scalarDefsSize+k] = currentVertex->getProperty(k);
+				floatContainer[rmodelPos[j]*scalarDefsSize+k] = currentVertex->getScalarProperty(k);
     }
     vertexScalarDataBufferObject = ShaderUtils::createDataBuffer<float>(floatContainer);
 

@@ -17,8 +17,12 @@ void main()
 {
     VertexFlagsGeom = VertexFlags;
     if(noValue != VertexValue){
-	float rat = (VertexValue-minValue)/(maxValue-minValue);
-	Color = mix(MinValueColor,MaxValueColor, rat);
+        if(maxValue == minValue) {
+            Color = MinValueColor;
+        } else {
+            float rat = (VertexValue-minValue)/(maxValue-minValue);
+            Color = mix(MinValueColor,MaxValueColor, rat);
+        }
     }
     else
 	Color = NoValueColor;

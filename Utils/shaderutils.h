@@ -19,9 +19,9 @@ struct VertexAttributeBindingData{
 		const char* strShaderFile;
 };
 struct TransformFeedbackData{
-    public:
-        const std::vector<std::string> varyings;
-        GLenum bufferMode;
+	public:
+		const std::vector<std::string> varyings;
+		GLenum bufferMode;
 };
 class ShaderUtils
 {
@@ -30,21 +30,21 @@ class ShaderUtils
 		static const GLuint FAIL_CREATING_PROGRAM = 99998;
 		static GLuint CreateProgram(const std::vector<GLuint> &shaderList,
 									const std::vector<VertexAttributeBindingData> &attributes,
-                                    const std::vector<VertexAttributeBindingData> &fragData,
-                                    const TransformFeedbackData *transformFeedbackVaryings);
+									const std::vector<VertexAttributeBindingData> &fragData,
+									const TransformFeedbackData *transformFeedbackVaryings);
 		static GLuint CreateProgram(const std::vector<ShaderLoadingData> &shaderList);
 		static GLuint CreateProgram(const std::vector<ShaderLoadingData> &shaderList,
 									const std::vector<VertexAttributeBindingData> &attributes);
 		static GLuint CreateProgram(const std::vector<ShaderLoadingData> &shaderList,
 									const std::vector<VertexAttributeBindingData> &attributes,
 									const std::vector<VertexAttributeBindingData> &fragAt);
-        static GLuint CreateProgram(const std::vector<ShaderLoadingData> &shaderList,
-                                    const std::vector<VertexAttributeBindingData> &attributes,
-                                    const TransformFeedbackData *transformFeedbackVaryings);
-        static GLuint CreateProgram(const std::vector<ShaderLoadingData> &shaderList,
-                                    const std::vector<VertexAttributeBindingData> &attributes,
-                                    const std::vector<VertexAttributeBindingData> &fragAt,
-                                    const TransformFeedbackData *transformFeedbackVaryings);
+		static GLuint CreateProgram(const std::vector<ShaderLoadingData> &shaderList,
+									const std::vector<VertexAttributeBindingData> &attributes,
+									const TransformFeedbackData *transformFeedbackVaryings);
+		static GLuint CreateProgram(const std::vector<ShaderLoadingData> &shaderList,
+									const std::vector<VertexAttributeBindingData> &attributes,
+									const std::vector<VertexAttributeBindingData> &fragAt,
+									const TransformFeedbackData *transformFeedbackVaryings);
 		static GLuint CreateShader(ShaderLoadingData data);
 
 		//set uniforms
@@ -56,7 +56,7 @@ class ShaderUtils
 		static bool setUniform(GLuint program,const char* uniformName, int val);
 		static bool setUniform(GLuint program,const char* uniformName, float val);
 		static bool setUniform(GLuint program,const char* uniformName, bool val);
-        static bool setUniform(GLuint program,const char* uniformName, std::vector<float> val);
+		static bool setUniform(GLuint program,const char* uniformName, std::vector<float> val);
 		static bool setUniformTexture(GLuint program,const char* uniformName, GLuint val);
 
 		//buffers

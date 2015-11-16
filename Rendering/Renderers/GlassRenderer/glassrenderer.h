@@ -12,7 +12,7 @@ class GlassRenderer:public Renderer
 		virtual ~GlassRenderer();
 		virtual void glewIsReadyRenderer();
 		void draw(RModel*);
-        BaseRendererConfig* getRendererConfigWidget();
+		BaseRendererConfig* getRendererConfigWidget();
 		bool hasRendererConfigWidget();
 		void applyConfigChanges(RModel * = (RModel*)0);
 	private:

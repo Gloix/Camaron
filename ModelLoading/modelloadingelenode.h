@@ -34,7 +34,7 @@ class ModelLoadingEleNode: public ModelLoadingStrategy
 		int numberOfAttributesPerNode;
 		int numberOfBoundaryMarkers;
 		std::unordered_map<int,int> indexVsPosition;
-        std::vector<VScalarDef*> vertexProperties;
+		std::vector<VScalarDef*> vertexProperties;
 
 };
 

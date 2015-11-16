@@ -2,7 +2,7 @@
 #include "ui_convexgeometryintersectionconfigselection.h"
 #include "Common/Constants.h"
 ConvexGeometryIntersectionConfigSelection::ConvexGeometryIntersectionConfigSelection(QWidget *parent) :
-    BaseRendererConfig(parent),
+	BaseRendererConfig(parent),
 	ui(new Ui::ConvexGeometryIntersectionConfigSelection)
 {
 	ui->setupUi(this);

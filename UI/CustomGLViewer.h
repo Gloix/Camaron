@@ -30,8 +30,8 @@ class CustomGLViewer: public QGLWidget
 		void setSelection(Selection*);
 		void refreshRenderedModel();
 		void glewInitiated();
-        void refreshHelpers();
-        void setAxesVisible(bool value);
+		void refreshHelpers();
+		void setAxesVisible(bool value);
 
 	public slots:
 		void setXRotation(int angle);

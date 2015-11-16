@@ -21,7 +21,7 @@ class Renderer{
 		virtual void draw(RModel*);
 		virtual void rendererSelected(RModel* rmodel);
 		virtual bool rmodelChanged(RModel* rmodel);
-        virtual BaseRendererConfig* getRendererConfigWidget();
+		virtual BaseRendererConfig* getRendererConfigWidget();
 		virtual bool hasRendererConfigWidget();
 		virtual void applyConfigChanges(RModel*);
 		virtual glm::mat4 getMV(RModel*);

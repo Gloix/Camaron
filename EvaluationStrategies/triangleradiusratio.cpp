@@ -4,7 +4,6 @@
 TriangleRadiusRatio::TriangleRadiusRatio():
 	EvaluationStrategy("Radius Ratio","Radius Ratio")
 {
-    //weight = TRIANGLE_CRITERIA_WEIGHT_BASE + 0.5f;
 	weight = TRIANGLE_CRITERIA_WEIGHT_BASE + 0.5f;
 	descriptionWidget = 0;
 }

@@ -24,12 +24,12 @@ class SelectionStrategy
 		virtual bool selectElement( vis::Polyhedron *, Selection* );
 		virtual bool selectElement( vis::Polygon *, Selection* );
 		virtual bool selectElement( vis::Vertex *, Selection* );
-        virtual bool selectElement( vis::Edge *, Selection* );
+		virtual bool selectElement( vis::Edge *, Selection* );
 		virtual void selectElement( Selection* );
 		virtual bool isFullFilled( vis::Polyhedron * v );
 		virtual bool isFullFilled( vis::Polygon * m );
 		virtual bool isFullFilled( vis::Vertex * m );
-        virtual bool isFullFilled( vis::Edge * m );
+		virtual bool isFullFilled( vis::Edge * m );
 		virtual bool isFullFilled( Selection* );
 
 		virtual bool selectElementsFrom( PolyhedronMesh*,RModel*, Selection*, bool setupPreApplied = false );

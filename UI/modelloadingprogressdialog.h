@@ -47,8 +47,8 @@ class ModelLoadingProgressDialog : public QWidget
 		void setPolygonsLabels();
 		void setPolyhedronsLabels();
 		void updateProgressBar();
-        int loadedVertices,loadedPolygons,loadedPolyhedrons;
-        int totalVertices,totalPolygons,totalPolyhedrons,totalelements;
+		int loadedVertices,loadedPolygons,loadedPolyhedrons;
+		int totalVertices,totalPolygons,totalPolyhedrons,totalelements;
 		int progressVarValue;
 		int progressStages;
 		int progressVarMax;

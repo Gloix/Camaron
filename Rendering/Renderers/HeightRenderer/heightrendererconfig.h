@@ -15,27 +15,27 @@ class HeightRendererConfig : public BaseRendererConfig
 		Q_OBJECT
 		
 	public:
-        explicit HeightRendererConfig(QWidget *parent = 0);
-        virtual ~HeightRendererConfig();
+		explicit HeightRendererConfig(QWidget *parent = 0);
+		virtual ~HeightRendererConfig();
 		void readConfig();
-        bool setBoundsFromModel();
+		bool setBoundsFromModel();
 
-        int axis;
-        int coloring_type;
-        int inverse_intensity;
-        float min_x;
-        float min_y;
-        float min_z;
-        float max_x;
-        float max_y;
+		int axis;
+		int coloring_type;
+		int inverse_intensity;
+		float min_x;
+		float min_y;
+		float min_z;
+		float max_x;
+		float max_y;
 		float max_z;
 		void setModel(RModel* model);
 
 	private:
-        Ui::HeightRendererConfig *ui;
-        RModel* rmodel;
-    private slots:
-        void loadBoundsFromModel();
+		Ui::HeightRendererConfig *ui;
+		RModel* rmodel;
+	private slots:
+		void loadBoundsFromModel();
 
 };
 

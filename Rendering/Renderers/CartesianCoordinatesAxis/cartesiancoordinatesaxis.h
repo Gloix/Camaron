@@ -10,7 +10,7 @@ class CartesianCoordinatesAxis:public Renderer
 		virtual ~CartesianCoordinatesAxis();
 		virtual void glewIsReadyRenderer();
 		void draw(RModel*);
-        BaseRendererConfig* getRendererConfigWidget();
+		BaseRendererConfig* getRendererConfigWidget();
 		bool hasRendererConfigWidget();
 		void applyConfigChanges(RModel* rmodel = (RModel*)0);
 		bool rmodelChanged(RModel* rmodel);

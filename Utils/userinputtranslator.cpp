@@ -47,11 +47,11 @@ UserInputTranslator::UserInputTranslator()
 	ADD_USER_INPUT_DIC_UNIT("Elements Ids","Show Polyhedron Ids",
 							SHOW_POLYHEDRON_IDS,Qt::Key_O,false,false);
 
-    ADD_USER_INPUT_DIC_UNIT("Others","Select/Unselect",
-                            SHOW_SELECT,Qt::LeftButton,true,false);
+	ADD_USER_INPUT_DIC_UNIT("Others","Select/Unselect",
+							SHOW_SELECT,Qt::LeftButton,true,false);
 
-    ADD_USER_INPUT_DIC_UNIT("Others","Delete render",
-                            SHOW_DELETE_RENDER,Qt::Key_Delete,false,false);
+	ADD_USER_INPUT_DIC_UNIT("Others","Delete render",
+							SHOW_DELETE_RENDER,Qt::Key_Delete,false,false);
 
 }
 

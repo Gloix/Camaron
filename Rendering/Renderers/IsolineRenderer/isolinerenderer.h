@@ -7,17 +7,17 @@
 class IsolineRenderer:public Renderer
 {
 	public:
-        IsolineRenderer();
-        virtual ~IsolineRenderer();
+		IsolineRenderer();
+		virtual ~IsolineRenderer();
 		virtual void glewIsReadyRenderer();
 		void draw(RModel*);
-        BaseRendererConfig* getRendererConfigWidget();
+		BaseRendererConfig* getRendererConfigWidget();
 		bool hasRendererConfigWidget();
 		void applyConfigChanges(RModel * = (RModel*)0);
 		bool rmodelChanged(RModel* rmodel);
 	private:
 		GLuint theProgram;
-        IsolineRendererConfig* config;
+		IsolineRendererConfig* config;
 		float sizeRatio;
 };
 

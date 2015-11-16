@@ -8,7 +8,7 @@ ModelGeneralStaticsCollector::ModelGeneralStaticsCollector()
 
 void ModelGeneralStaticsCollector::fillModelStatics(VertexCloud* v){
 	//vertex statics
-    ModelStaticsItem itemVertex("Vertex Statistics");
+	ModelStaticsItem itemVertex("Vertex Statistics");
 	itemVertex.addStat("Total Vertex Count:",(int)v->getVertices().size());
 	modelStatics.push_back(itemVertex);
 	//bounds
@@ -31,7 +31,7 @@ void ModelGeneralStaticsCollector::fillModelStatics(PolygonMesh* mesh){
 	for(it_t i = 0;i<polygons.size();i++)
 		verticesCount[polygons[i]->getVertices().size()]++;
 
-    ModelStaticsItem item("Polygon Statistics");
+	ModelStaticsItem item("Polygon Statistics");
 	typedef std::unordered_map<int,int>::const_iterator map_it;
 	item.addStat("Total Polygons Count:",(int)mesh->getPolygons().size());
 	for(map_it i = verticesCount.begin();i!=verticesCount.end();i++){
@@ -52,7 +52,7 @@ void ModelGeneralStaticsCollector::fillModelStatics(PolyhedronMesh* mesh){
 	for(it_t i = 0;i<polyhedrons.size();i++)
 		facesCount[polyhedrons[i]->getPolyhedronPolygons().size()]++;
 
-    ModelStaticsItem item("Polyhedron Statistics");
+	ModelStaticsItem item("Polyhedron Statistics");
 	item.addStat("Total Polyhedrons Count:",(int)mesh->getPolyhedrons().size());
 	typedef std::unordered_map<int,int>::const_iterator map_it;
 	for(map_it i = facesCount.begin();i!=facesCount.end();i++){

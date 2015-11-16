@@ -14,14 +14,14 @@ class ConvexGeometryIntersectionRenderer:public Renderer, public SelectionStrate
 		//Renderer Overide functions
 		virtual void glewIsReadyRenderer();
 		void draw(RModel*);
-        BaseRendererConfig* getRendererConfigWidget();
+		BaseRendererConfig* getRendererConfigWidget();
 		bool hasRendererConfigWidget();
 		void applyConfigChanges(RModel * = (RModel*)0);
 		bool rmodelChanged(RModel* rmodel);
 
-        //Selection Strategy Override Functions
+		//Selection Strategy Override Functions
 		virtual bool hasConfigWidget();
-        virtual BaseRendererConfig* getConfigWidget();
+		virtual BaseRendererConfig* getConfigWidget();
 		virtual bool selectElement( vis::Polyhedron *, Selection* );
 		virtual bool selectElement( vis::Polygon *, Selection* );
 		bool setup();

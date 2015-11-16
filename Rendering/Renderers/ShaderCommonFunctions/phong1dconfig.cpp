@@ -2,7 +2,7 @@
 #include "ui_phong1dconfig.h"
 #include "Utils/qtutils.h"
 Phong1DConfig::Phong1DConfig(QWidget *parent) :
-    BaseRendererConfig(parent),
+	BaseRendererConfig(parent),
 	ui(new Ui::Phong1DConfig)
 {
 	ui->setupUi(this);

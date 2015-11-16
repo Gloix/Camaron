@@ -6,20 +6,20 @@
 
 class BaseRendererConfig : public QWidget
 {
-    Q_OBJECT
-    public:
-        explicit BaseRendererConfig(QWidget *parent = 0);
-        //void setRendererConfigPopup(RendererConfigPopUp rendererConfigPopUp);
-    protected:
-        void forceUpdate();
+	Q_OBJECT
+	public:
+		explicit BaseRendererConfig(QWidget *parent = 0);
+		//void setRendererConfigPopup(RendererConfigPopUp rendererConfigPopUp);
+	protected:
+		void forceUpdate();
 
-    signals:
-        void onConfigForceApply();
+	signals:
+		void onConfigForceApply();
 
-    public slots:
+	public slots:
 
-    private:
-        //RendererConfigPopUp rendererConfigPopUp;
+	private:
+		//RendererConfigPopUp rendererConfigPopUp;
 };
 
 #endif // BASERENDERERCONFIG_H

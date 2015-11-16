@@ -24,19 +24,19 @@ StaticsFrame::~StaticsFrame()
 
 //Fill combobox with evaluation strategies
 void StaticsFrame::fillEvaluationStrategiesComboBox(){
-    typedef std::map<float, unsigned char>::iterator it_type;
-    int nitems = 0;
-    for(it_type iterator = evaluationStrategyRegistry->getWeightMap()->begin(); iterator != evaluationStrategyRegistry->getWeightMap()->end(); iterator++) {
-        int key = iterator->second;
-        EvaluationStrategy* p = evaluationStrategyRegistry->getRegistryByKeyInstance(key);
-        if(p->hasStatics()){
-            p->QApplicationInitiatedEv();
-            this->ui->comboBox_statics_eval_strategies->addItem(p->getName(), QVariant((int)key));
-            if(p->hasQIcon())
-                ui->comboBox_statics_eval_strategies->setItemIcon(nitems,*p->getEvaluationStrategyQIcon());
-            nitems++;
-        }
-    }
+	typedef std::map<float, unsigned char>::iterator it_type;
+	int nitems = 0;
+	for(it_type iterator = evaluationStrategyRegistry->getWeightMap()->begin(); iterator != evaluationStrategyRegistry->getWeightMap()->end(); iterator++) {
+		int key = iterator->second;
+		EvaluationStrategy* p = evaluationStrategyRegistry->getRegistryByKeyInstance(key);
+		if(p->hasStatics()){
+			p->QApplicationInitiatedEv();
+			this->ui->comboBox_statics_eval_strategies->addItem(p->getName(), QVariant((int)key));
+			if(p->hasQIcon())
+				ui->comboBox_statics_eval_strategies->setItemIcon(nitems,*p->getEvaluationStrategyQIcon());
+			nitems++;
+		}
+	}
 }
 
 void StaticsFrame::refreshStatics(){

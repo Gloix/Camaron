@@ -20,13 +20,13 @@ class ModelLoadingPly: public ModelLoadingStrategy
 		bool readBody( PolygonMesh* );
 		bool readPolygons( PolygonMesh* );
 		bool readVertices( VertexCloud * );
-        bool readAdditionalEdges( VertexCloud * );
-        vis::Vertex* readVertex(int, float&, float&, float&);
+		bool readAdditionalEdges( VertexCloud * );
+		vis::Vertex* readVertex(int, float&, float&, float&);
 		bool readPolygonsBinary( PolygonMesh* );
 		bool readVerticesBinary( VertexCloud * );
 		CharArrayScanner scanner;
 		int numberOfBytesInVertexPropertiesToIgnore;
-        std::vector<VScalarDef*> vertexProperties;
+		std::vector<VScalarDef*> vertexProperties;
 		bool isBinary;
 		bool bigEndian;
 };

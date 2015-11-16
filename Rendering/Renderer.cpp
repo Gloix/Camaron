@@ -19,7 +19,7 @@ bool Renderer::rmodelChanged(RModel* rmodel){
 			rmodel->getOriginalModel()->getModelType()!=vis::CONSTANTS::NO_MODEL;
 }
 BaseRendererConfig*  Renderer::getRendererConfigWidget(){
-    return (BaseRendererConfig*)0;
+	return (BaseRendererConfig*)0;
 }
 
 bool  Renderer::hasRendererConfigWidget(){

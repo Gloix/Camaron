@@ -6,10 +6,10 @@ BaseRendererConfig::BaseRendererConfig(QWidget *parent) : QWidget(parent)
 }
 
 void BaseRendererConfig::forceUpdate() {
-    emit onConfigForceApply();
+	emit onConfigForceApply();
 }
 
 //void BaseRendererConfig::setRendererConfigPopup(RendererConfigPopUp rendererConfigPopUp) {
-//    this->rendererConfigPopUp = rendererConfigPopUp;
+//	this->rendererConfigPopUp = rendererConfigPopUp;
 //}
 

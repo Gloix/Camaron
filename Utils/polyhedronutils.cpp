@@ -33,24 +33,24 @@ void PolyhedronUtils::setPolyhedronRModelPositions(vis::Polyhedron* p){
 }
 
 void PolyhedronUtils::getTetrahedronIndices(vis::Polyhedron* p,
-                                      std::vector<GLuint>& tetrahedronIds) {
-    std::vector<vis::Polygon*>& polygons = p->getPolyhedronPolygons();
-    vis::Vertex* mainVertex = polygons[0]->getVertices()[0];
-    for(std::vector<vis::Polygon*>::size_type i = 1;i<polygons.size();i++){
-        std::vector<vis::Vertex*>& vertices = polygons[i]->getVertices();
-        if(std::find(vertices.begin(), vertices.end(), mainVertex) == vertices.end()) {
-            //std::vector<GLuint> trianglesIndices;
-            //PolygonUtils::getTriangleIndices(polygons[i], trianglesIndices);
+									  std::vector<GLuint>& tetrahedronIds) {
+	std::vector<vis::Polygon*>& polygons = p->getPolyhedronPolygons();
+	vis::Vertex* mainVertex = polygons[0]->getVertices()[0];
+	for(std::vector<vis::Polygon*>::size_type i = 1;i<polygons.size();i++){
+		std::vector<vis::Vertex*>& vertices = polygons[i]->getVertices();
+		if(std::find(vertices.begin(), vertices.end(), mainVertex) == vertices.end()) {
+			//std::vector<GLuint> trianglesIndices;
+			//PolygonUtils::getTriangleIndices(polygons[i], trianglesIndices);
 
-            for(std::vector<vis::Vertex*>::size_type j = 0; j < vertices.size();j+=3) {
-                tetrahedronIds.push_back(mainVertex->getRmodelPositions()[0]);
-                tetrahedronIds.push_back(vertices[j]->getRmodelPositions()[0]);
-                tetrahedronIds.push_back(vertices[j+1]->getRmodelPositions()[0]);
-                tetrahedronIds.push_back(vertices[j+2]->getRmodelPositions()[0]);
-            }
-        }
+			for(std::vector<vis::Vertex*>::size_type j = 0; j < vertices.size();j+=3) {
+				tetrahedronIds.push_back(mainVertex->getRmodelPositions()[0]);
+				tetrahedronIds.push_back(vertices[j]->getRmodelPositions()[0]);
+				tetrahedronIds.push_back(vertices[j+1]->getRmodelPositions()[0]);
+				tetrahedronIds.push_back(vertices[j+2]->getRmodelPositions()[0]);
+			}
+		}
 
-    }
+	}
 }
 
 float PolyhedronUtils::getPolyhedronSolidAngleFromVertex(vis::Polyhedron* p,

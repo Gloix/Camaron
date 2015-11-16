@@ -5,7 +5,6 @@
 PolygonAspectRatio::PolygonAspectRatio():
 	EvaluationStrategy("Aspect Ratio","Aspect ratio is calculated dividing the shortest edge by the longest edge of the polygon.\n AR = EdgeMin/EdgeMax", "Aspect Ratio")
 {
-    //weight = POLYGON_CRITERIA_WEIGHT_BASE + 0.5f;
 	weight = POLYGON_CRITERIA_WEIGHT_BASE + 0.6f;
 
 }

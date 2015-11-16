@@ -37,16 +37,16 @@ class RModel
 
 		void loadVertexPolygonPolyhedronIds(PolygonMesh* mesh);
 		void loadVertexPositionAndNormals(VertexCloud* model);
-        void loadAdditionalEdges(VertexCloud* model);
-        void loadVertexScalarProperties(VertexCloud* model);
-        void loadTetrahedronVertexIds(PolyhedronMesh* mesh);
+		void loadAdditionalEdges(VertexCloud* model);
+		void loadVertexScalarProperties(VertexCloud* model);
+		void loadTetrahedronVertexIds(PolyhedronMesh* mesh);
 
 		void refreshVertexAttributes(PolyhedronMesh*);
 		void refreshSelectedElements();
 		void deleteData();
 		Model* getOriginalModel();
 		int nVertices;
-        int nAdditionalEdges;
+		int nAdditionalEdges;
 		std::vector<RVertexFlagAttribute> vertexFlagsAttribute;
 		std::vector<RVertexFlagAttribute> vertexGeoCenterFlagsAttribute;
 		std::vector<RVertexFlagAttribute> polygonGeoCenterFlagsAttribute;
@@ -56,21 +56,21 @@ class RModel
 
 		std::vector<float> bounds;
 
-        int numberOfTetrahedrons;
+		int numberOfTetrahedrons;
 
 		static const GLuint NULL_BUFFER = 0;
 		//Main Rendering Model
 		GLuint positionDataBufferObject;
 		GLuint vertexNormalDataBufferObject;
 		GLuint vertexFlagsDataBufferObject;
-        GLuint vertexScalarDataBufferObject;
+		GLuint vertexScalarDataBufferObject;
 		GLuint rmodelVertexPositionBufferObject;
-        GLuint edgeVertexPositionsDataBufferObject;
-        GLuint edgeColorDataBufferObject;
+		GLuint edgeVertexPositionsDataBufferObject;
+		GLuint edgeColorDataBufferObject;
 		//ids
 		GLuint polygonPolyhedronIdsBufferObject;
 		GLuint vertexIdsBufferObject;
-        GLuint tetrahedronVertexIdsBufferObject;
+		GLuint tetrahedronVertexIdsBufferObject;
 		int getModelType();
 		void setBackgroundColor(glm::vec4);
 		glm::vec4 getBackgroundColor();

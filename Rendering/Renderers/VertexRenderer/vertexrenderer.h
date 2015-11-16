@@ -10,7 +10,7 @@ class VertexRenderer:public Renderer
 		virtual ~VertexRenderer();
 		virtual void glewIsReadyRenderer();
 		void draw(RModel*);
-        BaseRendererConfig* getRendererConfigWidget();
+		BaseRendererConfig* getRendererConfigWidget();
 		bool hasRendererConfigWidget();
 		bool rmodelChanged(RModel* rmodel);
 		void applyConfigChanges(RModel * = (RModel*)0);

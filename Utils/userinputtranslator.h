@@ -6,8 +6,8 @@
 #include "Utils/keyboardstate.h"
 #include <map>
 
-#define ADD_USER_INPUT_DIC_UNIT(category,description,code,key, shift, control)      \
-{                                                             \
+#define ADD_USER_INPUT_DIC_UNIT(category,description,code,key, shift, control)	  \
+{															 \
 	UserInputTranslationUnit userinputunit(code,key,shift,control,\
 	std::string(category),std::string(description));\
 	if(keysDictionary.count(category))\
@@ -39,8 +39,8 @@ class UserInputTranslator//singleton
 		static const int SHOW_VERTEX_IDS = 9;
 		static const int SHOW_POLYGON_IDS = 10;
 		static const int SHOW_POLYHEDRON_IDS = 11;
-        static const int SHOW_SELECT = 12;
-        static const int SHOW_DELETE_RENDER = 12;
+		static const int SHOW_SELECT = 12;
+		static const int SHOW_DELETE_RENDER = 12;
 	private:
 		UserInputTranslator();
 		static UserInputTranslator* instance;

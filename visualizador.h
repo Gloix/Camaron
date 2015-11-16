@@ -62,7 +62,7 @@ class Visualizador : public QMainWindow
 		void glVersionPopup();
 		void clearRecentFiles();
 		void getLoadedModelFromLoadingStrategy();
-        void showAxesChanged(bool value);
+		void showAxesChanged(bool value);
 	private:
 		static const unsigned int MAX_RECENT_FILES = 5;
 		void fixDockWidgetPositions();
@@ -110,7 +110,7 @@ class Visualizador : public QMainWindow
 		SelectionStrategyRegistry* selectionStrategyRegistry;
 		ModelExportStrategyRegistry* modelExportStrategyRegistry;
 
-        //Statistics
+		//Statistics
 		StaticsFrame staticsFrame;
 
 		//Selection Table

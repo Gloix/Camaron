@@ -23,30 +23,30 @@ VertexCloud::~VertexCloud()
 	for( std::vector<vis::Vertex*>::size_type i = 0; i != vertices.size(); i++ )
 		delete vertices[i];
 
-    for( std::vector<VScalarDef*>::size_type i = 0; i != scalarDefs.size(); i++ )
-        delete scalarDefs[i];
+	for( std::vector<VScalarDef*>::size_type i = 0; i != scalarDefs.size(); i++ )
+		delete scalarDefs[i];
 
-    for( std::vector<vis::Edge*>::size_type i = 0; i != additionalEdges.size(); i++ )
-        delete additionalEdges[i];
+	for( std::vector<vis::Edge*>::size_type i = 0; i != additionalEdges.size(); i++ )
+		delete additionalEdges[i];
 }
 
 int VertexCloud::getVerticesCount() {
 	return this->verticesCount;
 }
 int VertexCloud::getAdditionalEdgesCount() {
-    return this->additionalEdgesCount;
+	return this->additionalEdgesCount;
 }
 void VertexCloud::setVerticesCount( int v ) {
 	this->verticesCount = v;
 }
 void VertexCloud::setAdditionalEdgesCount( int e ) {
-    this->additionalEdgesCount = e;
+	this->additionalEdgesCount = e;
 }
 std::vector<vis::Vertex*>& VertexCloud::getVertices() {
 	return vertices;
 }
 std::vector<vis::Edge*>& VertexCloud::getAdditionalEdges() {
-    return additionalEdges;
+	return additionalEdges;
 }
 bool VertexCloud::is2D(){
 	return _2d;
@@ -57,11 +57,11 @@ void VertexCloud::set2D(bool b){
 }
 
 void VertexCloud::addScalarDef(VScalarDef* scalarDef) {
-    scalarDefs.push_back(scalarDef);
+	scalarDefs.push_back(scalarDef);
 }
 
 std::vector<VScalarDef*> &VertexCloud::getScalarDefs() {
-    return scalarDefs;
+	return scalarDefs;
 }
 
 DOUBLE_DISPATCH_MODEL_DEF(VertexCloud)

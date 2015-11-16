@@ -41,9 +41,9 @@ Model* ModelLoadingEleNode::load(std::string filename){
 	try{
 		if(isPolygonMesh){
 			PolygonMesh* polygonMeshModel = new PolygonMesh(filename,numberOfNodes,numberOfElements);
-            for(std::vector<VScalarDef*>::size_type i=0; i<vertexProperties.size(); i++) {
-                polygonMeshModel->addScalarDef(vertexProperties.at(i));
-            }
+			for(std::vector<VScalarDef*>::size_type i=0; i<vertexProperties.size(); i++) {
+				polygonMeshModel->addScalarDef(vertexProperties.at(i));
+			}
 			model = polygonMeshModel;
 			emit setupProgressBarForNewModel(vis::CONSTANTS::POLYGON_MESH,
 											 numberOfNodes,
@@ -64,9 +64,9 @@ Model* ModelLoadingEleNode::load(std::string filename){
 		}
 		else{
 			PolyhedronMesh* polyhedronMeshModel = new PolyhedronMesh(filename);
-            for(std::vector<VScalarDef*>::size_type i=0; i<vertexProperties.size(); i++) {
-                polyhedronMeshModel->addScalarDef(vertexProperties.at(i));
-            }
+			for(std::vector<VScalarDef*>::size_type i=0; i<vertexProperties.size(); i++) {
+				polyhedronMeshModel->addScalarDef(vertexProperties.at(i));
+			}
 			model = polyhedronMeshModel;
 			emit setupProgressBarForNewModel(vis::CONSTANTS::POLYHEDRON_MESH,
 											 numberOfNodes,
@@ -116,13 +116,13 @@ void ModelLoadingEleNode::readHeaderNode(){
 	scanner.readInt(fileBufferNode,&dimensions);
 	scanner.readInt(fileBufferNode,&numberOfAttributesPerNode);
 	scanner.readInt(fileBufferNode,&numberOfBoundaryMarkers);
-    int propertyIndex = 0;
-    for(int i=0;i< numberOfAttributesPerNode;i++) {
-        VScalarDef* vScalarDef = new VScalarDef();
-        vScalarDef->index = propertyIndex++;
-        sprintf(vScalarDef->name,"Property #%d",i);
-        vertexProperties.push_back(vScalarDef);
-    }
+	int propertyIndex = 0;
+	for(int i=0;i< numberOfAttributesPerNode;i++) {
+		VScalarDef* vScalarDef = new VScalarDef();
+		vScalarDef->index = propertyIndex++;
+		sprintf(vScalarDef->name,"Property #%d",i);
+		vertexProperties.push_back(vScalarDef);
+	}
 }
 bool ModelLoadingEleNode::readVertices( PolygonMesh* mesh){
 	scanner.reset(fileSizeNode);
@@ -137,25 +137,25 @@ bool ModelLoadingEleNode::readVertices( PolygonMesh* mesh){
 	int index;
 	float x,y;
 	float z = 0.0f;
-    float prop = 0.0f;
+	float prop = 0.0f;
 	scanner.readInt(fileBufferNode,&index,true);
 	scanner.readFloat(fileBufferNode, &x );
 	scanner.readFloat(fileBufferNode, &y );
 	if(dimensions>2)
 		scanner.readFloat(fileBufferNode, &z );
-    std::vector<VScalarDef*> &scalarDefs = mesh->getScalarDefs();
-    vis::Vertex* vertex = new vis::Vertex( index, x, y, z, 0 );
-    for(int i=0 ; i<numberOfAttributesPerNode; i++) {
-        scanner.readFloat(fileBufferNode, &prop);
-        //VScalar vscalar;
-        //vscalar.fvalue = prop;
+	std::vector<VScalarDef*> &scalarDefs = mesh->getScalarDefs();
+	vis::Vertex* vertex = new vis::Vertex( index, x, y, z, 0 );
+	for(int i=0 ; i<numberOfAttributesPerNode; i++) {
+		scanner.readFloat(fileBufferNode, &prop);
+		//VScalar vscalar;
+		//vscalar.fvalue = prop;
 		vertex->addScalarProperty(i, prop);
-        scalarDefs[i]->bounds.resize(2);
-        scalarDefs[i]->bounds[0] = prop;
-        scalarDefs[i]->bounds[1] = prop;
-    }
+		scalarDefs[i]->bounds.resize(2);
+		scalarDefs[i]->bounds[0] = prop;
+		scalarDefs[i]->bounds[1] = prop;
+	}
 
-    vertices.push_back(vertex);
+	vertices.push_back(vertex);
 
 	indexVsPosition[index] = 0;
 	bounds[0] = bounds[3] = x;
@@ -171,18 +171,18 @@ bool ModelLoadingEleNode::readVertices( PolygonMesh* mesh){
 			scanner.readFloat(fileBufferNode,&z);
 		indexVsPosition[index] = i;
 
-        vertex = new vis::Vertex(index,x,y,z,i);
-        for(int i=0 ; i<numberOfAttributesPerNode; i++) {
-            scanner.readFloat(fileBufferNode, &prop);
+		vertex = new vis::Vertex(index,x,y,z,i);
+		for(int i=0 ; i<numberOfAttributesPerNode; i++) {
+			scanner.readFloat(fileBufferNode, &prop);
 			vertex->addScalarProperty(i, prop);
-            if(scalarDefs[i]->bounds[0] > prop) {
-                scalarDefs[i]->bounds[0] = prop;
-            } else if(scalarDefs[i]->bounds[1] < prop) {
-                scalarDefs[i]->bounds[1] = prop;
-            }
-        }
+			if(scalarDefs[i]->bounds[0] > prop) {
+				scalarDefs[i]->bounds[0] = prop;
+			} else if(scalarDefs[i]->bounds[1] < prop) {
+				scalarDefs[i]->bounds[1] = prop;
+			}
+		}
 
-        vertices.push_back(vertex);
+		vertices.push_back(vertex);
 		if( bounds[0] > x )
 			bounds[0] = x;
 		else if( bounds[3] < x )

@@ -7,18 +7,18 @@
 class HeightRenderer: public Renderer
 {
 	public:
-        HeightRenderer();
-        virtual ~HeightRenderer();
+		HeightRenderer();
+		virtual ~HeightRenderer();
 		virtual void glewIsReadyRenderer();
 		void draw(RModel*);
-        BaseRendererConfig* getRendererConfigWidget();
+		BaseRendererConfig* getRendererConfigWidget();
 		bool hasRendererConfigWidget();
 		void applyConfigChanges(RModel * = (RModel*)0);
 
 	private:
 
-        HeightRendererConfig* config;
+		HeightRendererConfig* config;
 
-        GLuint program;
+		GLuint program;
 };
 #endif // HEIGHTRENDERER_H

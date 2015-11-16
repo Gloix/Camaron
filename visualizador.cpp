@@ -94,7 +94,7 @@ Visualizador::Visualizador(QWidget *parent) :
 	connect(ui->pushButton_eval_strat_desc,SIGNAL(clicked()),this,SLOT(showEvaluationStrategyDescription()));
 	connect(ui->comboBox_evalStrategies,SIGNAL(currentIndexChanged(int)),this,SLOT(changeEvaluationStrategy(int)));
 	connect(ui->actionDetected_Video_Adapter,SIGNAL(triggered()),this,SLOT(glVersionPopup()));
-    connect(ui->chkShowAxes,SIGNAL(toggled(bool)),this,SLOT(showAxesChanged(bool)));
+	connect(ui->chkShowAxes,SIGNAL(toggled(bool)),this,SLOT(showAxesChanged(bool)));
 	modelLoadingFactory = ModelLoadingFactory::getSingletonInstance();
 	modelLoadingFactoryLW = ModelLoadingFactory::getLightWeightSingletonInstance();
 	fileFormats = getModelAcceptedExtensions(modelLoadingFactory);
@@ -267,11 +267,11 @@ std::string Visualizador::getModelAcceptedExportExtensions(){
 }
 //Fill combobox with evaluation strategies
 void Visualizador::fillEvaluationStrategiesComboBox(){
-    typedef std::map<float,unsigned char>::iterator it_type;
+	typedef std::map<float,unsigned char>::iterator it_type;
 	int npol = 0;
-    for(it_type iterator = evaluationStrategyRegistry->getWeightMap()->begin(); iterator != evaluationStrategyRegistry->getWeightMap()->end(); iterator++) {
-        int key = iterator->second;
-        EvaluationStrategy* p = evaluationStrategyRegistry->getRegistryByKeyInstance(key);
+	for(it_type iterator = evaluationStrategyRegistry->getWeightMap()->begin(); iterator != evaluationStrategyRegistry->getWeightMap()->end(); iterator++) {
+		int key = iterator->second;
+		EvaluationStrategy* p = evaluationStrategyRegistry->getRegistryByKeyInstance(key);
 		if(p){
 			p->QApplicationInitiatedEv();
 			this->ui->comboBox_evalStrategies->addItem(p->getName(), QVariant(key));
@@ -450,7 +450,7 @@ void Visualizador::openModelFromFilePath(QString filename, bool addToRecentFiles
 			this->model = loaded;
 			setupEvaluationStrategiesStatics();
 			this->customGLViewer->resetCameraPosition();
-            this->customGLViewer->refreshHelpers();
+			this->customGLViewer->refreshHelpers();
 			this->selectionTableView.refreshSelectedElementsTable();
 			this->model->loadModelDataIntoRModel(this->rmodel);
 			this->selection.setRModel(rmodel);
@@ -490,7 +490,7 @@ void Visualizador::openModelFromFilePath(QString filename, bool addToRecentFiles
 }
 void Visualizador::openModelFromFilePathQThread(QString filename,bool lw){
 	try{
-        this->customGLViewer->refreshHelpers();
+		this->customGLViewer->refreshHelpers();
 		progressDialog.setModelName(FileUtils::getFileNameWithoutPath(filename.toStdString()));
 		progressDialog.setupForNewModel(vis::CONSTANTS::VERTEX_CLOUD,0);
 		progressDialog.show();
@@ -535,7 +535,7 @@ void Visualizador::getLoadedModelFromLoadingStrategy(){
 		this->model = loaded;
 		setupEvaluationStrategiesStatics();
 		this->customGLViewer->resetCameraPosition();
-        this->customGLViewer->refreshHelpers();
+		this->customGLViewer->refreshHelpers();
 		this->selectionTableView.refreshSelectedElementsTable();
 		enableAndDisableWidgets();
 		progressDialog.stageComplete(ModelLoadingProgressDialog::CAMARON_ELEMENTS_CONFIGURATED);
@@ -797,6 +797,6 @@ void Visualizador::fixDockWidgetPositions(){
 }
 
 void Visualizador::showAxesChanged(bool value){
-    this->customGLViewer->setAxesVisible(value);
-    this->customGLViewer->forceReRendering();
+	this->customGLViewer->setAxesVisible(value);
+	this->customGLViewer->forceReRendering();
 }

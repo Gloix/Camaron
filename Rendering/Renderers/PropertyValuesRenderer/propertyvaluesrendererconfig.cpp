@@ -5,7 +5,7 @@
 #include "Utils/qtutils.h"
 
 PropertyValuesRendererConfig::PropertyValuesRendererConfig(QWidget *parent) :
-    BaseRendererConfig(parent),
+	BaseRendererConfig(parent),
 	ui(new Ui::PropertyValuesRendererConfig)
 {
 	ui->setupUi(this);
@@ -16,19 +16,19 @@ PropertyValuesRendererConfig::PropertyValuesRendererConfig(QWidget *parent) :
 }
 //Fill combobox with evaluation strategies
 void PropertyValuesRendererConfig::fillEvaluationStrategiesComboBox(){
-    typedef std::map<float, unsigned char>::iterator it_type;
-    int nitems = 0;
-    for(it_type iterator = evaluationStrategyRegistry->getWeightMap()->begin(); iterator != evaluationStrategyRegistry->getWeightMap()->end(); iterator++) {
-        int key = iterator->second;
-        EvaluationStrategy* p = evaluationStrategyRegistry->getRegistryByKeyInstance(key);
-        if(!p||!p->hasStatics())
-            continue;
-        p->QApplicationInitiatedEv();
-        this->ui->comboBox_evaluations->addItem(p->getName(), QVariant(key));
-        if(p->hasQIcon())
-            ui->comboBox_evaluations->setItemIcon(nitems,*p->getEvaluationStrategyQIcon());
-        nitems++;
-    }
+	typedef std::map<float, unsigned char>::iterator it_type;
+	int nitems = 0;
+	for(it_type iterator = evaluationStrategyRegistry->getWeightMap()->begin(); iterator != evaluationStrategyRegistry->getWeightMap()->end(); iterator++) {
+		int key = iterator->second;
+		EvaluationStrategy* p = evaluationStrategyRegistry->getRegistryByKeyInstance(key);
+		if(!p||!p->hasStatics())
+			continue;
+		p->QApplicationInitiatedEv();
+		this->ui->comboBox_evaluations->addItem(p->getName(), QVariant(key));
+		if(p->hasQIcon())
+			ui->comboBox_evaluations->setItemIcon(nitems,*p->getEvaluationStrategyQIcon());
+		nitems++;
+	}
 }
 PropertyValuesRendererConfig::~PropertyValuesRendererConfig()
 {

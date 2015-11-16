@@ -5,7 +5,6 @@
 PolyhedronArea::PolyhedronArea():
 	EvaluationStrategy("Surface","Surface")
 {
-    //weight = POLYHEDRON_CRITERIA_WEIGHT_BASE + 0.5f;
 	weight = POLYHEDRON_CRITERIA_WEIGHT_BASE + 0.1f;
 }
 PolyhedronArea::~PolyhedronArea()

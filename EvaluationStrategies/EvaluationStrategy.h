@@ -35,14 +35,14 @@ class EvaluationStrategy
 		virtual float value( vis::Polygon* m );
 		virtual float value( vis::Triangle* m );
 		virtual float value( vis::Polyhedron* m );
-        virtual float value( vis::Edge* m );
+		virtual float value( vis::Edge* m );
 		const char *getName( );
 		const char* getPropertyName( );
 		virtual bool isFullFilled( vis::Vertex* v );
 		virtual bool isFullFilled( vis::Polygon* m );
 		virtual bool isFullFilled( vis::Triangle* m );
 		virtual bool isFullFilled( vis::Polyhedron* m );
-        virtual bool isFullFilled( vis::Edge* m );
+		virtual bool isFullFilled( vis::Edge* m );
 		float getWeight();
 		void setWeight(float);
 

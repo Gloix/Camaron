@@ -5,21 +5,21 @@
 #include "Rendering/RModel/rmodel.h"
 
 ScalarPropertyRendererConfig::ScalarPropertyRendererConfig(QWidget *parent) :
-    BaseRendererConfig(parent),
+	BaseRendererConfig(parent),
 	ui(new Ui::ScalarPropertyRendererConfig)
 {
 	ui->setupUi(this);
-    connect(ui->pushButton,SIGNAL( clicked()),this,SLOT(loadBoundsFromModel()));
+	connect(ui->pushButton,SIGNAL( clicked()),this,SLOT(loadBoundsFromModel()));
 	connect(ui->comboBox_prop_select,SIGNAL( currentIndexChanged(int)),this,SLOT(changedProperty(int)));
-    rmodel = NULL;
-    coloring_type = 1;
-    inverse_intensity = 0;
+	rmodel = NULL;
+	coloring_type = 1;
+	inverse_intensity = 0;
 	selectedScalarDef = NULL;
 
 }
 
 void ScalarPropertyRendererConfig::loadBoundsFromModel(){
-    setBoundsFromModel();
+	setBoundsFromModel();
 }
 
 void ScalarPropertyRendererConfig::changedProperty(int index){
@@ -61,30 +61,30 @@ void ScalarPropertyRendererConfig::setModel(RModel* model)
 }
 
 bool ScalarPropertyRendererConfig::setBoundsFromModel(){
-    if (rmodel==NULL || rmodel->bounds.size()!=6) {
-        std::cout << "BOUNDS NOT AVAILABLE." << std::endl;
-        return false;
-    }
+	if (rmodel==NULL || rmodel->bounds.size()!=6) {
+		std::cout << "BOUNDS NOT AVAILABLE." << std::endl;
+		return false;
+	}
 	selectedBounds[selectedScalarDef] = selectedScalarDef->bounds;
-    //std::cout << "BOUNDS AVAILABLE:" <<min_x<<","<<min_y<<","<<min_z<< std::endl;
-    //std::cout << "BOUNDS AVAILABLE:" <<max_x<<","<<max_y<<","<<max_z<< std::endl;
-    //update_ui
+	//std::cout << "BOUNDS AVAILABLE:" <<min_x<<","<<min_y<<","<<min_z<< std::endl;
+	//std::cout << "BOUNDS AVAILABLE:" <<max_x<<","<<max_y<<","<<max_z<< std::endl;
+	//update_ui
 	//int precision = 8;
 	ui->lineEdit_min_bound->setText(QString::number(selectedBounds[selectedScalarDef][0]));
 	ui->lineEdit_max_bound->setText(QString::number(selectedBounds[selectedScalarDef][1]));
 
 	ui->lineEdit_min_bound->setCursorPosition(0);
 	ui->lineEdit_max_bound->setCursorPosition(0);
-    return true;
+	return true;
 }
 
 void ScalarPropertyRendererConfig::readConfig(){
 
-    if (ui->radioButton_Color_mode_hue->isChecked()) coloring_type = 1;
-    else coloring_type = 0; //gray scale
+	if (ui->radioButton_Color_mode_hue->isChecked()) coloring_type = 1;
+	else coloring_type = 0; //gray scale
 
-    if (ui->checkBox_Inverse_intensity->isChecked()) inverse_intensity = 1;
-    else inverse_intensity = 0;
+	if (ui->checkBox_Inverse_intensity->isChecked()) inverse_intensity = 1;
+	else inverse_intensity = 0;
 
 	if(selectedScalarDef != NULL) {
 		selectedBounds[selectedScalarDef][0] =

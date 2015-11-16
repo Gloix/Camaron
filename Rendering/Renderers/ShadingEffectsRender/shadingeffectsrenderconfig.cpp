@@ -2,7 +2,7 @@
 #include "ui_shadingeffectsrenderconfig.h"
 #include "Utils/qtutils.h"
 ShadingEffectsRenderConfig::ShadingEffectsRenderConfig(QWidget *parent) :
-    BaseRendererConfig(parent),
+	BaseRendererConfig(parent),
 	ui(new Ui::ShadingEffectsRenderConfig)
 {
 	ui->setupUi(this);

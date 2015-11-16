@@ -12,7 +12,7 @@ class MainRenderer: public Renderer
 		virtual void glewIsReadyRenderer();
 		void draw(RModel*);
 		void drawWithDepthPeeling(RModel*);
-        BaseRendererConfig* getRendererConfigWidget();
+		BaseRendererConfig* getRendererConfigWidget();
 		bool hasRendererConfigWidget();
 		void applyConfigChanges(RModel * = (RModel*)0);
 		bool resizeFBO(RModel *);

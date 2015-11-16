@@ -11,14 +11,14 @@ class ScalarPropertyRenderer: public Renderer
 		virtual ~ScalarPropertyRenderer();
 		virtual void glewIsReadyRenderer();
 		void draw(RModel*);
-        BaseRendererConfig* getRendererConfigWidget();
+		BaseRendererConfig* getRendererConfigWidget();
 		bool hasRendererConfigWidget();
 		void applyConfigChanges(RModel * = (RModel*)0);
 
 	private:
 
-        ScalarPropertyRendererConfig* config;
+		ScalarPropertyRendererConfig* config;
 
-        GLuint program;
+		GLuint program;
 };
 #endif // SCALARPROPERTYRENDERER_H

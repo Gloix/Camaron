@@ -2,7 +2,7 @@
 #include "ui_cartesiancoordinatesaxisconfig.h"
 #include "Utils/qtutils.h"
 CartesianCoordinatesAxisConfig::CartesianCoordinatesAxisConfig(QWidget *parent) :
-    BaseRendererConfig(parent),
+	BaseRendererConfig(parent),
 	ui(new Ui::CartesianCoordinatesAxisConfig)
 {
 	ui->setupUi(this);

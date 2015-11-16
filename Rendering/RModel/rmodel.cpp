@@ -23,11 +23,11 @@ RModel::RModel():
 	vertexFlagsDataBufferObject = NULL_BUFFER;
 	vertexNormalDataBufferObject = NULL_BUFFER;
 	rmodelVertexPositionBufferObject = NULL_BUFFER;
-    vertexScalarDataBufferObject = NULL_BUFFER;
+	vertexScalarDataBufferObject = NULL_BUFFER;
 	polygonPolyhedronIdsBufferObject = NULL_BUFFER;
-    tetrahedronVertexIdsBufferObject = NULL_BUFFER;
-    edgeVertexPositionsDataBufferObject = NULL_BUFFER;
-    edgeColorDataBufferObject = NULL_BUFFER;
+	tetrahedronVertexIdsBufferObject = NULL_BUFFER;
+	edgeVertexPositionsDataBufferObject = NULL_BUFFER;
+	edgeColorDataBufferObject = NULL_BUFFER;
 	scale = 1.0f;
 	modelType = vis::CONSTANTS::NO_MODEL;
 	originalModel = (Model*)0;
@@ -38,7 +38,7 @@ RModel::RModel():
 	recalculateNormal = true;
 	recalculateModelCameraSpaceScale = true;
 	perspectiveValue = 5.0f;
-    numberOfTetrahedrons=0;
+	numberOfTetrahedrons=0;
 }
 RModel::~RModel(){
 	this->freeRAMFromVideoCardBuffer();
@@ -54,7 +54,7 @@ void RModel::deleteData(){
 	for(std::vector<RModelVScalarDef*>::size_type i=0;i<scalarDefs.size();i++) {
 		delete(scalarDefs[i]);
 	}
-    scalarDefs.clear();
+	scalarDefs.clear();
 	bounds.resize(6);
 	bounds[0] = 0.0;
 	bounds[1] = 0.0;
@@ -91,7 +91,7 @@ void RModel::loadRModelData(VertexCloud* model){
 	nVertices = vertices.size();
 	positionDataBufferObject = ShaderUtils::createDataBuffer<glm::vec3>(vertices);
 	vertexFlagsDataBufferObject = ShaderUtils::createDataBuffer<RVertexFlagAttribute>(vertexFlagsAttribute);
-    loadAdditionalEdges(model);
+	loadAdditionalEdges(model);
 	originalModel = model;
 	copyScalarDefs(model);
 }
@@ -160,35 +160,35 @@ void RModel::loadRModelData(PolygonMesh* mesh){
 	vertexFlagsDataBufferObject = ShaderUtils::createDataBuffer<RVertexFlagAttribute>(vertexFlagsAttribute);
 	loadVertexPositionAndNormals(mesh);
 	loadVertexPolygonPolyhedronIds(mesh);
-    if(mesh->getAdditionalEdges().size() != 0) {
-        loadAdditionalEdges(mesh);
-    }
-    std::cout << "Loading Scalar Properties" << std::endl;
-    loadVertexScalarProperties(mesh);
+	if(mesh->getAdditionalEdges().size() != 0) {
+		loadAdditionalEdges(mesh);
+	}
+	std::cout << "Loading Scalar Properties" << std::endl;
+	loadVertexScalarProperties(mesh);
 	originalModel = mesh;
 	copyScalarDefs(mesh);
 }
 
 void RModel::loadAdditionalEdges(VertexCloud* vcloud){
-    std::vector<glm::vec3> edgeContainer;
-    std::vector<glm::vec3> edgeColorContainer;
-    std::vector<vis::Edge*>& additionalEdges = vcloud->getAdditionalEdges();
-    edgeContainer.reserve(vcloud->getAdditionalEdgesCount()*2);
-    edgeColorContainer.reserve(vcloud->getAdditionalEdgesCount()*2);
+	std::vector<glm::vec3> edgeContainer;
+	std::vector<glm::vec3> edgeColorContainer;
+	std::vector<vis::Edge*>& additionalEdges = vcloud->getAdditionalEdges();
+	edgeContainer.reserve(vcloud->getAdditionalEdgesCount()*2);
+	edgeColorContainer.reserve(vcloud->getAdditionalEdgesCount()*2);
 
-    for(std::vector<vis::Edge*>::size_type i = 0;i<additionalEdges.size();i++){
-        vis::Edge* currentEdge = additionalEdges[i];
-        glm::vec3& vec0 = currentEdge->getVertex0()->getCoords();
-        glm::vec3& vec1 = currentEdge->getVertex1()->getCoords();
-        glm::vec3& color = currentEdge->getColor();
-        edgeContainer.push_back(vec0);
-        edgeContainer.push_back(vec1);
-        edgeColorContainer.push_back(color);
-        edgeColorContainer.push_back(color);
-    }
-    nAdditionalEdges = vcloud->getAdditionalEdgesCount();
-    edgeVertexPositionsDataBufferObject = ShaderUtils::createDataBuffer<glm::vec3>(edgeContainer);
-    edgeColorDataBufferObject = ShaderUtils::createDataBuffer<glm::vec3>(edgeColorContainer);
+	for(std::vector<vis::Edge*>::size_type i = 0;i<additionalEdges.size();i++){
+		vis::Edge* currentEdge = additionalEdges[i];
+		glm::vec3& vec0 = currentEdge->getVertex0()->getCoords();
+		glm::vec3& vec1 = currentEdge->getVertex1()->getCoords();
+		glm::vec3& color = currentEdge->getColor();
+		edgeContainer.push_back(vec0);
+		edgeContainer.push_back(vec1);
+		edgeColorContainer.push_back(color);
+		edgeColorContainer.push_back(color);
+	}
+	nAdditionalEdges = vcloud->getAdditionalEdgesCount();
+	edgeVertexPositionsDataBufferObject = ShaderUtils::createDataBuffer<glm::vec3>(edgeContainer);
+	edgeColorDataBufferObject = ShaderUtils::createDataBuffer<glm::vec3>(edgeColorContainer);
 }
 
 /*void RModel::loadRModelData(PolygonMesh* mesh){
@@ -251,20 +251,20 @@ void RModel::loadVertexPositionAndNormals(VertexCloud* model){
 }
 
 void RModel::loadVertexScalarProperties(VertexCloud* model){
-    std::vector<float> floatContainer;
-    std::vector<VScalarDef*>::size_type scalarDefsSize = model->getScalarDefs().size();
-    floatContainer.resize(nVertices * scalarDefsSize);
-    std::vector<vis::Vertex*>& vertices = model->getVertices();
-    //coords
-    for(std::vector<vis::Vertex*>::size_type i = 0;i<vertices.size();i++){
-        vis::Vertex* currentVertex = vertices[i];
-        //std::vector<VScalar> scalarProps = currentVertex->getScalarProperties();
-        std::vector<int>& rmodelPos = currentVertex->getRmodelPositions();
-        for(std::vector<vis::Vertex*>::size_type j = 0;j<rmodelPos.size();j++)
-            for(std::vector<VScalarDef*>::size_type k = 0;k<scalarDefsSize;k++)
+	std::vector<float> floatContainer;
+	std::vector<VScalarDef*>::size_type scalarDefsSize = model->getScalarDefs().size();
+	floatContainer.resize(nVertices * scalarDefsSize);
+	std::vector<vis::Vertex*>& vertices = model->getVertices();
+	//coords
+	for(std::vector<vis::Vertex*>::size_type i = 0;i<vertices.size();i++){
+		vis::Vertex* currentVertex = vertices[i];
+		//std::vector<VScalar> scalarProps = currentVertex->getScalarProperties();
+		std::vector<int>& rmodelPos = currentVertex->getRmodelPositions();
+		for(std::vector<vis::Vertex*>::size_type j = 0;j<rmodelPos.size();j++)
+			for(std::vector<VScalarDef*>::size_type k = 0;k<scalarDefsSize;k++)
 				floatContainer[rmodelPos[j]*scalarDefsSize+k] = currentVertex->getScalarProperty(k);
-    }
-    vertexScalarDataBufferObject = ShaderUtils::createDataBuffer<float>(floatContainer);
+	}
+	vertexScalarDataBufferObject = ShaderUtils::createDataBuffer<float>(floatContainer);
 
 }
 
@@ -312,13 +312,13 @@ void RModel::loadVertexPolygonPolyhedronIds(PolygonMesh* mesh){
 }
 
 void RModel::loadTetrahedronVertexIds(PolyhedronMesh* mesh) {
-    std::vector<GLuint> ids;
-    std::vector<vis::Polyhedron*>& polyhedrons = mesh->getPolyhedrons();
-    for(std::vector<vis::Polyhedron*>::size_type i=0;i<polyhedrons.size();i++ ) {
-        PolyhedronUtils::getTetrahedronIndices(polyhedrons[i], ids);
-    }
-    numberOfTetrahedrons = ids.size()/4;
-    tetrahedronVertexIdsBufferObject = ShaderUtils::createDataBuffer<GLuint>(ids);
+	std::vector<GLuint> ids;
+	std::vector<vis::Polyhedron*>& polyhedrons = mesh->getPolyhedrons();
+	for(std::vector<vis::Polyhedron*>::size_type i=0;i<polyhedrons.size();i++ ) {
+		PolyhedronUtils::getTetrahedronIndices(polyhedrons[i], ids);
+	}
+	numberOfTetrahedrons = ids.size()/4;
+	tetrahedronVertexIdsBufferObject = ShaderUtils::createDataBuffer<GLuint>(ids);
 }
 
 void RModel::loadRModelData(PolyhedronMesh* mesh){
@@ -327,7 +327,7 @@ void RModel::loadRModelData(PolyhedronMesh* mesh){
 	std::vector<vis::Polyhedron*>& polyhedrons = mesh->getPolyhedrons();
 	for(std::vector<vis::Polyhedron*>::size_type i = 0;i<polyhedrons.size();i++)
 		PolyhedronUtils::setPolyhedronRModelPositions(polyhedrons[i]);
-    loadTetrahedronVertexIds(mesh);
+	loadTetrahedronVertexIds(mesh);
 }
 void RModel::loadRModelData(LightWeightVertexCloud* vcloud){
 	this->freeRAMFromVideoCardBuffer();
@@ -397,22 +397,22 @@ void RModel::freeRAMFromVideoCardBuffer(){
 	glDeleteBuffers(1,&this->vertexFlagsDataBufferObject);
 	glDeleteBuffers(1,&this->positionDataBufferObject);
 	glDeleteBuffers(1,&this->vertexNormalDataBufferObject);
-    glDeleteBuffers(1,&this->vertexScalarDataBufferObject);
+	glDeleteBuffers(1,&this->vertexScalarDataBufferObject);
 	glDeleteBuffers(1,&rmodelVertexPositionBufferObject);
 	glDeleteBuffers(1,&polygonPolyhedronIdsBufferObject);
-    glDeleteBuffers(1,&tetrahedronVertexIdsBufferObject);
-    glDeleteBuffers(1,&edgeVertexPositionsDataBufferObject);
-    glDeleteBuffers(1,&edgeColorDataBufferObject);
+	glDeleteBuffers(1,&tetrahedronVertexIdsBufferObject);
+	glDeleteBuffers(1,&edgeVertexPositionsDataBufferObject);
+	glDeleteBuffers(1,&edgeColorDataBufferObject);
 	//glDeleteBuffers(1, &this->colorDataBufferObject);
 	this->positionDataBufferObject = RModel::NULL_BUFFER;
 	this->vertexFlagsDataBufferObject = RModel::NULL_BUFFER;
 	this->vertexNormalDataBufferObject = RModel::NULL_BUFFER;
 	rmodelVertexPositionBufferObject = RModel::NULL_BUFFER;
 	polygonPolyhedronIdsBufferObject = RModel::NULL_BUFFER;
-    vertexScalarDataBufferObject = RModel::NULL_BUFFER;
-    tetrahedronVertexIdsBufferObject = RModel::NULL_BUFFER;
-    edgeVertexPositionsDataBufferObject = RModel::NULL_BUFFER;
-    edgeColorDataBufferObject = RModel::NULL_BUFFER;
+	vertexScalarDataBufferObject = RModel::NULL_BUFFER;
+	tetrahedronVertexIdsBufferObject = RModel::NULL_BUFFER;
+	edgeVertexPositionsDataBufferObject = RModel::NULL_BUFFER;
+	edgeColorDataBufferObject = RModel::NULL_BUFFER;
 
 }
 glm::mat4 RModel::getMV(){

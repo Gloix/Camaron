@@ -17,14 +17,14 @@ class ScalarPropertyRendererConfig : public BaseRendererConfig
 		Q_OBJECT
 		
 	public:
-        explicit ScalarPropertyRendererConfig(QWidget *parent = 0);
-        virtual ~ScalarPropertyRendererConfig();
+		explicit ScalarPropertyRendererConfig(QWidget *parent = 0);
+		virtual ~ScalarPropertyRendererConfig();
 		void readConfig();
-        bool setBoundsFromModel();
+		bool setBoundsFromModel();
 
 		RModelVScalarDef *selectedScalarDef;
-        int coloring_type;
-        int inverse_intensity;
+		int coloring_type;
+		int inverse_intensity;
 		void setModel(RModel* model);
 		std::map<RModelVScalarDef*, std::vector<float>> selectedBounds;
 
@@ -33,10 +33,10 @@ class ScalarPropertyRendererConfig : public BaseRendererConfig
 		Ui::ScalarPropertyRendererConfig *ui;
 		std::vector<RModelVScalarDef*> scalarDefs;
 		std::map<int,RModelVScalarDef*> scalarDefIdsMap;
-        RModel* rmodel;
+		RModel* rmodel;
 		Model* model;
-    private slots:
-        void loadBoundsFromModel();
+	private slots:
+		void loadBoundsFromModel();
 		void changedProperty(int index);
 
 };

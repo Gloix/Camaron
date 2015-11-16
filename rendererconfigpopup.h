@@ -15,7 +15,7 @@ class RendererConfigPopUp : public QWidget
 	public:
 		explicit RendererConfigPopUp(QWidget *parent = 0);
 		~RendererConfigPopUp();
-        void setConfigQWidget(BaseRendererConfig*);
+		void setConfigQWidget(BaseRendererConfig*);
 		void cleanConfigQWidget();
 	public slots:
 		void applyChangesPushButtonClicked();

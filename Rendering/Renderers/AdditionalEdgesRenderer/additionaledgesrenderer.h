@@ -6,11 +6,11 @@
 class AdditionalEdgesRenderer:public Renderer
 {
 	public:
-        AdditionalEdgesRenderer();
-        virtual ~AdditionalEdgesRenderer();
+		AdditionalEdgesRenderer();
+		virtual ~AdditionalEdgesRenderer();
 		virtual void glewIsReadyRenderer();
 		void draw(RModel*);
-        BaseRendererConfig* getRendererConfigWidget();
+		BaseRendererConfig* getRendererConfigWidget();
 		bool hasRendererConfigWidget();
 		void applyConfigChanges(RModel * = (RModel*)0);
 		bool rmodelChanged(RModel* rmodel);

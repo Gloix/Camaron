@@ -38,7 +38,7 @@ Model* ModelLoadingPly::load(std::string filename){
 
 	PolygonMesh* loaded = new PolygonMesh(filename);
 	VertexCloud* vcloud = 0;
-    vertexProperties.clear();
+	vertexProperties.clear();
 	try{
 		if(readHeader(loaded)){
 			if(loaded->getPolygonsCount()){
@@ -59,10 +59,10 @@ Model* ModelLoadingPly::load(std::string filename){
 				//Vertex Cloud!
 				vcloud = new VertexCloud(filename);
 				vcloud->setVerticesCount(loaded->getVerticesCount());
-                vcloud->setAdditionalEdgesCount(loaded->getAdditionalEdgesCount());
+				vcloud->setAdditionalEdgesCount(loaded->getAdditionalEdgesCount());
 				delete loaded;
 				loaded = 0;
-                if(readVertices( vcloud ) && readAdditionalEdges(vcloud)){
+				if(readVertices( vcloud ) && readAdditionalEdges(vcloud)){
 					delete[] fileBuffer;
 					fileSize = 0;
 					return ( Model* )vcloud;
@@ -83,14 +83,14 @@ Model* ModelLoadingPly::load(std::string filename){
 		fileSize = 0;
 		throw ex;
 	}
-    // Delete x, y and z properties. The rest will be held by the Model object.
-    for (std::vector<VScalarDef*>::size_type i = 0; i < vertexProperties.size() ; i++ ) {
-        if( !strcmp(vertexProperties.at(i)->name, "x\0") ||
-                !strcmp(vertexProperties.at(i)->name, "y\0") ||
-                !strcmp(vertexProperties.at(i)->name, "z\0")) {
-            delete vertexProperties.at(i);
-        }
-    }
+	// Delete x, y and z properties. The rest will be held by the Model object.
+	for (std::vector<VScalarDef*>::size_type i = 0; i < vertexProperties.size() ; i++ ) {
+		if( !strcmp(vertexProperties.at(i)->name, "x\0") ||
+				!strcmp(vertexProperties.at(i)->name, "y\0") ||
+				!strcmp(vertexProperties.at(i)->name, "z\0")) {
+			delete vertexProperties.at(i);
+		}
+	}
 
 	delete loaded;
 	delete[] fileBuffer;
@@ -107,8 +107,8 @@ bool ModelLoadingPly::readHeader(PolygonMesh* polygonMesh)
 	bool in = true;
 	char word [256];
 	bool readingVertexProperties = false;
-    //bool readingEdgeProperties = false;
-    int propertyIndex = 0;
+	//bool readingEdgeProperties = false;
+	int propertyIndex = 0;
 	while(in){
 		scanner.readString(fileBuffer, word,false);
 		if( !strcmp( word, "element\0" ) ){
@@ -116,21 +116,21 @@ bool ModelLoadingPly::readHeader(PolygonMesh* polygonMesh)
 			if( !strcmp( word, "vertex\0" ) ){
 				scanner.readInt(fileBuffer,&np );
 				readingVertexProperties = true;
-                //readingEdgeProperties = false;
-            } else if( !strcmp( word, "face\0" ) ){
+				//readingEdgeProperties = false;
+			} else if( !strcmp( word, "face\0" ) ){
 				scanner.readInt(fileBuffer,&nf );
 				readingVertexProperties = false;
-                //readingEdgeProperties = false;
-            } else if( !strcmp( word, "edge\0" ) ){
-                scanner.readInt(fileBuffer,&ne );
-                //readingEdgeProperties = true;
-                readingVertexProperties = false;
-            }
+				//readingEdgeProperties = false;
+			} else if( !strcmp( word, "edge\0" ) ){
+				scanner.readInt(fileBuffer,&ne );
+				//readingEdgeProperties = true;
+				readingVertexProperties = false;
+			}
 
 		}else if( !strcmp( word, "property\0" ) ){
 			//property name
 			if(readingVertexProperties){
-                scanner.readString(fileBuffer, word,false); // Skip datatype (we'll assume float for now)
+				scanner.readString(fileBuffer, word,false); // Skip datatype (we'll assume float for now)
 				VScalarDef* scalarDef = new VScalarDef;
 				scanner.readString(fileBuffer, scalarDef->name, false);
 				vertexProperties.push_back(scalarDef);
@@ -138,9 +138,9 @@ bool ModelLoadingPly::readHeader(PolygonMesh* polygonMesh)
 						strcmp( scalarDef->name, "y\0") &&
 						strcmp( scalarDef->name, "z\0")){
 					scalarDef->index = propertyIndex++;
-                    polygonMesh->addScalarDef(scalarDef);
-                }
-            }
+					polygonMesh->addScalarDef(scalarDef);
+				}
+			}
 		}else if( !strcmp( word, "end_header\0" ) ){
 			break;
 		}else if(!strcmp( word, "format\0" )){
@@ -154,7 +154,7 @@ bool ModelLoadingPly::readHeader(PolygonMesh* polygonMesh)
 	}
 	polygonMesh->setPolygonsCount( nf );
 	polygonMesh->setVerticesCount( np );
-    polygonMesh->setAdditionalEdgesCount( ne );
+	polygonMesh->setAdditionalEdgesCount( ne );
 	emit setupProgressBarForNewModel(vis::CONSTANTS::POLYGON_MESH,np,nf,0);
 	//scanner.readInt(fileBuffer,&nf );//discard number of edges
 	if(!isBinary)
@@ -200,54 +200,34 @@ bool ModelLoadingPly::readPolygons( PolygonMesh* pol ) {
 bool ModelLoadingPly::readVertices( VertexCloud* pol ) {
 	std::vector<vis::Vertex*> &v = pol->getVertices();
 	std::vector<float> &bounds = pol->getBounds();
-    std::vector<VScalarDef*> &scalarDefs = pol->getScalarDefs();
+	std::vector<VScalarDef*> &scalarDefs = pol->getScalarDefs();
 	v.clear();
 	v.reserve( pol->getVerticesCount() );
 	bounds.resize( 6 );
 
-//	float x = 0.0f;
-//    //scanner.readFloat(fileBuffer, &x );
-//	float y = 0.0f;
-//    //scanner.readFloat(fileBuffer, &y );
-//    float z = 0.0f;
-//    //scanner.readFloat(fileBuffer, &z );
-//    for( uint i = 0; i < vertexProperties.size(); i++ ) {
-//        if( !strcmp(vertexProperties.at(i).name, "x\0")) {
-//            scanner.readFloat(fileBuffer, &x);
-//        } else if( !strcmp(vertexProperties.at(i).name, "y\0")) {
-//            scanner.readFloat(fileBuffer, &y);
-//        } else if( !strcmp(vertexProperties.at(i).name, "z\0")) {
-//            scanner.readFloat(fileBuffer, &z);
-//        }
-//    }
-    float x, y, z;
-    vis::Vertex *vertex = readVertex(0, x, y, z);
-    for(std::vector<VScalarDef*>::size_type i=0 ; i<scalarDefs.size() ; i++) {
-        scalarDefs[i]->bounds.resize(2);
-        scalarDefs[i]->bounds[0] = scalarDefs[i]->bounds[1] = vertex->getProperty(i);
-    }
+	float x, y, z;
+	vis::Vertex *vertex = readVertex(0, x, y, z);
+	for(std::vector<VScalarDef*>::size_type i=0 ; i<scalarDefs.size() ; i++) {
+		scalarDefs[i]->bounds.resize(2);
+		scalarDefs[i]->bounds[0] = scalarDefs[i]->bounds[1] = vertex->getProperty(i);
+	}
 
-    v.push_back( vertex );
-    //v.push_back( new vis::Vertex( 0, x, y, z ) );
+	v.push_back( vertex );
 	bounds[0] = bounds[3] = x;
 	bounds[1] = bounds[4] = y;
 	bounds[2] = bounds[5] = z;
 	scanner.skipToNextLine(fileBuffer);
 
 	for( int i = 1; i < pol->getVerticesCount(); i++ ) {
-//		scanner.readFloat(fileBuffer, &x );
-//		scanner.readFloat(fileBuffer, &y );
-//		scanner.readFloat(fileBuffer, &z );
-//		v.push_back( new vis::Vertex( i, x, y, z ) );
-        vertex = readVertex(i, x, y, z);
-        for(std::vector<VScalarDef*>::size_type i=0 ; i<scalarDefs.size() ; i++) {
-            if ( vertex->getProperty(i) > scalarDefs[i]->bounds[1] ) {
-                scalarDefs[i]->bounds[1] = vertex->getProperty(i);
-            } else if ( vertex->getProperty(i) < scalarDefs[i]->bounds[0] ) {
-                scalarDefs[i]->bounds[0] = vertex->getProperty(i);
-            }
-        }
-        v.push_back( vertex );
+		vertex = readVertex(i, x, y, z);
+		for(std::vector<VScalarDef*>::size_type i=0 ; i<scalarDefs.size() ; i++) {
+			if ( vertex->getProperty(i) > scalarDefs[i]->bounds[1] ) {
+				scalarDefs[i]->bounds[1] = vertex->getProperty(i);
+			} else if ( vertex->getProperty(i) < scalarDefs[i]->bounds[0] ) {
+				scalarDefs[i]->bounds[0] = vertex->getProperty(i);
+			}
+		}
+		v.push_back( vertex );
 
 		if( bounds[0] > x )
 			bounds[0] = x;
@@ -279,60 +259,56 @@ bool ModelLoadingPly::readVertices( VertexCloud* pol ) {
 }
 
 vis::Vertex* ModelLoadingPly::readVertex(int id, float& x, float& y, float& z) {
-    x = 0.0f;
-    //scanner.readFloat(fileBuffer, &x );
-    y = 0.0f;
-    //scanner.readFloat(fileBuffer, &y );
-    z = 0.0f;
-    //scanner.readFloat(fileBuffer, &z );
-    //std::vector<VScalar> properties;
-    std::vector<float> properties;
-    for( std::vector<VScalarDef*>::size_type i = 0; i < vertexProperties.size(); i++ ) {
-        if( !strcmp(vertexProperties.at(i)->name, "x\0")) {
-            scanner.readFloat(fileBuffer, &x);
-        } else if( !strcmp(vertexProperties.at(i)->name, "y\0")) {
-            scanner.readFloat(fileBuffer, &y);
-        } else if( !strcmp(vertexProperties.at(i)->name, "z\0")) {
-            scanner.readFloat(fileBuffer, &z);
-        } else {
-            float f;
-            scanner.readFloat(fileBuffer, &f);
-            properties.push_back(f);
-        }
-    }
-    vis::Vertex* vertex = new vis::Vertex(id, x, y, z);
-    for( unsigned int i = 0; i < properties.size(); i++) {
+	x = 0.0f;
+	y = 0.0f;
+	z = 0.0f;
+	std::vector<float> properties;
+	for( std::vector<VScalarDef*>::size_type i = 0; i < vertexProperties.size(); i++ ) {
+		if( !strcmp(vertexProperties.at(i)->name, "x\0")) {
+			scanner.readFloat(fileBuffer, &x);
+		} else if( !strcmp(vertexProperties.at(i)->name, "y\0")) {
+			scanner.readFloat(fileBuffer, &y);
+		} else if( !strcmp(vertexProperties.at(i)->name, "z\0")) {
+			scanner.readFloat(fileBuffer, &z);
+		} else {
+			float f;
+			scanner.readFloat(fileBuffer, &f);
+			properties.push_back(f);
+		}
+	}
+	vis::Vertex* vertex = new vis::Vertex(id, x, y, z);
+	for( unsigned int i = 0; i < properties.size(); i++) {
 		vertex->addScalarProperty(i,properties[i]);
-    }
-    return vertex;
+	}
+	return vertex;
 }
 
 bool ModelLoadingPly::readAdditionalEdges( VertexCloud* pol ) {
-    std::vector<vis::Edge*> &e = pol->getAdditionalEdges();
-    e.clear();
-    e.reserve(pol->getAdditionalEdgesCount());
+	std::vector<vis::Edge*> &e = pol->getAdditionalEdges();
+	e.clear();
+	e.reserve(pol->getAdditionalEdgesCount());
 
-    int n0, n1;
-    int r, g, b;
-    for( int i = 0; i < pol->getAdditionalEdgesCount(); i++ ) {
-        scanner.readInt(fileBuffer, &n0);
-        scanner.readInt(fileBuffer, &n1);
-        scanner.readInt(fileBuffer, &r);
-        scanner.readInt(fileBuffer, &g);
-        scanner.readInt(fileBuffer, &b);
-        vis::Edge * edge = new vis::Edge(i, pol->getVertices()[n0],
-                       pol->getVertices()[n1],
-                       glm::vec3(r/255.0f,g/255.0f,b/255.0f));
-        e.push_back( edge );
-        scanner.skipToNextLine(fileBuffer);
-        //if(i%1000==0)
-            //emit setLoadedAdditionalEdges(i);
-    }
+	int n0, n1;
+	int r, g, b;
+	for( int i = 0; i < pol->getAdditionalEdgesCount(); i++ ) {
+		scanner.readInt(fileBuffer, &n0);
+		scanner.readInt(fileBuffer, &n1);
+		scanner.readInt(fileBuffer, &r);
+		scanner.readInt(fileBuffer, &g);
+		scanner.readInt(fileBuffer, &b);
+		vis::Edge * edge = new vis::Edge(i, pol->getVertices()[n0],
+					   pol->getVertices()[n1],
+					   glm::vec3(r/255.0f,g/255.0f,b/255.0f));
+		e.push_back( edge );
+		scanner.skipToNextLine(fileBuffer);
+		//if(i%1000==0)
+			//emit setLoadedAdditionalEdges(i);
+	}
 
-    //emit setLoadedAdditionalEdges(pol->getAdditionalEdgesCount());
-    std::cout << "AdditionalEdgesVector: Capacity = " << e.capacity() << std::endl;
-    std::cout << "AdditionalEdgesVector: Size = " << e.size() << std::endl;
-    return true;
+	//emit setLoadedAdditionalEdges(pol->getAdditionalEdgesCount());
+	std::cout << "AdditionalEdgesVector: Capacity = " << e.capacity() << std::endl;
+	std::cout << "AdditionalEdgesVector: Size = " << e.size() << std::endl;
+	return true;
 }
 
 bool ModelLoadingPly::readPolygonsBinary( PolygonMesh* pol ) {
@@ -395,7 +371,7 @@ bool ModelLoadingPly::readVerticesBinary( VertexCloud* pol ) {
 	bounds[0] = bounds[3] = x;
 	bounds[1] = bounds[4] = y;
 	bounds[2] = bounds[5] = z;
-    scanner.move(numberOfBytesInVertexPropertiesToIgnore);
+	scanner.move(numberOfBytesInVertexPropertiesToIgnore);
 	for( int i = 1; i < pol->getVerticesCount(); i++ ) {
 		scanner.readBinary(fileBuffer, &x );
 		scanner.readBinary(fileBuffer, &y );
@@ -439,7 +415,7 @@ bool ModelLoadingPly::readBody( PolygonMesh* pol )
 			return true;
 	}else{
 
-        if( readVertices( pol ) && readPolygons( pol ) && readAdditionalEdges( pol ) )
+		if( readVertices( pol ) && readPolygons( pol ) && readAdditionalEdges( pol ) )
 			return true;
 	}
 

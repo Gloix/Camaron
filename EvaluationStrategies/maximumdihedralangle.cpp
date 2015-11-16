@@ -6,7 +6,6 @@
 MaximumDihedralAngle::MaximumDihedralAngle():
 	EvaluationStrategy("Maximum Dihedral Angle", "Maximum Dihedral Angle")
 {
-    //weight = POLYHEDRON_CRITERIA_WEIGHT_BASE + 0.57f;
 	weight = TRIANGLE_CRITERIA_WEIGHT_BASE + 0.5f;
 }
 MaximumDihedralAngle::~MaximumDihedralAngle()

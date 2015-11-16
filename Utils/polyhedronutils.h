@@ -16,7 +16,7 @@ class PolyhedronUtils
 		static void setPolyhedronRModelPositions(vis::Polyhedron*);
 		static float getPolyhedronSolidAngleFromVertex(vis::Polyhedron* p,
 													   vis::Vertex* v);
-        static void getTetrahedronIndices(vis::Polyhedron*, std::vector<GLuint>&);
+		static void getTetrahedronIndices(vis::Polyhedron*, std::vector<GLuint>&);
 	private:
 		PolyhedronUtils();
 		static glm::vec3 getCoordsSphericalCoordinates(glm::vec3);

@@ -14,11 +14,13 @@
 #include "Factories/RendererRegistry.h"
 #include "Factories/modelexportstrategyregistry.h"
 #include "Factories/ModelLoadingFactory.h"
+#include "Factories/PropertyFieldLoadingFactory.h"
 #include "SelectionStrategies/Selection.h"
 #include "SelectionStrategies/SelectionStrategy.h"
 #include "SelectionStrategies/SelectionStrategyByProperty/selectionstrategybyproperty.h"
 #include "SelectionStrategies/MouseSelection/mouseselection.h"
 #include "ModelLoading/ModelLoadingStrategy.h"
+#include "PropertyFieldLoading/PropertyFieldLoadingStrategy.h"
 #include "ModelExport/modelexportstrategy.h"
 #include "UI/CustomGLViewer.h"
 #include "UI/rendererslist.h"
@@ -48,6 +50,7 @@ Visualizador::Visualizador(QWidget *parent) :
 	progressDialog(this)
 {
 	ui->setupUi(this);
+	ui->dockWidget_evaluation_strategies->hide();
 	evalStrategyConfigWidget = 0;
 	renderersList = new RenderersList(ui->widget_list_renderer_cont);
 	renderersList->show();
@@ -67,6 +70,7 @@ Visualizador::Visualizador(QWidget *parent) :
 	connect(ui->actionKey_Shortcuts,SIGNAL(triggered()),&shortcutconfig,SLOT(show()));
 	connect(ui->actionOpen,SIGNAL(triggered()),this,SLOT(openFile()));
 	connect(ui->actionOpen_Low_RAM_mode,SIGNAL(triggered()),this,SLOT(openFileLowWeight()));
+	connect(ui->actionImport_scalar_field,SIGNAL(triggered()),this,SLOT(importFileScalarField()));
 	connect(renderersList,SIGNAL(secondaryRendererRemoved()),this,SLOT(secondaryRendererRemoved()));
 	connect(ui->actionExport_complete,SIGNAL(triggered()),this,SLOT(exportModel()));
 	connect(ui->actionSelection_As,SIGNAL(triggered()),this,SLOT(exportSelection()));
@@ -97,8 +101,10 @@ Visualizador::Visualizador(QWidget *parent) :
 	connect(ui->chkShowAxes,SIGNAL(toggled(bool)),this,SLOT(showAxesChanged(bool)));
 	modelLoadingFactory = ModelLoadingFactory::getSingletonInstance();
 	modelLoadingFactoryLW = ModelLoadingFactory::getLightWeightSingletonInstance();
+	propertyFieldLoadingFactory = PropertyFieldLoadingFactory::getSingletonInstance();
 	fileFormats = getModelAcceptedExtensions(modelLoadingFactory);
 	fileFormatsLW = getModelAcceptedExtensions(modelLoadingFactoryLW);
+	fileFormatsPropertyField = getPropertyFieldAcceptedExtensions(propertyFieldLoadingFactory);
 	fileExportFormats = getModelAcceptedExportExtensions();
 	savedState = saveGeometry();
 	modelGeneralStaticsCollected = false;
@@ -136,6 +142,7 @@ Visualizador::Visualizador(QWidget *parent) :
 	loadRecentFiles();
 	connectModelLoadingStrategies(modelLoadingFactory);
 	connectModelLoadingStrategies(modelLoadingFactoryLW);
+	enableAndDisableWidgets();
 }
 
 
@@ -242,6 +249,21 @@ std::string Visualizador::getModelAcceptedExtensions(ModelLoadingFactory* factor
 	typedef std::vector<ModelLoadingStrategy*>::size_type it_type;
 	for(it_type iterator = 0; iterator < strategies.size(); iterator++) {
 		ModelLoadingStrategy* p = strategies[iterator];
+		std::vector<AcceptedFileFormat>& acceptedfileFormats = p->getFileFormats();
+		typedef std::vector<AcceptedFileFormat>::size_type ffit;
+		for(ffit i = 0;i<acceptedfileFormats.size();i++){
+			fileformats += ";;"+acceptedfileFormats[i].fileFormatName+"(*."+
+						   acceptedfileFormats[i].fileFormatExt+")";
+		}
+	}
+	return "All Files(*)"+fileformats;
+}
+std::string Visualizador::getPropertyFieldAcceptedExtensions(PropertyFieldLoadingFactory* factory){
+	std::string fileformats;
+	std::vector<PropertyFieldLoadingStrategy*>& strategies = factory->getPropertyFieldLoadingStrategies();
+	typedef std::vector<PropertyFieldLoadingStrategy*>::size_type it_type;
+	for(it_type iterator = 0; iterator < strategies.size(); iterator++) {
+		PropertyFieldLoadingStrategy* p = strategies[iterator];
 		std::vector<AcceptedFileFormat>& acceptedfileFormats = p->getFileFormats();
 		typedef std::vector<AcceptedFileFormat>::size_type ffit;
 		for(ffit i = 0;i<acceptedfileFormats.size();i++){
@@ -411,6 +433,7 @@ void Visualizador::closeModel(){
 		}
 		fillRendererComboBox();
 		renderersList->removeAllRenderers();
+		enableAndDisableWidgets();
 	}
 }
 
@@ -438,6 +461,17 @@ void Visualizador::openFileLowWeight()
 	openModelFromFilePathQThread(filename,true);
 
 }
+void Visualizador::importFileScalarField() {
+	if(progressDialog.isVisible())
+		return;
+	QString filename = QFileDialog::getOpenFileName(this,
+													("Open Scalar Field File"), "",
+													fileFormatsLW.c_str());
+	if(filename.size()==0)
+		return;
+	openModelFromFilePathQThread(filename,true);
+}
+
 void Visualizador::openModelFromFilePath(QString filename, bool addToRecentFiles){
 	CrossTimer crossTimer;
 	CrossTimer crossTimerModel;
@@ -548,7 +582,7 @@ void Visualizador::getLoadedModelFromLoadingStrategy(){
 			modelGeneralStaticsWidget.setData(&modelGeneralStaticsCollector);
 			modelGeneralStaticsCollected = true;
 		}
-		std::cout << "Model loaded in: "<<timer.getTranscurredSeconds()<<std::endl;
+		std::cout << "Model loaded in: "<<timer.getTranscurredSeconds()<<std::endl;		
 		addRecentFiles(QString::fromStdString(loaded->getFilename()));
 		loaded->clean();//will clear unused data for LightWeight models
 		this->customGLViewer->forceReRendering();
@@ -556,6 +590,9 @@ void Visualizador::getLoadedModelFromLoadingStrategy(){
 	progressDialog.hide();
 }
 void Visualizador::enableAndDisableWidgets(){
+	ui->actionClose_Model->setEnabled(model != 0);
+	ui->menuExport_As->setEnabled(model != 0);
+	ui->actionImport_scalar_field->setEnabled(model != 0);
 	if(!model)
 		return;
 	ui->dockWidget_evaluation_strategies->setDisabled(model->isLightWeight());

@@ -30,7 +30,7 @@
     <normaloff>:/Images/UI/Images/Icon/shrimp32x32.png</normaloff>:/Images/UI/Images/Icon/shrimp32x32.png</iconset>
   </property>
   <property name="autoFillBackground">
-   <bool>true</bool>
+   <bool>false</bool>
   </property>
   <property name="styleSheet">
    <string notr="true">#sphereIntersectionDataWidget, #cubeIntersectionDataWidget,#fromFileIntersectionWidget, #widgetUnionNew {
@@ -100,6 +100,7 @@ background-color: rgb(255, 255, 255);
     </widget>
     <addaction name="actionOpen"/>
     <addaction name="actionOpen_Low_RAM_mode"/>
+    <addaction name="actionImport_scalar_field"/>
     <addaction name="menuRecent_files"/>
     <addaction name="menuExport_As"/>
     <addaction name="actionClose_Model"/>
@@ -186,7 +187,16 @@ background-color: rgb(255, 255, 255);
      <item>
       <widget class="QWidget" name="widget_2" native="true">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <property name="margin">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
          <number>0</number>
         </property>
         <item>
@@ -399,7 +409,16 @@ background-color: rgb(255, 255, 255);
      <property name="spacing">
       <number>0</number>
      </property>
-     <property name="margin">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
       <number>0</number>
      </property>
      <item>
@@ -606,6 +625,11 @@ background-color: rgb(255, 255, 255);
   <action name="actionOpen_Low_RAM_mode">
    <property name="text">
     <string>Open (Low RAM mode)...</string>
+   </property>
+  </action>
+  <action name="actionImport_scalar_field">
+   <property name="text">
+    <string>Import scalar field...</string>
    </property>
   </action>
  </widget>

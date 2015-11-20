@@ -25,14 +25,7 @@ class PolyhedronMesh;
 class LightWeightVertexCloud;
 class LightWeightPolygonMesh;
 class LightWeightPolyhedronMesh;
-struct AcceptedFileFormat{
-	public:
-		AcceptedFileFormat(std::string fname, std::string fext){
-			fileFormatName = fname; fileFormatExt = fext;
-		}
-		std::string fileFormatName;
-		std::string fileFormatExt;
-};
+struct AcceptedFileFormat;
 
 class ModelLoadingStrategy:public QThread
 {

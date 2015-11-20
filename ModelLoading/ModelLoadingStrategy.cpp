@@ -17,6 +17,7 @@
 #include "ModelLoading/ModelLoadingWorkers/fixsurfacepolygonsverticesorderworker.h"
 #include "ModelLoading/ModelLoadingWorkers/calculatevertexnormalslightweightmodelworker.h"
 #include "Utils/qtutils.h"
+#include "Utils/fileutils.h"
 ModelLoadingStrategy::ModelLoadingStrategy(): QThread(){
 	loadedModel = 0;
 }

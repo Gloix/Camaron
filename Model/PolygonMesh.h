@@ -2,7 +2,10 @@
 #define POLYGONMESH_H
 
 #include <vector>
+#include <map>
+#include <glm/glm.hpp>
 #include "Model/VertexCloud.h"
+
 namespace vis{
 class Polygon;
 }
@@ -19,6 +22,8 @@ class PolygonMesh: public VertexCloud
 
 	protected:
 	private:
+		// scalarPointsInPolygon holds the points' coordinates in barycentric coordinates
+		std::map<unsigned char, std::vector<glm::vec3>> scalarPointsInPolygon;
 		int polygonsCount;
 		std::vector<vis::Polygon*> polygons;
 };

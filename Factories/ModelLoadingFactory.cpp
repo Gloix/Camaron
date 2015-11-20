@@ -51,7 +51,7 @@ Model* ModelLoadingFactory::loadModel( std::string filename )throw (ModelLoading
 	std::string ext = FileUtils::getFileNameExtension(filename);
 
 #ifdef DEBUG_MOD
-	std::cout << "Archivo: " << filename << ", Extension: " << ext << "\n";
+	std::cout << "File: " << filename << ", Extension: " << ext << "\n";
 #endif
 	ModelLoadingStrategy* strategy = this->getRegistryByKeyInstance( ext );
 	if( strategy ) {
@@ -73,7 +73,7 @@ ModelLoadingStrategy* ModelLoadingFactory::loadModelQThread( std::string filenam
 	std::string ext = FileUtils::getFileNameExtension(filename);
 
 #ifdef DEBUG_MOD
-	std::cout << "Archivo: " << filename << ", Extension: " << ext << "\n";
+	std::cout << "File: " << filename << ", Extension: " << ext << "\n";
 #endif
 	ModelLoadingStrategy* strategy = this->getRegistryByKeyInstance( ext );
 	if( strategy ) {

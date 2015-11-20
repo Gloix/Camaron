@@ -54,7 +54,9 @@ void AdditionalEdgesRenderer::draw(RModel* rmodel){
 	glBindBuffer(GL_ARRAY_BUFFER, rmodel->edgeColorDataBufferObject);
 	glVertexAttribPointer( COLOR_ATTRIBUTE, 3, GL_FLOAT, GL_FALSE, 0,
 						   (GLubyte *)NULL );
+	glDisable(GL_DEPTH_TEST);
 	glDrawArrays(GL_LINES, 0, rmodel->nAdditionalEdges*2 );
+	glEnable(GL_DEPTH_TEST);
 
 	glDisableVertexAttribArray(POSITION_ATTRIBUTE); // Vertex position
 	glDisableVertexAttribArray(COLOR_ATTRIBUTE); // Vertex selection

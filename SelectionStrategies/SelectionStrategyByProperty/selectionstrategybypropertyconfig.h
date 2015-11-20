@@ -5,6 +5,8 @@
 namespace Ui {
 class SelectionStrategyByPropertyConfig;
 }
+class RModel;
+class Model;
 class EvaluationStrategyRegistry;
 class EvaluationStrategy;
 class SelectionStrategyByPropertyConfig : public QWidget
@@ -21,9 +23,11 @@ class SelectionStrategyByPropertyConfig : public QWidget
 		EvaluationStrategy* evaluationStrategy;
 		bool applyOverModel;//false = overSelection
 		bool newSelection;//false = join
+		void setModel(RModel*);
 	public slots:
 		void changeEvaluationStrategy(int index);
 	private:
+		Model* model;
 		EvaluationStrategyRegistry* evaluationStrategyRegistry;
 		Ui::SelectionStrategyByPropertyConfig *ui;
 		void fillEvaluationStrategiesComboBox();

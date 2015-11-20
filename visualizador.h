@@ -27,6 +27,7 @@ class SelectionStrategyRegistry;
 class RendererRegistry;
 class SelectionStrategy;
 class ModelLoadingFactory;
+class PropertyFieldLoadingFactory;
 class RModel;
 class RenderersList;
 class Model;
@@ -44,6 +45,7 @@ class Visualizador : public QMainWindow
 		void closeModel();
 		void openFile();
 		void openFileLowWeight();
+		void importFileScalarField();
 		void exportModel();
 		void exportSelection();
 		void selectUsingSelectionStrategy();
@@ -79,6 +81,7 @@ class Visualizador : public QMainWindow
 		void enableAndDisableWidgets();
 
 		std::string getModelAcceptedExtensions(ModelLoadingFactory* factory);
+		std::string getPropertyFieldAcceptedExtensions(PropertyFieldLoadingFactory* factory);
 		std::string getModelAcceptedExportExtensions();
 		void setupEvaluationStrategiesStatics();
 		void openModelFromFilePath(QString, bool addToRecentFiles);
@@ -91,7 +94,7 @@ class Visualizador : public QMainWindow
 		Model* model;
 		ModelGeneralStaticsCollector modelGeneralStaticsCollector;
 		//Model Loading
-		std::string fileFormats,fileFormatsLW;
+		std::string fileFormats,fileFormatsLW, fileFormatsPropertyField;
 		std::string fileExportFormats;
 		//Model Rendering
 		CustomGLViewer* customGLViewer;
@@ -107,6 +110,7 @@ class Visualizador : public QMainWindow
 		EvaluationStrategyRegistry* evaluationStrategyRegistry;
 		ModelLoadingFactory* modelLoadingFactory;
 		ModelLoadingFactory* modelLoadingFactoryLW;
+		PropertyFieldLoadingFactory* propertyFieldLoadingFactory;
 		SelectionStrategyRegistry* selectionStrategyRegistry;
 		ModelExportStrategyRegistry* modelExportStrategyRegistry;
 

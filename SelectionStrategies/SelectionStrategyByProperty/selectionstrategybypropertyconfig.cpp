@@ -3,6 +3,8 @@
 #include "Utils/qtutils.h"
 #include "EvaluationStrategies/EvaluationStrategy.h"
 #include "Factories/EvaluationStrategyRegistry.h"
+#include "Rendering/RModel/rmodel.h"
+#include "Model/Model.h"
 SelectionStrategyByPropertyConfig::SelectionStrategyByPropertyConfig(QWidget *parent) :
 	QWidget(parent),
 	ui(new Ui::SelectionStrategyByPropertyConfig)
@@ -49,12 +51,14 @@ void SelectionStrategyByPropertyConfig::changeEvaluationStrategy(int index){
 	int evalStrategyKey = this->ui->comboBoxEvalStrategiesSelect->itemData(index).toInt();
 	EvaluationStrategy* evs = evaluationStrategyRegistry->getRegistryByKeyInstance(evalStrategyKey);
 	if(evs){
-		if(evs->getCalculatedValuesCount()>0){
-			ui->ssbp_minimumValueInputSelect->setText(QString::number(evs->getMinValue()));
-			ui->ssbp_maximumValueInputSelect->setText(QString::number(evs->getMaxValue()));
-		}else{
-			ui->ssbp_minimumValueInputSelect->setText(QString("No data"));
-			ui->ssbp_maximumValueInputSelect->setText(QString("No data"));
+		if(evs->getCalculatedValuesCount()==0){
+			//model->evaluateUsingEvaluationStrategy(evs);
 		}
+		//ui->ssbp_minimumValueInputSelect->setText(QString::number(evs->getMinValue()));
+		//ui->ssbp_maximumValueInputSelect->setText(QString::number(evs->getMaxValue()));
 	}
+}
+
+void SelectionStrategyByPropertyConfig::setModel(RModel* rmodel) {
+	this->model = rmodel->getOriginalModel();
 }

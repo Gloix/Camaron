@@ -23,6 +23,7 @@ SOURCES += main.cpp\
     EvaluationStrategies/PolygonArea.cpp \
     EvaluationStrategies/EvaluationStrategy.cpp \
     Factories/ModelLoadingFactory.cpp \
+    Factories/PropertyFieldLoadingFactory.cpp \
     Model/VertexCloud.cpp \
     Model/PolyhedronMesh.cpp \
     Model/PolygonMesh.cpp \
@@ -175,7 +176,11 @@ SOURCES += main.cpp\
     Rendering/Renderers/ScalarPropertyRenderer/scalarpropertyrenderer.cpp \
     Rendering/Renderers/ScalarPropertyRenderer/scalarpropertyrendererconfig.cpp \
     Rendering/Renderers/baserendererconfig.cpp \
-    Model/Element/edge.cpp
+    PropertyFieldLoading/PropertyFieldLoadingStrategy.cpp \
+    PropertyFieldLoading/propertyfieldloadingply.cpp \
+    PropertyFieldLoading/propertyfieldloadingelenode.cpp \
+    Model/Element/edge.cpp \
+    UI/propertyfieldloaddialog.cpp
 
 HEADERS  += visualizador.h \
     Common/Constants.h \
@@ -183,6 +188,7 @@ HEADERS  += visualizador.h \
     EvaluationStrategies/PolygonArea.h \
     EvaluationStrategies/EvaluationStrategy.h \
     Factories/ModelLoadingFactory.h \
+    Factories/PropertyFieldLoadingFactory.h \
     Model/VertexCloud.h \
     Model/PolyhedronMesh.h \
     Model/PolygonMesh.h \
@@ -341,7 +347,11 @@ HEADERS  += visualizador.h \
     Rendering/Renderers/ScalarPropertyRenderer/scalarpropertyrenderer.h \
     Rendering/Renderers/ScalarPropertyRenderer/scalarpropertyrendererconfig.h \
     Rendering/Renderers/baserendererconfig.h \
-    Model/Element/edge.h
+    PropertyFieldLoading/PropertyFieldLoadingStrategy.h \
+    PropertyFieldLoading/propertyfieldloadingply.h \
+    PropertyFieldLoading/propertyfieldloadingelenode.h \
+    Model/Element/edge.h \
+    UI/propertyfieldloaddialog.h
 
 FORMS    += visualizador.ui \
     Rendering/Renderers/ModelMainRenderer/mainrendererconfig.ui \
@@ -377,7 +387,8 @@ FORMS    += visualizador.ui \
     UI/modelloadingprogressdialog.ui \
     Rendering/Renderers/CartesianCoordinatesAxis/cartesiancoordinatesaxisconfig.ui \
     Rendering/Renderers/HeightRenderer/heightrendererconfig.ui \
-    Rendering/Renderers/ScalarPropertyRenderer/scalarpropertyrendererconfig.ui
+    Rendering/Renderers/ScalarPropertyRenderer/scalarpropertyrendererconfig.ui \
+    UI/propertyfieldloaddialog.ui
 
 OTHER_FILES += \
     Rendering/Renderers/ModelMainRenderer/mmr.vert \

@@ -47,7 +47,8 @@ Visualizador::Visualizador(QWidget *parent) :
 	mainConfiguration(this),
 	shortcutconfig(this),
 	modelGeneralStaticsWidget(this),
-	progressDialog(this)
+	progressDialog(this),
+	propertyFieldDialog(this)
 {
 	ui->setupUi(this);
 	ui->dockWidget_evaluation_strategies->hide();
@@ -142,6 +143,7 @@ Visualizador::Visualizador(QWidget *parent) :
 	loadRecentFiles();
 	connectModelLoadingStrategies(modelLoadingFactory);
 	connectModelLoadingStrategies(modelLoadingFactoryLW);
+	connectPropertyFieldLoadingStrategies(propertyFieldLoadingFactory);
 	enableAndDisableWidgets();
 }
 
@@ -348,11 +350,42 @@ void Visualizador::connectModelLoadingStrategies(ModelLoadingFactory *factory){
 				&progressDialog,SLOT(setLoadedPolyhedrons(int)));
 		connect(loadingStrategies[i],SIGNAL(stageComplete(int)),
 				&progressDialog,SLOT(stageComplete(int)));
+		connect(loadingStrategies[i],SIGNAL(addMessage(QString)),
+				&progressDialog,SLOT(addMessage(QString)));
 		connect(loadingStrategies[i],SIGNAL(errorLoadingModel(QString)),
 				&progressDialog,SLOT(displayError(QString)));
 		connect(loadingStrategies[i],SIGNAL(warningLoadingModel(QString)),
 				&progressDialog,SLOT(displayWarning(QString)));
 	}
+}
+
+void Visualizador::connectPropertyFieldLoadingStrategies(PropertyFieldLoadingFactory *factory){
+	typedef std::vector<PropertyFieldLoadingStrategy*>::size_type size_t;
+	std::vector<PropertyFieldLoadingStrategy*>& loadingStrategies =
+			factory->getPropertyFieldLoadingStrategies();
+
+	for(size_t i = 0; i < loadingStrategies.size(); i++) {
+		connect(loadingStrategies[i],SIGNAL(propertyFieldsLoadedSuccesfully()),
+				this,SLOT(onLoadedPropertyFields()));
+		connect(loadingStrategies[i],SIGNAL(
+					setupProgressBarForNewPropertyField(
+						std::vector<std::shared_ptr<PropertyFieldDef>>)),
+				&propertyFieldDialog,SLOT(setupForNewFile(
+											  std::vector<std::shared_ptr<PropertyFieldDef>>)));
+		connect(loadingStrategies[i],SIGNAL(setLoadedProgress(unsigned int)),
+				&propertyFieldDialog,SLOT(setLoadedProgress(unsigned int)));
+		connect(loadingStrategies[i],SIGNAL(addMessage(QString)),
+				&progressDialog,SLOT(addMessage(QString)));
+		connect(loadingStrategies[i],SIGNAL(errorLoadingPropertyField(QString)),
+				&progressDialog,SLOT(displayError(QString)));
+		connect(loadingStrategies[i],SIGNAL(warningLoadingModel(QString)),
+				&progressDialog,SLOT(displayWarning(QString)));
+	}
+}
+
+void Visualizador::onLoadedPropertyFields() {
+	customGLViewer->forceReRendering();
+	propertyFieldDialog.hide();
 }
 
 void Visualizador::exportModel(){
@@ -433,8 +466,8 @@ void Visualizador::closeModel(){
 		}
 		fillRendererComboBox();
 		renderersList->removeAllRenderers();
-		enableAndDisableWidgets();
 	}
+	enableAndDisableWidgets();
 }
 
 void Visualizador::openFile()

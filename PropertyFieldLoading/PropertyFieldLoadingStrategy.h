@@ -5,26 +5,25 @@
 #include "Exceptions/modelloadingexception.h"
 #include <string>
 #include <vector>
+#include <memory>
 #include <QThread>
 #include "UI/modelloadingprogressdialog.h"
+#include "PropertyFieldLoading/propertyfielddef.h"
 #define N_DEFAULT_THREADS_MODEL_LOADING 8
 #define PROPERTY_FIELD_LOAD_FUNC_DEC \
-	virtual Model* load( std::string filename, Model* model)
+	virtual void load( std::string filename, Model* model, std::vector<std::shared_ptr<PropertyFieldDef>> propertyFieldDef)
+#define PROPERTY_FIELD_LOAD_DEFS_FUNC_DEC \
+	virtual std::vector<std::shared_ptr<PropertyFieldDef>> loadDefs( std::string filename)
 #define PROPERTY_FIELD_VALIDATE_FUNC_DEC \
 	virtual bool validate( std::string filename )
 #define PROPERTY_FIELD_LOADING_EXTENDING_CLASS_MINIMAL(x)\
 	x();\
 	virtual ~x();\
 	PROPERTY_FIELD_LOAD_FUNC_DEC;\
+	PROPERTY_FIELD_LOAD_DEFS_FUNC_DEC;\
 	PROPERTY_FIELD_VALIDATE_FUNC_DEC;
 
 class Model;
-class VertexCloud;
-class PolygonMesh;
-class PolyhedronMesh;
-class LightWeightVertexCloud;
-class LightWeightPolygonMesh;
-class LightWeightPolyhedronMesh;
 struct AcceptedFileFormat;
 
 class PropertyFieldLoadingStrategy:public QThread
@@ -35,28 +34,27 @@ class PropertyFieldLoadingStrategy:public QThread
 		PropertyFieldLoadingStrategy(std::string fileFormatName, std::string fileFormatExt);
 		virtual ~PropertyFieldLoadingStrategy();
 		PROPERTY_FIELD_LOAD_FUNC_DEC = 0;
+		PROPERTY_FIELD_LOAD_DEFS_FUNC_DEC = 0;
 		PROPERTY_FIELD_VALIDATE_FUNC_DEC = 0;
 		std::vector<AcceptedFileFormat>& getFileFormats();
 
 		//QThread
 		void run();
-		void loadPropertyFieldQThread(std::string filename, Model* model);
+		void loadPropertyFieldQThread(std::string filename, Model* model, std::vector<std::shared_ptr<PropertyFieldDef>> propertyFieldDefs);
 	signals:
-		void propertyFieldLoadedSuccesfully();
-		void setupProgressBarForNewPropertyField(int,int,int,int);
-		void setLoadedVertices(int);
-		void setLoadedPolygons(int);
-		void setLoadedPolyhedrons(int);
-		void stageComplete(int);
+		void propertyFieldsLoadedSuccesfully();
+		void setupProgressBarForNewPropertyField(std::vector<std::shared_ptr<PropertyFieldDef>>);
+		void setLoadedProgress(unsigned int);
 		void addMessage(QString);
-		void errorLoadingModel(QString);
-		void warningLoadingModel(QString);
+		void errorLoadingPropertyField(QString);
+		void warningLoadingPropertyField(QString);
 	protected:
 		std::vector<AcceptedFileFormat> acceptedFileFormats;
 		//tools
 	private:
 		Model* model;
 		std::string propertyFieldPath;
+		std::vector<std::shared_ptr<PropertyFieldDef>> selected;
 
 };
 

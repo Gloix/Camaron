@@ -16,6 +16,7 @@
 #include "UI/KeyshortcutConfig/keyshortcutconfiguration.h"
 #include "ModelGeneralStatics/modelgeneralstaticscollector.h"
 #include "UI/modelloadingprogressdialog.h"
+#include "UI/propertyfieldloaddialog.h"
 #include "Utils/crosstimer.h"
 class CustomGLViewer;
 namespace Ui {
@@ -74,6 +75,7 @@ class Visualizador : public QMainWindow
 		void fillSelectionStrategiesComboBox();
 		void fillRendererComboBox();
 		void connectModelLoadingStrategies(ModelLoadingFactory*);
+		void connectPropertyFieldLoadingStrategies(PropertyFieldLoadingFactory*);
 		void loadRecentFiles();
 		void saveRecentFiles();
 		void updateRecentFilesQActions();
@@ -87,6 +89,8 @@ class Visualizador : public QMainWindow
 		void openModelFromFilePath(QString, bool addToRecentFiles);
 		void openModelFromFilePathQThread(QString filename,bool lw);
 		Ui::Visualizador *ui;
+
+		void onLoadedPropertyFields();
 
 		//Model
 		bool modelGeneralStaticsCollected;
@@ -135,6 +139,7 @@ class Visualizador : public QMainWindow
 		std::list<std::string> recentFilesnames;
 
 		ModelLoadingProgressDialog progressDialog;
+		PropertyFieldLoadDialog propertyFieldDialog;
 		CrossTimer timer;
 };
 

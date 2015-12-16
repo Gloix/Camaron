@@ -8,6 +8,7 @@
 #include "Rendering/Renderer.h"
 #include "Rendering/RModel/rmodel.h"
 #include "ModelExport/modelexportstrategy.h"
+#include "Model/modelvisitor.h"
 #include <iostream>
 
 VertexCloud::VertexCloud(std::string f):
@@ -22,9 +23,6 @@ VertexCloud::~VertexCloud()
 {
 	for( std::vector<vis::Vertex*>::size_type i = 0; i != vertices.size(); i++ )
 		delete vertices[i];
-
-	for( std::vector<VScalarDef*>::size_type i = 0; i != scalarDefs.size(); i++ )
-		delete scalarDefs[i];
 
 	for( std::vector<vis::Edge*>::size_type i = 0; i != additionalEdges.size(); i++ )
 		delete additionalEdges[i];
@@ -54,14 +52,6 @@ bool VertexCloud::is2D(){
 
 void VertexCloud::set2D(bool b){
 	_2d = b;
-}
-
-void VertexCloud::addScalarDef(VScalarDef* scalarDef) {
-	scalarDefs.push_back(scalarDef);
-}
-
-std::vector<VScalarDef*> &VertexCloud::getScalarDefs() {
-	return scalarDefs;
 }
 
 DOUBLE_DISPATCH_MODEL_DEF(VertexCloud)

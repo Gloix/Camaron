@@ -4,6 +4,7 @@
 #include "EvaluationStrategies/EvaluationStrategy.h"
 #include "Rendering/RModel/rmodel.h"
 #include "ModelExport/modelexportstrategy.h"
+#include "Model/modelvisitor.h"
 
 PolyhedronMesh::PolyhedronMesh(std::string f):PolygonMesh(f)
 {

@@ -5,14 +5,17 @@
 #include <QWidget>
 #include <glm/glm.hpp>
 #include "Model/PolygonMesh.h"
+#include "Model/modelvisitor.h"
 #include "Rendering/Renderers/baserendererconfig.h"
+#include "PropertyFieldLoading/propertyfielddefvisitor.h"
 
+class PolyhedronMesh;
+template <typename T> class RModelPropertyFieldDef;
 namespace Ui {
 class ScalarPropertyRendererConfig;
 }
 class RModel;
-struct RModelVScalarDef;
-class ScalarPropertyRendererConfig : public BaseRendererConfig
+class ScalarPropertyRendererConfig : public BaseRendererConfig, public ModelVisitor
 {
 		Q_OBJECT
 		
@@ -22,17 +25,20 @@ class ScalarPropertyRendererConfig : public BaseRendererConfig
 		void readConfig();
 		bool setBoundsFromModel();
 
-		RModelVScalarDef *selectedScalarDef;
+		std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>> selectedScalarRModelDef;
 		int coloring_type;
 		int inverse_intensity;
-		void setModel(RModel* model);
-		std::map<RModelVScalarDef*, std::vector<float>> selectedBounds;
+		void setRModel(RModel* model);
+		virtual void visit(PolygonMesh* model);
+		virtual void visit(PolyhedronMesh* model);
+		std::map<PropertyFieldDef*, std::vector<float>> selectedBounds;
 
 	private:
-
 		Ui::ScalarPropertyRendererConfig *ui;
-		std::vector<RModelVScalarDef*> scalarDefs;
-		std::map<int,RModelVScalarDef*> scalarDefIdsMap;
+		void loadScalarDefs();
+		void onNewModelLoaded();
+		std::vector<std::shared_ptr<ScalarFieldDef>> scalarDefs;
+		std::map<int,std::shared_ptr<ScalarFieldDef>> scalarDefIdsMap;
 		RModel* rmodel;
 		Model* model;
 	private slots:

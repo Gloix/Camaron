@@ -1,5 +1,6 @@
 #include "Factories/PropertyFieldLoadingFactory.h"
 #include "PropertyFieldLoading/PropertyFieldLoadingStrategy.h"
+#include "PropertyFieldLoading/propertyfielddef.h"
 #include "ModelLoading/ModelLoadingStrategy.h"
 #include "Utils/fileutils.h"
 #include <iostream>
@@ -39,25 +40,25 @@ bool PropertyFieldLoadingFactory::addNewPropertyFieldLoadingStrategy( PropertyFi
 
 }
 
-void PropertyFieldLoadingFactory::loadPropertyField( std::string filename, Model* model )throw (ModelLoadingException,
-																	ExceptionMessage,
-																	UnknownExtensionException,
-																	std::bad_alloc){
-	if(!FileUtils::fileExists(filename)){
-		throw ExceptionMessage("File not found:<br>"+filename);
-	}
-	std::string ext = FileUtils::getFileNameExtension(filename);
+//void PropertyFieldLoadingFactory::loadPropertyField( std::string filename, Model* model, PropertyFieldDef propertyFieldDef )throw (ModelLoadingException,
+//																	ExceptionMessage,
+//																	UnknownExtensionException,
+//																	std::bad_alloc){
+//	if(!FileUtils::fileExists(filename)){
+//		throw ExceptionMessage("File not found:<br>"+filename);
+//	}
+//	std::string ext = FileUtils::getFileNameExtension(filename);
 
-#ifdef DEBUG_MOD
-	std::cout << "File: " << filename << ", Extension: " << ext << "\n";
-#endif
-	PropertyFieldLoadingStrategy* strategy = this->getRegistryByKeyInstance( ext );
-	if( strategy ) {
-		if( strategy->validate( filename ) )
-			strategy->load( filename, model );
-	}
-	throw UnknownExtensionException(filename);
-}
+//#ifdef DEBUG_MOD
+//	std::cout << "File: " << filename << ", Extension: " << ext << "\n";
+//#endif
+//	PropertyFieldLoadingStrategy* strategy = this->getRegistryByKeyInstance( ext );
+//	if( strategy ) {
+//		if( strategy->validate( filename ) )
+//			strategy-> load( filename, model, propertyFieldDef);
+//	}
+//	throw UnknownExtensionException(filename);
+//}
 PropertyFieldLoadingStrategy* PropertyFieldLoadingFactory::loadPropertyFieldQThread( std::string filename )throw (ModelLoadingException,
 																	ExceptionMessage,
 																	UnknownExtensionException,

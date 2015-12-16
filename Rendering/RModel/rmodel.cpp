@@ -12,6 +12,8 @@
 #include "Utils/matrixtransformationutils.h"
 #include "Utils/shaderutils.h"
 #include "Rendering/RModel/RVertexFlagAttribute.h"
+#include "PropertyFieldLoading/propertyfielddef.h"
+#include "PropertyFieldLoading/scalarfielddef.h"
 
 
 RModel::RModel():
@@ -23,7 +25,6 @@ RModel::RModel():
 	vertexFlagsDataBufferObject = NULL_BUFFER;
 	vertexNormalDataBufferObject = NULL_BUFFER;
 	rmodelVertexPositionBufferObject = NULL_BUFFER;
-	vertexScalarDataBufferObject = NULL_BUFFER;
 	polygonPolyhedronIdsBufferObject = NULL_BUFFER;
 	tetrahedronVertexIdsBufferObject = NULL_BUFFER;
 	edgeVertexPositionsDataBufferObject = NULL_BUFFER;
@@ -42,19 +43,13 @@ RModel::RModel():
 }
 RModel::~RModel(){
 	this->freeRAMFromVideoCardBuffer();
-	for(std::vector<RModelVScalarDef*>::size_type i=0;i<scalarDefs.size();i++) {
-		delete(scalarDefs[i]);
-	}
 }
 
 void RModel::deleteData(){
 	this->freeRAMFromVideoCardBuffer();
 	vertexFlagsAttribute.clear();
 	std::vector<RVertexFlagAttribute>().swap(vertexFlagsAttribute);
-	for(std::vector<RModelVScalarDef*>::size_type i=0;i<scalarDefs.size();i++) {
-		delete(scalarDefs[i]);
-	}
-	scalarDefs.clear();
+	//rModelPropertyFieldDefs.clear();
 	bounds.resize(6);
 	bounds[0] = 0.0;
 	bounds[1] = 0.0;
@@ -70,6 +65,11 @@ void RModel::deleteData(){
 Model* RModel::getOriginalModel(){
 	return originalModel;
 }
+
+//std::vector<std::shared_ptr<RModelPropertyFieldDef>> &RModel::getRModelPropertyFieldDefs()
+//{
+//	return rModelPropertyFieldDefs;
+//}
 
 void RModel::loadRModelData(VertexCloud* model){
 	this->freeRAMFromVideoCardBuffer();
@@ -93,51 +93,46 @@ void RModel::loadRModelData(VertexCloud* model){
 	vertexFlagsDataBufferObject = ShaderUtils::createDataBuffer<RVertexFlagAttribute>(vertexFlagsAttribute);
 	loadAdditionalEdges(model);
 	originalModel = model;
-	copyScalarDefs(model);
+	//copyPropertyFieldDefs(model);
 }
 
-void RModel::copyScalarDefs(VertexCloud* model) {
-	std::vector<VScalarDef*> modelScalarDefs = model->getScalarDefs();
-	RModelVScalarDef* rmodelVScalarDef;
-	for(std::vector<VScalarDef*>::size_type i = 0; i<modelScalarDefs.size(); i++ ) {
-		rmodelVScalarDef = new RModelVScalarDef;
-		rmodelVScalarDef->buffer = vertexScalarDataBufferObject;
-		rmodelVScalarDef->bounds.assign(modelScalarDefs[i]->bounds.begin(), modelScalarDefs[i]->bounds.end());
-		rmodelVScalarDef->name = std::string(modelScalarDefs[i]->name);
-		rmodelVScalarDef->offset = modelScalarDefs[i]->index*sizeof(float);
-		rmodelVScalarDef->stride = modelScalarDefs.size()*sizeof(float);
-		scalarDefs.push_back(rmodelVScalarDef);
-	}
-	//X
-	rmodelVScalarDef = new RModelVScalarDef;
-	rmodelVScalarDef->buffer = positionDataBufferObject;
-	rmodelVScalarDef->bounds.push_back(model->getBounds()[0]);
-	rmodelVScalarDef->bounds.push_back(model->getBounds()[3]);
-	rmodelVScalarDef->name = std::string("X");
-	rmodelVScalarDef->offset = 0;
-	rmodelVScalarDef->stride = 3*sizeof(float);
-	scalarDefs.push_back(rmodelVScalarDef);
-	//Y
-	rmodelVScalarDef = new RModelVScalarDef;
-	rmodelVScalarDef->buffer = positionDataBufferObject;
-	rmodelVScalarDef->bounds.push_back(model->getBounds()[1]);
-	rmodelVScalarDef->bounds.push_back(model->getBounds()[4]);
-	rmodelVScalarDef->name = std::string("Y");
-	rmodelVScalarDef->offset = 1*sizeof(float);
-	rmodelVScalarDef->stride = 3*sizeof(float);
-	scalarDefs.push_back(rmodelVScalarDef);
-	//Z
-	if(!model->is2D()) {
-		rmodelVScalarDef = new RModelVScalarDef;
-		rmodelVScalarDef->buffer = positionDataBufferObject;
-		rmodelVScalarDef->bounds.push_back(model->getBounds()[2]);
-		rmodelVScalarDef->bounds.push_back(model->getBounds()[5]);
-		rmodelVScalarDef->name = std::string("Z");
-		rmodelVScalarDef->offset = 2*sizeof(float);
-		rmodelVScalarDef->stride = 3*sizeof(float);
-		scalarDefs.push_back(rmodelVScalarDef);
-	}
-}
+//void RModel::copyPropertyFieldDefs(VertexCloud* model) {
+//	std::vector<std::shared_ptr<PropertyFieldDef>> modelPropertyFieldDefs = model->getPropertyFieldDefs();
+//	for(std::vector<std::shared_ptr<PropertyFieldDef>>::size_type i = 0; i<modelPropertyFieldDefs.size(); i++ ) {
+//		GLuint buffer = propertyDataBufferObjects[i];
+//		GLsizei stride = 0;
+//		GLubyte offset = 0;
+//		std::shared_ptr<RModelPropertyFieldDef> rModelPropertyFieldDef(
+//					new RModelPropertyFieldDef(modelPropertyFieldDefs[i], buffer, stride, offset));
+//		rModelPropertyFieldDefs.push_back(rModelPropertyFieldDef);
+//	}
+//	//X
+//	std::shared_ptr<PropertyFieldDef> propX(
+//				new ScalarFieldDef(0,"X",model->getBounds()[0],model->getBounds()[3]));
+//	rModelPropertyFieldDefs.push_back(std::shared_ptr<RModelScalarFieldDef>(new RModelScalarFieldDef(
+//										  propX,
+//										  positionDataBufferObject,
+//										  3*sizeof(float),
+//										  0)));
+//	//Y
+//	std::shared_ptr<PropertyFieldDef> propY(
+//				new ScalarFieldDef(0,"Y",model->getBounds()[1],model->getBounds()[4]));
+//	rModelPropertyFieldDefs.push_back(std::shared_ptr<RModelPropertyFieldDef>(new RModelPropertyFieldDef(
+//							 propY,
+//							 positionDataBufferObject,
+//							 3*sizeof(float),
+//							 1*sizeof(float))));
+//	//Z
+//	if(!model->is2D()) {
+//		std::shared_ptr<PropertyFieldDef> propZ(
+//					new ScalarFieldDef(0,"Z",model->getBounds()[2],model->getBounds()[5]));
+//		rModelPropertyFieldDefs.push_back(std::shared_ptr<RModelPropertyFieldDef>(new RModelPropertyFieldDef(
+//								 propZ,
+//								 positionDataBufferObject,
+//								 3*sizeof(float),
+//								 2*sizeof(float))));
+//	}
+//}
 
 void RModel::copyModelBounds(Model* model){
 	this->bounds.clear();
@@ -164,9 +159,8 @@ void RModel::loadRModelData(PolygonMesh* mesh){
 		loadAdditionalEdges(mesh);
 	}
 	std::cout << "Loading Scalar Properties" << std::endl;
-	loadVertexScalarProperties(mesh);
 	originalModel = mesh;
-	copyScalarDefs(mesh);
+	//copyPropertyFieldDefs(mesh);
 }
 
 void RModel::loadAdditionalEdges(VertexCloud* vcloud){
@@ -250,22 +244,39 @@ void RModel::loadVertexPositionAndNormals(VertexCloud* model){
 
 }
 
-void RModel::loadVertexScalarProperties(VertexCloud* model){
+std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>> RModel::loadPropertyField(VertexCloud* model, std::shared_ptr<ScalarFieldDef> pfd){
+	// First check if the current property field is the one we're asked for
+	if(currentRModelPropertyFieldDef->getPropertyFieldDef().get() == pfd.get()) {
+		return std::dynamic_pointer_cast<RModelPropertyFieldDef<ScalarFieldDef>>(currentRModelPropertyFieldDef);
+		//return std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>>(currentRModelPropertyFieldDef, static_cast<RModelPropertyFieldDef<ScalarFieldDef>*>(currentRModelPropertyFieldDef.get()));
+	}
+	// Delete the currently loaded property field
+	if(currentRModelPropertyFieldDef) {
+		GLuint buffer = currentRModelPropertyFieldDef->getBuffer();
+		glDeleteBuffers(1,&buffer);
+	}
+	// Load the new RModelPropertyFieldDef
+	unsigned char pfdposition = model->getPropertyFieldPosition(pfd.get());
 	std::vector<float> floatContainer;
-	std::vector<VScalarDef*>::size_type scalarDefsSize = model->getScalarDefs().size();
-	floatContainer.resize(nVertices * scalarDefsSize);
+	std::shared_ptr<PropertyFieldDef> propertyFieldDef = model->getPropertyFieldDefs()[pfdposition];
+	floatContainer.resize(nVertices* propertyFieldDef->getElementSize());
 	std::vector<vis::Vertex*>& vertices = model->getVertices();
 	//coords
-	for(std::vector<vis::Vertex*>::size_type i = 0;i<vertices.size();i++){
+	for( auto i = 0u; i < vertices.size(); i++ ) {
 		vis::Vertex* currentVertex = vertices[i];
 		//std::vector<VScalar> scalarProps = currentVertex->getScalarProperties();
 		std::vector<int>& rmodelPos = currentVertex->getRmodelPositions();
-		for(std::vector<vis::Vertex*>::size_type j = 0;j<rmodelPos.size();j++)
-			for(std::vector<VScalarDef*>::size_type k = 0;k<scalarDefsSize;k++)
-				floatContainer[rmodelPos[j]*scalarDefsSize+k] = currentVertex->getScalarProperty(k);
+		for( auto j = 0u; j < rmodelPos.size(); j++ )
+			floatContainer[rmodelPos[j]] = currentVertex->getScalarProperty(pfdposition);
 	}
-	vertexScalarDataBufferObject = ShaderUtils::createDataBuffer<float>(floatContainer);
-
+	GLuint buffer = ShaderUtils::createDataBuffer<float>(floatContainer);
+	std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>> ret(new RModelPropertyFieldDef<ScalarFieldDef>(
+													std::dynamic_pointer_cast<ScalarFieldDef>(propertyFieldDef),
+													buffer,
+													0,
+													0));
+	currentRModelPropertyFieldDef = std::dynamic_pointer_cast<RModelPropertyFieldDef<PropertyFieldDef>>(ret);
+	return ret;
 }
 
 void RModel::loadVertexPolygonPolyhedronIds(PolygonMesh* mesh){
@@ -397,7 +408,8 @@ void RModel::freeRAMFromVideoCardBuffer(){
 	glDeleteBuffers(1,&this->vertexFlagsDataBufferObject);
 	glDeleteBuffers(1,&this->positionDataBufferObject);
 	glDeleteBuffers(1,&this->vertexNormalDataBufferObject);
-	glDeleteBuffers(1,&this->vertexScalarDataBufferObject);
+	GLuint rModelPropertyFieldDefBuffer = currentRModelPropertyFieldDef->getBuffer();
+	glDeleteBuffers(1,&rModelPropertyFieldDefBuffer);
 	glDeleteBuffers(1,&rmodelVertexPositionBufferObject);
 	glDeleteBuffers(1,&polygonPolyhedronIdsBufferObject);
 	glDeleteBuffers(1,&tetrahedronVertexIdsBufferObject);
@@ -409,7 +421,6 @@ void RModel::freeRAMFromVideoCardBuffer(){
 	this->vertexNormalDataBufferObject = RModel::NULL_BUFFER;
 	rmodelVertexPositionBufferObject = RModel::NULL_BUFFER;
 	polygonPolyhedronIdsBufferObject = RModel::NULL_BUFFER;
-	vertexScalarDataBufferObject = RModel::NULL_BUFFER;
 	tetrahedronVertexIdsBufferObject = RModel::NULL_BUFFER;
 	edgeVertexPositionsDataBufferObject = RModel::NULL_BUFFER;
 	edgeColorDataBufferObject = RModel::NULL_BUFFER;

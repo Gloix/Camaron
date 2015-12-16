@@ -3,6 +3,10 @@
 
 #include <QWidget>
 //#include "rendererconfigpopup.h"
+#include <memory>
+
+class ScalarFieldDef;
+class TQSPropertyFieldDef;
 
 class BaseRendererConfig : public QWidget
 {
@@ -10,6 +14,8 @@ class BaseRendererConfig : public QWidget
 	public:
 		explicit BaseRendererConfig(QWidget *parent = 0);
 		//void setRendererConfigPopup(RendererConfigPopUp rendererConfigPopUp);
+//		virtual void addPropertyFieldDef(std::shared_ptr<ScalarFieldDef> pfd);
+//		virtual void addPropertyFieldDef(std::shared_ptr<TQSPropertyFieldDef> pfd);
 	protected:
 		void forceUpdate();
 

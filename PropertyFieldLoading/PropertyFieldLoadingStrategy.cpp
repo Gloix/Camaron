@@ -18,6 +18,8 @@
 #include "ModelLoading/ModelLoadingWorkers/calculatevertexnormalslightweightmodelworker.h"
 #include "Utils/qtutils.h"
 #include "Utils/fileutils.h"
+#include "PropertyFieldLoading/propertyfielddef.h"
+
 PropertyFieldLoadingStrategy::PropertyFieldLoadingStrategy(): QThread(){
 }
 PropertyFieldLoadingStrategy::PropertyFieldLoadingStrategy(std::string fileFormatName,
@@ -37,21 +39,19 @@ std::vector<AcceptedFileFormat>& PropertyFieldLoadingStrategy::getFileFormats(){
 
 void PropertyFieldLoadingStrategy::run(){
 	try{
-		bool loaded = load(propertyFieldPath, model);
-		if(loaded){
-			emit stageComplete(ModelLoadingProgressDialog::BASE_MODE_READY);
-			emit propertyFieldLoadedSuccesfully();
-		}
+		load(propertyFieldPath, model, this->selected);
+		emit propertyFieldsLoadedSuccesfully();
 	}catch(ExceptionMessage& e){
-		emit errorLoadingModel(QString::fromStdString(e.getMessage()));
+		emit errorLoadingPropertyField(QString::fromStdString(e.getMessage()));
 	}catch(std::bad_alloc &ba){
-		emit errorLoadingModel( QString("Not enough RAM to load the model, try the x64 version"));
+		emit errorLoadingPropertyField( QString("Not enough RAM to load the model, try the x64 version"));
 	}catch(std::exception& e){
-		emit errorLoadingModel( QString(e.what()));
+		emit errorLoadingPropertyField( QString(e.what()));
 	}
 }
-void PropertyFieldLoadingStrategy::loadPropertyFieldQThread(std::string propertyFieldPath, Model* model){
+void PropertyFieldLoadingStrategy::loadPropertyFieldQThread(std::string propertyFieldPath, Model* model, std::vector<std::shared_ptr<PropertyFieldDef>> selected){
 	this->propertyFieldPath = propertyFieldPath;
 	this->model = model;
+	this->selected = selected;
 	this->start();
 }

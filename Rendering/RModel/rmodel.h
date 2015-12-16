@@ -5,6 +5,8 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <string>
+#include <memory>
+#include "Rendering/RModel/rmodelpropertyfielddef.h"
 
 class VertexCloud;
 class PolygonMesh;
@@ -12,15 +14,10 @@ class PolyhedronMesh;
 class LightWeightVertexCloud;
 class LightWeightPolygonMesh;
 class LightWeightPolyhedronMesh;
+//template <typename T> class RModelPropertyFieldDef;
+class ScalarFieldDef;
+class PropertyFieldDef;
 class Model;
-struct VScalarDef;
-struct RModelVScalarDef {
-	std::string name;
-	std::vector<float> bounds;
-	GLuint buffer;
-	GLsizei stride;
-	GLubyte offset;
-};
 
 class RModel
 {
@@ -38,7 +35,7 @@ class RModel
 		void loadVertexPolygonPolyhedronIds(PolygonMesh* mesh);
 		void loadVertexPositionAndNormals(VertexCloud* model);
 		void loadAdditionalEdges(VertexCloud* model);
-		void loadVertexScalarProperties(VertexCloud* model);
+		std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>> loadPropertyField(VertexCloud* model, std::shared_ptr<ScalarFieldDef>);
 		void loadTetrahedronVertexIds(PolyhedronMesh* mesh);
 
 		void refreshVertexAttributes(PolyhedronMesh*);
@@ -52,18 +49,17 @@ class RModel
 		std::vector<RVertexFlagAttribute> polygonGeoCenterFlagsAttribute;
 		std::vector<RVertexFlagAttribute> polyhedronGeoCenterFlagsAttribute;
 
-		std::vector<RModelVScalarDef*> scalarDefs;
-
 		std::vector<float> bounds;
 
 		int numberOfTetrahedrons;
+
+		//std::vector<std::shared_ptr<RModelPropertyFieldDef<>>> &getRModelPropertyFieldDefs();
 
 		static const GLuint NULL_BUFFER = 0;
 		//Main Rendering Model
 		GLuint positionDataBufferObject;
 		GLuint vertexNormalDataBufferObject;
 		GLuint vertexFlagsDataBufferObject;
-		GLuint vertexScalarDataBufferObject;
 		GLuint rmodelVertexPositionBufferObject;
 		GLuint edgeVertexPositionsDataBufferObject;
 		GLuint edgeColorDataBufferObject;
@@ -95,7 +91,9 @@ class RModel
 		bool isOrthoProjectionInUse();
 		void setViewMatrix(glm::mat4);
 	private:
-		void copyScalarDefs(VertexCloud*);
+		std::shared_ptr<RModelPropertyFieldDef<PropertyFieldDef>> currentRModelPropertyFieldDef;
+		//std::vector<std::shared_ptr<RModelPropertyFieldDef>> rModelPropertyFieldDefs;
+		void copyPropertyFieldDefs(VertexCloud*);
 		int modelType;
 		glm::vec3 cameraPosition;
 		glm::vec4 backgroundColor;

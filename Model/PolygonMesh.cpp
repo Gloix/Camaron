@@ -7,6 +7,7 @@
 #include "Rendering/Renderer.h"
 #include "Rendering/RModel/rmodel.h"
 #include "ModelExport/modelexportstrategy.h"
+#include "Model/modelvisitor.h"
 #include <iostream>
 
 PolygonMesh::PolygonMesh(std::string f,int nver, int npol):VertexCloud(f) {

@@ -1,16 +1,12 @@
 #ifndef VERTEXCLOUD_H
 #define VERTEXCLOUD_H
 #include "Model/Model.h"
+#include <memory>
 namespace vis{
 class Vertex;
 class Edge;
 }
 
-struct VScalarDef {
-	int index;
-	char name [256];
-	std::vector<float> bounds;
-};
 class VertexCloud: public Model
 {
 	public:
@@ -24,8 +20,6 @@ class VertexCloud: public Model
 		void setAdditionalEdgesCount( int );
 		bool is2D();
 		void set2D(bool);
-		std::vector<VScalarDef*> &getScalarDefs();
-		void addScalarDef(VScalarDef*);
 
 		DOUBLE_DISPATCH_MODEL_DEC
 	protected:
@@ -33,7 +27,6 @@ class VertexCloud: public Model
 		std::vector<vis::Vertex*> vertices;
 		int verticesCount;
 		int additionalEdgesCount;
-		std::vector<VScalarDef*> scalarDefs;
 		std::vector<vis::Edge*> additionalEdges;
 	private:
 };

@@ -2,6 +2,7 @@
 #include "isolinerenderer.h"
 #include "Utils/shaderutils.h"
 #include "Rendering/RModel/rmodel.h"
+#include "Rendering/RModel/rmodelpropertyfielddef.h"
 #include "Common/Constants.h"
 #define POSITION_ATTRIBUTE 0
 #define VERTEX_FLAGS 1
@@ -48,11 +49,11 @@ void IsolineRenderer::glewIsReadyRenderer(){
 }
 
 void IsolineRenderer::draw(RModel* rmodel){
-	config->setModel(rmodel);
+	config->setRModel(rmodel);
 	if(rmodel->positionDataBufferObject == RModel::NULL_BUFFER)
 		return;// Create and set-up the vertex array object
 	//Matrix
-	if(config->selectedScalarDef == NULL) {
+	if(config->selectedScalarRModelDef) {
 		return;
 	}
 	glUseProgram(theProgram);
@@ -74,9 +75,9 @@ void IsolineRenderer::draw(RModel* rmodel){
 	glVertexAttribPointer( POSITION_ATTRIBUTE, 3, GL_FLOAT, GL_FALSE, 0,
 						   (GLubyte *)NULL );
 	// Map index 1 to the scalar buffer
-	glBindBuffer(GL_ARRAY_BUFFER, config->selectedScalarDef->buffer);
-	glVertexAttribPointer( VERTEX_SCALARPROP, 1, GL_FLOAT, GL_FALSE, config->selectedScalarDef->stride,
-						   (GLubyte*)config->selectedScalarDef->offset );
+	glBindBuffer(GL_ARRAY_BUFFER, config->selectedScalarRModelDef->getBuffer());
+	glVertexAttribPointer( VERTEX_SCALARPROP, 1, GL_FLOAT, GL_FALSE, config->selectedScalarRModelDef->getStride(),
+						   config->selectedScalarRModelDef->getOffset() );
 	// Map index 2 to the flags buffer
 	glBindBuffer(GL_ARRAY_BUFFER, rmodel->vertexFlagsDataBufferObject);
 	glVertexAttribIPointer( VERTEX_FLAGS, 1, GL_UNSIGNED_INT, 0,
@@ -107,10 +108,6 @@ bool IsolineRenderer::rmodelChanged(RModel* rmodel){
 			rmodel->getModelType()==vis::CONSTANTS::VERTEX_CLOUD ||
 			rmodel->getModelType()==vis::CONSTANTS::NO_MODEL)
 		return false;
-	glm::vec3 minVector = glm::vec3(rmodel->bounds[0],rmodel->bounds[1],rmodel->bounds[2]);
-	glm::vec3 maxVector = glm::vec3(rmodel->bounds[3],rmodel->bounds[4],rmodel->bounds[5]);
-	float distance = glm::distance(minVector,maxVector);
-	sizeRatio = distance / 50.0f;
 	return true;
 }
 

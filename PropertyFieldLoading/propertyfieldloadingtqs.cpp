@@ -1,4 +1,4 @@
-#include "PropertyFieldLoading/propertyfieldloadingelenode.h"
+#include "PropertyFieldLoading/propertyfieldloadingtqs.h"
 #include "Model/PolygonMesh.h"
 #include "Model/PolyhedronMesh.h"
 #include "Model/Element/Vertex.h"
@@ -6,110 +6,215 @@
 #include "Model/Element/triangle.h"
 #include "Utils/hashingtree.h"
 #include "Utils/fileutils.h"
+#include "PropertyFieldLoading/tqspropertyfielddef.h"
 #include <iostream>
 #include <stdio.h>
 #include <exception>
-PropertyFieldLoadingEleNode::PropertyFieldLoadingEleNode():PropertyFieldLoadingStrategy()
-{
-	acceptedFileFormats.push_back(AcceptedFileFormat("ELE","ele"));
-	acceptedFileFormats.push_back(AcceptedFileFormat("ELE","node"));
-}
-
-PropertyFieldLoadingEleNode::~PropertyFieldLoadingEleNode()
+PropertyFieldLoadingTqs::PropertyFieldLoadingTqs():PropertyFieldLoadingStrategy("TQS", "tqs")
 {
 }
 
-bool PropertyFieldLoadingEleNode::validate(std::string filename){
-	std::string filenameExt = FileUtils::getFileNameExtension(filename);
-	if(filenameExt.compare("ele") == 0 || filenameExt.compare("node") == 0){
-		std::string filenameNoExt = FileUtils::getFileNameWithoutExtension(filename);
-		if(FileUtils::fileExists(filenameNoExt+".ele")&&FileUtils::fileExists(filenameNoExt+".node"))
-			return true;
+PropertyFieldLoadingTqs::~PropertyFieldLoadingTqs()
+{
+}
+
+bool PropertyFieldLoadingTqs::validate(std::string filename){
+	fileBuffer = FileUtils::getFileToBuffer(filename,&fileSize);
+	if(fileSize==0)
+		return false;
+	scanner.reset(fileSize);
+	char word [256];
+	bool valid = false;
+	scanner.readString(fileBuffer, word,false);
+	if( !strcmp( word, "TQS\0" ) ) {
+		float version = 0.0;
+		scanner.readFloat(fileBuffer, &version, false);
+		if(version == 1.0) {
+			valid = true;
+		}
 	}
-	return false;
-
+	delete[] fileBuffer;
+	return valid;
 }
-void PropertyFieldLoadingEleNode::load(std::string filename, Model* model){
-	std::string filenameNoExt = FileUtils::getFileNameWithoutExtension(filename);
-	std::cout << "File name: "<< filename << std::endl;
-	std::cout << "File name No Ext: "<< filenameNoExt << std::endl;
-	fileBufferEle = FileUtils::getFileToBuffer(filenameNoExt+".ele",&fileSizeEle);
-	fileBufferNode = FileUtils::getFileToBuffer(filenameNoExt+".node",&fileSizeNode);
-	readHeaderEle();
-	readHeaderNode();
+
+std::vector<PropertyFieldDef> PropertyFieldLoadingTqs::loadDefs(std::string filename){
+	//read number of points
+	bool in = true;
+	char word [256];
+	//bool readingEdgeProperties = false;
+	int propertyIndex = 0;
+	bool error = false;
+	std::string propertyName;
+	int coordinatesSystem;
+	int dimensions = 2;
+
+	//START READING HEADER
+	//skip "qst <version>" first
+	scanner.skipToNextLine(fileBuffer);
+
+	scanner.readString(fileBuffer, word,false);
+	if( !strcmp( word, "name:\0" ) ){
+		scanner.readString(fileBuffer, word,false);
+		propertyName = std::string(word);
+		scanner.skipToNextLine(fileBuffer);
+	} else {
+		throw ExceptionMessage("Name not defined in line 2");
+	}
+
+	scanner.readString(fileBuffer, word, false);
+	if( !strcmp( word, "coordinates_system:\0" ) ){
+		scanner.readString(fileBuffer, word,false);
+		if( !strcmp(word, "barycentric") ) {
+			coordinatesSystem = COORDINATES_SYSTEM_BARYCENTRIC;
+		} else {
+			throw ExceptionMessage("Coordinates system not recognized in line 3");
+		}
+		scanner.skipToNextLine(fileBuffer);
+	} else {
+		throw ExceptionMessage("Coordinates system not defined");
+	}
+
+	scanner.readString(fileBuffer, word, false);
+	if( !strstr( word, "dimensions:\0" ) ){
+		scanner.readInt(fileBuffer, &ndimensions,false);
+		scanner.skipToNextLine(fileBuffer);
+	} else {
+		throw ExceptionMessage("Number of dimensions not defined in line 4");
+	}
+	TQSPropertyFieldDef property(0, propertyName, coordinatesSystem, dimensions);
+
+	while(in){
+		scanner.readString(fileBuffer, word, false);
+		if( !strstr( word, "%\0" ) ){
+			continue;
+		}
+		if( !strstr( word, "number_of_points:\0", false) ) {
+			int numberOfPoints = 0;
+			scanner.readInt(fileBuffer, &numberOfPoints, false);
+			std::vector<std::vector<float>> values(numberOfPoints, std::vector<float>(dimensions+1));
+			for( int i=0;i<numberOfPoints;i++ ) {
+				for( int j=0;j<dimensions;j++ ) {
+					float value = 0.0;
+					scanner.readFloat(fileBuffer, &value, false);
+					values[i][j] = value;
+				}
+			}
+			property.addPolygonCoordinates();
+		}else if( !strcmp( word, "property\0" ) ){
+			//property name
+			if(readingVertexProperties){
+				scanner.readString(fileBuffer, word,false); // Skip datatype (we'll assume float for now)
+				VScalarDef* scalarDef = new VScalarDef;
+				scanner.readString(fileBuffer, scalarDef->name, false);
+				vertexProperties.push_back(scalarDef);
+				if( strcmp( scalarDef->name, "x\0" ) &&
+						strcmp( scalarDef->name, "y\0") &&
+						strcmp( scalarDef->name, "z\0")){
+					scalarDef->index = propertyIndex++;
+					polygonMesh->addScalarDef(scalarDef);
+				}
+			}
+		}else if( !strcmp( word, "end_header\0" ) ){
+			break;
+		}else if(!strcmp( word, "format\0" )){
+			scanner.readString(fileBuffer, word,false);
+			isBinary = strcmp( word, "ascii\0" ) != 0;
+		}
+		scanner.skipToNextLine(fileBuffer);
+		if(scanner.invalidState())
+			return false;
+
+	}
+	polygonMesh->setPolygonsCount( nf );
+	polygonMesh->setVerticesCount( np );
+	polygonMesh->setAdditionalEdgesCount( ne );
+	//emit setupProgressBarForNewModel(vis::CONSTANTS::POLYGON_MESH,np,nf,0);
+	//scanner.readInt(fileBuffer,&nf );//discard number of edges
+	if(!isBinary)
+		scanner.skipToNextLine(fileBuffer);
+	else{
+		unsigned char dummychar;
+		scanner.readBinary(fileBuffer, &dummychar);
+		while(dummychar!='\n')
+			scanner.readBinary(fileBuffer, &dummychar);
+	}
+	std::vector<PropertyFieldDef> result;
+	result.push_back(property);
+	return ;
+}
+
+
+void PropertyFieldLoadingTqs::load(std::string filename, Model* model, PropertyFieldDef propertyFieldDef){
+	fileBuffer = FileUtils::getFileToBuffer(filename,&fileSize);
+	scanner.reset(fileSize);
+
+	vertexProperties.clear();
 	try{
-		if(isPolygonMesh){
-			PolygonMesh* polygonMeshModel = new PolygonMesh(filename,numberOfNodes,numberOfElements);
-			for(std::vector<VScalarDef*>::size_type i=0; i<vertexProperties.size(); i++) {
-				polygonMeshModel->addScalarDef(vertexProperties.at(i));
-			}
-			model = polygonMeshModel;
-			//emit setupProgressBarForNewModel(vis::CONSTANTS::POLYGON_MESH,
-			//								 numberOfNodes,
-			//								 numberOfElements,0);
-			if(!readVertices(polygonMeshModel)||!readPolygons(polygonMeshModel)){
-				delete polygonMeshModel;
-				model = (Model*)0;
-			}
-			else{
-				//completeVertexPolygonRelations(polygonMeshModel);
-				//emit stageComplete(ModelLoadingProgressDialog::COMPLETED_VERTEX_POLYGON_R);
-				//completePolygonPolygonRelations(polygonMeshModel);
-				//emit stageComplete(ModelLoadingProgressDialog::COMPLETED_POLYGON_POLYGON_R);
-				//calculateNormalsPolygons(polygonMeshModel);
-				//calculateNormalsVertices(polygonMeshModel);
-				//emit stageComplete(ModelLoadingProgressDialog::NORMALS_CALCULATED);
-			}
-		}
-		else{
-			PolyhedronMesh* polyhedronMeshModel = new PolyhedronMesh(filename);
-			for(std::vector<VScalarDef*>::size_type i=0; i<vertexProperties.size(); i++) {
-				polyhedronMeshModel->addScalarDef(vertexProperties.at(i));
-			}
-			model = polyhedronMeshModel;
-			//emit setupProgressBarForNewModel(vis::CONSTANTS::POLYHEDRON_MESH,
-			//								 numberOfNodes,
-			//								 numberOfElements,numberOfElements);
-			if(!readVertices(polyhedronMeshModel)||!readPolyhedrons(polyhedronMeshModel)){
-				delete polyhedronMeshModel;
-				model = (Model*)0;
-			}
-			else{
-				//completeVertexPolygonRelations(polyhedronMeshModel);
-				//emit stageComplete(ModelLoadingProgressDialog::COMPLETED_VERTEX_POLYGON_R);
-				//completePolygonPolygonRelations(polyhedronMeshModel);
-				//emit stageComplete(ModelLoadingProgressDialog::COMPLETED_POLYGON_POLYGON_R);
-				//completePolygonPolyhedronRelations(polyhedronMeshModel);
-				//emit stageComplete(ModelLoadingProgressDialog::COMPLETED_POLYGON_POLYHEDRON_R);
-				//calculateGeoCenterPolyhedronMesh(polyhedronMeshModel);
-				//emit stageComplete(ModelLoadingProgressDialog::POLYHEDRON_GEOCENTER_CALCULATED);
-				//calculateNormalsPolygons(polyhedronMeshModel);
-				//fixSurfacePolygonsVerticesOrder(polyhedronMeshModel);
-				//emit stageComplete(ModelLoadingProgressDialog::FIXED_SURFACE_POLYGONS_VERTICES_ORDER);
-				//calculateNormalsVertices(polyhedronMeshModel);
-				//emit stageComplete(ModelLoadingProgressDialog::NORMALS_CALCULATED);
+		if(readHeader(loaded)){
+			if(loaded->getElementsCount()){
+				if( readBody( loaded ) ){
+					//this->completeVertexPolygonRelations(loaded);
+					//emit stageComplete(ModelLoadingProgressDialog::COMPLETED_VERTEX_POLYGON_R);
+					//completePolygonPolygonRelations(loaded,4);
+					//emit stageComplete(ModelLoadingProgressDialog::COMPLETED_POLYGON_POLYGON_R);
+					//this->shrinkVertexPolygonRelations(loaded);
+					//calculateNormalsPolygons(loaded,4);
+					//calculateNormalsVertices(loaded,4);
+					//emit stageComplete(ModelLoadingProgressDialog::NORMALS_CALCULATED);
+					delete[] fileBuffer;
+					fileSize = 0;
+					return ( Model* )loaded;
+				}
+			}else{
+				//Vertex Cloud!
+				vcloud = new VertexCloud(filename);
+				vcloud->setVerticesCount(loaded->getVerticesCount());
+				vcloud->setAdditionalEdgesCount(loaded->getAdditionalEdgesCount());
+				delete loaded;
+				loaded = 0;
+				if(readVertices( vcloud ) && readAdditionalEdges(vcloud)){
+					delete[] fileBuffer;
+					fileSize = 0;
+					return ( Model* )vcloud;
+				}
 			}
 		}
-	}catch(std::bad_alloc& e){
-		if(model)
-			delete model;
-		delete[] fileBufferEle;
-		delete[] fileBufferNode;
-		model = 0;
-		throw e;
+	}catch(std::bad_alloc &ba){
+		if(loaded)
+			delete loaded;
+		if(vcloud)
+			delete vcloud;
+		delete[] fileBuffer;
+		fileSize = 0;
+		throw std::bad_alloc();
+	}catch(ModelLoadingException &ex){
+		delete loaded;
+		delete[] fileBuffer;
+		fileSize = 0;
+		throw ex;
 	}
-	delete[] fileBufferEle;
-	delete[] fileBufferNode;
-	return model;
+	// Delete x, y and z properties. The rest will be held by the Model object.
+	for (std::vector<VScalarDef*>::size_type i = 0; i < vertexProperties.size() ; i++ ) {
+		if( !strcmp(vertexProperties.at(i)->name, "x\0") ||
+				!strcmp(vertexProperties.at(i)->name, "y\0") ||
+				!strcmp(vertexProperties.at(i)->name, "z\0")) {
+			delete vertexProperties.at(i);
+		}
+	}
+
+	delete loaded;
+	delete[] fileBuffer;
+	fileSize = 0;
+	return (Model*)NULL;
 }
-void PropertyFieldLoadingEleNode::readHeaderEle(){
+void PropertyFieldLoadingTqs::readHeaderEle(){
 	scanner.reset(fileSizeEle);
 	scanner.readInt(fileBufferEle,&numberOfElements,true);
 	scanner.readInt(fileBufferEle,&numberOfNodesPerElement);
 	scanner.readInt(fileBufferEle,&numberOfAttributesPerElement);
 	isPolygonMesh = numberOfNodesPerElement == 3 || numberOfNodesPerElement == 6;
 }
-void PropertyFieldLoadingEleNode::readHeaderNode(){
+void PropertyFieldLoadingTqs::readHeaderNode(){
 	scanner.reset(fileSizeNode);
 	scanner.readInt(fileBufferNode,&numberOfNodes,true);
 	scanner.readInt(fileBufferNode,&dimensions);
@@ -123,7 +228,7 @@ void PropertyFieldLoadingEleNode::readHeaderNode(){
 		vertexProperties.push_back(vScalarDef);
 	}
 }
-bool PropertyFieldLoadingEleNode::readVertices( PolygonMesh* mesh){
+bool PropertyFieldLoadingTqs::readVertices( PolygonMesh* mesh){
 	scanner.reset(fileSizeNode);
 	scanner.readInt(fileBufferNode,&numberOfNodes,true);
 	scanner.skipToNextLine(fileBufferNode);
@@ -202,7 +307,7 @@ bool PropertyFieldLoadingEleNode::readVertices( PolygonMesh* mesh){
 	emit setLoadedVertices(numberOfNodes);
 	return true;
 }
-bool PropertyFieldLoadingEleNode::readPolygons( PolygonMesh* mesh){
+bool PropertyFieldLoadingTqs::readPolygons( PolygonMesh* mesh){
 	scanner.reset(fileSizeEle);
 	scanner.readInt(fileBufferEle,&numberOfElements);
 	scanner.skipToNextLine(fileBufferEle);
@@ -229,7 +334,7 @@ bool PropertyFieldLoadingEleNode::readPolygons( PolygonMesh* mesh){
 	indexVsPosition.clear();
 	return true;
 }
-bool PropertyFieldLoadingEleNode::readPolyhedrons( PolyhedronMesh* mesh){
+bool PropertyFieldLoadingTqs::readPolyhedrons( PolyhedronMesh* mesh){
 	scanner.reset(fileSizeEle);
 	scanner.readInt(fileBufferEle,&numberOfElements);
 	scanner.skipToNextLine(fileBufferEle);
@@ -285,4 +390,4 @@ bool PropertyFieldLoadingEleNode::readPolyhedrons( PolyhedronMesh* mesh){
 	return true;
 }
 #include "Factories/PropertyFieldLoadingFactory.h"
-REGISTER_PROPERTY_FIELD_LOADING_STRATEGY(PropertyFieldLoadingEleNode);
+REGISTER_PROPERTY_FIELD_LOADING_STRATEGY(PropertyFieldLoadingTqs);

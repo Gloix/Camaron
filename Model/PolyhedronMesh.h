@@ -4,6 +4,8 @@
 #include "Model/Element/Polyhedron.h"
 #include "Model/PolygonMesh.h"
 
+class ModelVisitor;
+
 class PolyhedronMesh: public PolygonMesh
 {
 	public:

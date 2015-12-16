@@ -1,5 +1,6 @@
 #include "lightweightpolygonmesh.h"
 #include "Rendering/RModel/rmodel.h"
+#include "Model/modelvisitor.h"
 
 LightWeightPolygonMesh::LightWeightPolygonMesh(std::string s,
 											   int nver,

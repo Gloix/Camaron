@@ -3,6 +3,8 @@
 #include "Utils/shaderutils.h"
 #include "Rendering/RModel/rmodel.h"
 #include "Common/Constants.h"
+#include "Rendering/RModel/rmodelpropertyfielddef.h"
+#include "PropertyFieldLoading/scalarfielddef.h"
 #define POSITION_ATTRIBUTE 0
 #define VERTEX_SCALARPROP 1
 
@@ -108,7 +110,7 @@ bool IsosurfaceRenderer::buildIsosurfaceGenerationProgram() {
 }
 
 void IsosurfaceRenderer::draw(RModel* rmodel){
-	config->setModel(rmodel);
+	config->setRModel(rmodel);
 	if(rmodel->positionDataBufferObject == RModel::NULL_BUFFER)
 		return;// Create and set-up the vertex array object
 
@@ -121,13 +123,13 @@ void IsosurfaceRenderer::draw(RModel* rmodel){
 		lastModel = rmodel->getOriginalModel();
 		lastScalarLevels = config->isolevels;
 		std::vector<float> isosurfaceSteps = config->isolevels;
-		if(isosurfaceSteps.size() != 0 && config->selectedScalarDef != NULL) {
+		if(isosurfaceSteps.size() != 0 && config->selectedScalarRModelDef) {
 			generateIsosurface(rmodel, isosurfaceSteps);
 		} else {
 			return;
 		}
 	}
-	if(config->selectedScalarDef == NULL || config->isolevels.size() == 0) {
+	if(!config->selectedScalarRModelDef || config->isolevels.size() == 0) {
 		return;
 	}
 	glUseProgram(renderProgram);
@@ -135,8 +137,8 @@ void IsosurfaceRenderer::draw(RModel* rmodel){
 	ShaderUtils::setUniform(renderProgram, "MVP",rmodel->getMVP());
 	ShaderUtils::setUniform(renderProgram, "GradientStartColor", config->gradientStartColor);
 	ShaderUtils::setUniform(renderProgram, "GradientEndColor", config->gradientEndColor);
-	ShaderUtils::setUniform(renderProgram, "ScalarMin", config->selectedScalarDef->bounds[0]);
-	ShaderUtils::setUniform(renderProgram, "ScalarMax", config->selectedScalarDef->bounds[1]);
+	ShaderUtils::setUniform(renderProgram, "ScalarMin", config->selectedScalarRModelDef->getPropertyFieldDef()->getMin());
+	ShaderUtils::setUniform(renderProgram, "ScalarMax", config->selectedScalarRModelDef->getPropertyFieldDef()->getMax());
 	//ShaderUtils::setUniform(renderProgram, "WireFrameColor", config->wireframeColor);
 	//ShaderUtils::setUniform(renderProgram, "WireFrameOption", config->wireFrameOption);
 
@@ -204,9 +206,9 @@ void IsosurfaceRenderer::generateIsosurface(RModel* rmodel, std::vector<float> v
 	glVertexAttribPointer( POSITION_ATTRIBUTE, 3, GL_FLOAT, GL_FALSE, 0,
 						   (GLubyte *)NULL );
 
-	glBindBuffer(GL_ARRAY_BUFFER, config->selectedScalarDef->buffer);
-	glVertexAttribPointer( VERTEX_SCALARPROP, 1, GL_FLOAT, GL_FALSE, config->selectedScalarDef->stride,
-						   (GLubyte*)config->selectedScalarDef->offset);
+	glBindBuffer(GL_ARRAY_BUFFER, config->selectedScalarRModelDef->getBuffer());
+	glVertexAttribPointer( VERTEX_SCALARPROP, 1, GL_FLOAT, GL_FALSE, config->selectedScalarRModelDef->getStride(),
+						   (GLubyte*)config->selectedScalarRModelDef->getOffset());
 	glBeginTransformFeedback(GL_POINTS);
 
 	glDrawElements(GL_LINES_ADJACENCY, rmodel->numberOfTetrahedrons*4, GL_UNSIGNED_INT,
@@ -241,11 +243,9 @@ void IsosurfaceRenderer::applyConfigChanges(RModel *){
 bool IsosurfaceRenderer::rmodelChanged(RModel* rmodel){
 	if(rmodel->bounds.size()<6 || !rmodel->getOriginalModel() ||
 			rmodel->getModelType()==vis::CONSTANTS::VERTEX_CLOUD ||
+			rmodel->getModelType()==vis::CONSTANTS::POLYGON_MESH ||
 			rmodel->getModelType()==vis::CONSTANTS::NO_MODEL)
 		return false;
-	glm::vec3 minVector = glm::vec3(rmodel->bounds[0],rmodel->bounds[1],rmodel->bounds[2]);
-	glm::vec3 maxVector = glm::vec3(rmodel->bounds[3],rmodel->bounds[4],rmodel->bounds[5]);
-	//float distance = glm::distance(minVector,maxVector);
 	return true;
 }
 

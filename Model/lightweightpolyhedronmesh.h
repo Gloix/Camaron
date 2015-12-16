@@ -2,6 +2,7 @@
 #define LIGHTWEIGHTPOLYHEDRONMESH_H
 #include "Model/lightweightpolygonmesh.h"
 #include "Model/LWElements/lwpolyhedron.h"
+#include "Model/modelvisitor.h"
 class LightWeightPolyhedronMesh: public LightWeightPolygonMesh
 {
 	public:

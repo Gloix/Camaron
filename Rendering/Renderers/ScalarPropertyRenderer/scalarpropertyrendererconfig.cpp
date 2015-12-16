@@ -3,6 +3,10 @@
 #include "Utils/qtutils.h"
 #include <iostream>
 #include "Rendering/RModel/rmodel.h"
+#include "PropertyFieldLoading/propertyfielddef.h"
+#include "Rendering/RModel/rmodelpropertyfielddef.h"
+#include "PropertyFieldLoading/scalarfielddef.h"
+#include "PropertyFieldLoading/scalarfieldlistaddervisitor.h"
 
 ScalarPropertyRendererConfig::ScalarPropertyRendererConfig(QWidget *parent) :
 	BaseRendererConfig(parent),
@@ -14,8 +18,6 @@ ScalarPropertyRendererConfig::ScalarPropertyRendererConfig(QWidget *parent) :
 	rmodel = NULL;
 	coloring_type = 1;
 	inverse_intensity = 0;
-	selectedScalarDef = NULL;
-
 }
 
 void ScalarPropertyRendererConfig::loadBoundsFromModel(){
@@ -23,8 +25,10 @@ void ScalarPropertyRendererConfig::loadBoundsFromModel(){
 }
 
 void ScalarPropertyRendererConfig::changedProperty(int index){
-	selectedScalarDef = scalarDefIdsMap[index];
-	std::vector<float> bounds = selectedBounds[selectedScalarDef];
+	int propertyIndex = this->ui->comboBox_prop_select->itemData(index).toInt();
+	std::shared_ptr<ScalarFieldDef> selectedScalarDef = std::dynamic_pointer_cast<ScalarFieldDef>(scalarDefs[propertyIndex]);
+	selectedScalarRModelDef = rmodel->loadPropertyField((VertexCloud*)model, selectedScalarDef);
+	std::vector<float> bounds = selectedBounds[(PropertyFieldDef*)selectedScalarDef.get()];
 	if(bounds.size() == 2) {
 		ui->lineEdit_min_bound->setText(QString::number(bounds[0]));
 		ui->lineEdit_max_bound->setText(QString::number(bounds[1]));
@@ -36,27 +40,52 @@ ScalarPropertyRendererConfig::~ScalarPropertyRendererConfig()
 	delete ui;
 }
 
-void ScalarPropertyRendererConfig::setModel(RModel* model)
+void ScalarPropertyRendererConfig::setRModel(RModel* rmodel)
 {
-	if(this->model != model->getOriginalModel()) {
-		this->model = model->getOriginalModel();
-		scalarDefs.clear();
-		scalarDefIdsMap.clear();
-		scalarDefs = model->scalarDefs;
-		selectedBounds.clear();
-		ui->comboBox_prop_select->clear();
-		if(scalarDefs.size() > 0) {
-			ui->comboBox_prop_select->setEnabled(true);
-			for(std::vector<VScalarDef>::size_type i = 0;i<scalarDefs.size();i++){
-				selectedBounds[scalarDefs[i]] = scalarDefs[i]->bounds;
-				scalarDefIdsMap.insert(std::make_pair(i,scalarDefs[i]));
-				ui->comboBox_prop_select->addItem(QString::fromStdString(scalarDefs[i]->name), QVariant(i));
-			}
-		} else {
-			ui->comboBox_prop_select->setEnabled(false);
-			selectedScalarDef = NULL;
-		}
+	this->rmodel = rmodel;
+	if((Model*)this->model != rmodel->getOriginalModel()) {
+		rmodel->getOriginalModel()->accept((ModelVisitor*)this);
+	}
+}
 
+void ScalarPropertyRendererConfig::visit(PolygonMesh* model) {
+	this->model = model;
+	onNewModelLoaded();
+}
+
+void ScalarPropertyRendererConfig::visit(PolyhedronMesh* model) {
+	this->model = (Model*)model;
+	onNewModelLoaded();
+}
+
+void ScalarPropertyRendererConfig::onNewModelLoaded()
+{
+	loadScalarDefs();
+	scalarDefIdsMap.clear();
+	ui->comboBox_prop_select->clear();
+	selectedBounds.clear();
+	if(scalarDefs.size() > 0) {
+		ui->comboBox_prop_select->setEnabled(true);
+		for(decltype(scalarDefs.size()) i = 0;i<scalarDefs.size();i++){
+			float max = scalarDefs[i]->getMax();
+			float min = scalarDefs[i]->getMin();
+			selectedBounds[(PropertyFieldDef*)scalarDefs[i].get()][0] = min;
+			selectedBounds[(PropertyFieldDef*)scalarDefs[i].get()][1] = max;
+			scalarDefIdsMap.insert(std::make_pair(i,scalarDefs[i]));
+			ui->comboBox_prop_select->addItem(QString::fromStdString(scalarDefs[i]->getName()), QVariant(i));
+		}
+		selectedScalarRModelDef = rmodel->loadPropertyField((VertexCloud*)model, std::dynamic_pointer_cast<ScalarFieldDef>(scalarDefs[0]));
+	} else {
+		ui->comboBox_prop_select->setEnabled(false);
+		selectedScalarRModelDef = nullptr;
+	}
+}
+
+void ScalarPropertyRendererConfig::loadScalarDefs() {
+	scalarDefs.clear();
+	ScalarFieldListAdderVisitor visitor(scalarDefs);
+	for(std::shared_ptr<PropertyFieldDef> prop : this->model->getPropertyFieldDefs()) {
+		prop->accept(visitor);
 	}
 }
 
@@ -65,13 +94,16 @@ bool ScalarPropertyRendererConfig::setBoundsFromModel(){
 		std::cout << "BOUNDS NOT AVAILABLE." << std::endl;
 		return false;
 	}
-	selectedBounds[selectedScalarDef] = selectedScalarDef->bounds;
+	float max = selectedScalarRModelDef->getPropertyFieldDef()->getMax();
+	float min = selectedScalarRModelDef->getPropertyFieldDef()->getMin();
+	selectedBounds[(PropertyFieldDef*)selectedScalarRModelDef->getPropertyFieldDef().get()][0] = min;
+	selectedBounds[(PropertyFieldDef*)selectedScalarRModelDef->getPropertyFieldDef().get()][1] = max;
 	//std::cout << "BOUNDS AVAILABLE:" <<min_x<<","<<min_y<<","<<min_z<< std::endl;
 	//std::cout << "BOUNDS AVAILABLE:" <<max_x<<","<<max_y<<","<<max_z<< std::endl;
 	//update_ui
 	//int precision = 8;
-	ui->lineEdit_min_bound->setText(QString::number(selectedBounds[selectedScalarDef][0]));
-	ui->lineEdit_max_bound->setText(QString::number(selectedBounds[selectedScalarDef][1]));
+	ui->lineEdit_min_bound->setText(QString::number(min));
+	ui->lineEdit_max_bound->setText(QString::number(max));
 
 	ui->lineEdit_min_bound->setCursorPosition(0);
 	ui->lineEdit_max_bound->setCursorPosition(0);
@@ -86,11 +118,11 @@ void ScalarPropertyRendererConfig::readConfig(){
 	if (ui->checkBox_Inverse_intensity->isChecked()) inverse_intensity = 1;
 	else inverse_intensity = 0;
 
-	if(selectedScalarDef != NULL) {
-		selectedBounds[selectedScalarDef][0] =
-				QtUtils::readFloatFromQText(ui->lineEdit_min_bound->text(),selectedScalarDef->bounds[0]);
-		selectedBounds[selectedScalarDef][1] =
-				QtUtils::readFloatFromQText(ui->lineEdit_max_bound->text(),selectedScalarDef->bounds[1]);
+	if(selectedScalarRModelDef != NULL) {
+		selectedBounds[(PropertyFieldDef*)selectedScalarRModelDef->getPropertyFieldDef().get()][0] =
+				QtUtils::readFloatFromQText(ui->lineEdit_min_bound->text(),selectedScalarRModelDef->getPropertyFieldDef()->getMin());
+		selectedBounds[(PropertyFieldDef*)selectedScalarRModelDef->getPropertyFieldDef().get()][1] =
+				QtUtils::readFloatFromQText(ui->lineEdit_max_bound->text(),selectedScalarRModelDef->getPropertyFieldDef()->getMax());
 	}
 
 }

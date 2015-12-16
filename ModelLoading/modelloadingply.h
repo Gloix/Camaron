@@ -2,11 +2,12 @@
 #define MODELLOADINGPLY_H
 #include "Utils/chararrayscanner.h"
 #include "ModelLoading/ModelLoadingStrategy.h"
+#include "PropertyFieldLoading/PropertyFieldLoadingStrategy.h"
 #include "Model/Element/Vertex.h"
 class PolygonMesh;
 class VertexCloud;
 class Model;
-struct VScalarDef;
+class PropertyFieldDef;
 
 class ModelLoadingPly: public ModelLoadingStrategy
 {
@@ -26,7 +27,7 @@ class ModelLoadingPly: public ModelLoadingStrategy
 		bool readVerticesBinary( VertexCloud * );
 		CharArrayScanner scanner;
 		int numberOfBytesInVertexPropertiesToIgnore;
-		std::vector<VScalarDef*> vertexProperties;
+		std::vector<std::shared_ptr<PropertyFieldDef>> vertexProperties;
 		bool isBinary;
 		bool bigEndian;
 };

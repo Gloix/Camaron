@@ -2,53 +2,34 @@
 #define PROPERTYFIELDLOADDIALOG_H
 
 #include <QWidget>
+#include <string>
+#include <memory>
+
 namespace Ui {
 class PropertyFieldLoadDialog;
 }
+class PropertyFieldDef;
 
 class PropertyFieldLoadDialog : public QWidget
 {
 		Q_OBJECT
 		
 	public:
-                explicit PropertyFieldLoadDialog(QWidget *parent = 0);
-                ~PropertyFieldLoadDialog();
-                void setModelName(std::string modelname);
-                void setupForPropertyFields(std::vector<string>);
-		static const int RMODEL_READY = 6;
-		static const int CAMARON_ELEMENTS_CONFIGURATED = 8;
-		static const int BASE_MODE_READY = 9;
-		//Polygon Mesh operations
-		static const int COMPLETED_VERTEX_POLYGON_R = 1;
-		static const int COMPLETED_POLYGON_POLYGON_R = 2;
-		static const int NORMALS_CALCULATED = 4;
-		//Polyhedron Mesh operations
-		static const int COMPLETED_POLYGON_POLYHEDRON_R = 3;
-		static const int POLYHEDRON_GEOCENTER_CALCULATED = 5;
-		static const int FIXED_SURFACE_POLYGONS_VERTICES_ORDER = 7;
+		explicit PropertyFieldLoadDialog(QWidget *parent = 0);
+		~PropertyFieldLoadDialog();
+		void setPropertyFieldName(std::string propertyFieldName);
+		void setupForPropertyFields(std::vector<std::shared_ptr<PropertyFieldDef>> propertyFieldDefs);
 	public slots:
-		void setupProgressBarForNewModel(int,int,int,int);
-		void setLoadedVertices(int);
-		void setLoadedPolygons(int);
-		void setLoadedPolyhedrons(int);
-		void stageComplete(int);
+		void stageComplete(PropertyFieldDef*);
 		void addMessage(QString message);
 		void displayError(QString message);
 		void displayWarning(QString message);
 	private:
-		Ui::ModelLoadingProgressDialog *ui;
-		void resetVertices(int);
-		void resetPolygons(int);
-		void resetPolyhedrons(int);
-		void setVerticesLabels();
-		void setPolygonsLabels();
-		void setPolyhedronsLabels();
+		Ui::PropertyFieldLoadDialog *ui;
 		void updateProgressBar();
-		int loadedVertices,loadedPolygons,loadedPolyhedrons;
-		int totalVertices,totalPolygons,totalPolyhedrons,totalelements;
-		int progressVarValue;
+		//int progressBarValue;
 		int progressStages;
-		int progressVarMax;
+		//int progressVarMax;
 		int modelType;
 };
 

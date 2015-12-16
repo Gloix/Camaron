@@ -5,6 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include "Common/Constants.h"
+#include "Rendering/RModel/rmodelpropertyfielddef.h"
 
 #define POSITION_ATTRIBUTE 0
 #define VERTEX_SCALARPROP 1
@@ -50,7 +51,7 @@ void ScalarPropertyRenderer::glewIsReadyRenderer(){
 void ScalarPropertyRenderer::draw(RModel* rmodel){
 	if(!rmodel)
 		return;
-	config->setModel(rmodel);
+	config->setRModel(rmodel);
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	// FIRST DRAW
@@ -58,8 +59,8 @@ void ScalarPropertyRenderer::draw(RModel* rmodel){
 	ShaderUtils::setUniform(program,"u_TransformMatrix",rmodel->getMVP());
 	ShaderUtils::setUniform(program,"coloring_type",config->coloring_type);
 	ShaderUtils::setUniform(program,"inverse_intensity",config->inverse_intensity);
-	ShaderUtils::setUniform(program,"min_bound",config->selectedBounds[config->selectedScalarDef][0]);
-	ShaderUtils::setUniform(program,"max_bound",config->selectedBounds[config->selectedScalarDef][1]);
+	ShaderUtils::setUniform(program,"min_bound",config->selectedBounds[(PropertyFieldDef*)config->selectedScalarRModelDef->getPropertyFieldDef().get()][0]);
+	ShaderUtils::setUniform(program,"max_bound",config->selectedBounds[(PropertyFieldDef*)config->selectedScalarRModelDef->getPropertyFieldDef().get()][1]);
 
 	glEnableVertexAttribArray(POSITION_ATTRIBUTE); // Vertex position
 	glEnableVertexAttribArray(VERTEX_SCALARPROP); // Vertex scalars
@@ -68,9 +69,9 @@ void ScalarPropertyRenderer::draw(RModel* rmodel){
 	glVertexAttribPointer( POSITION_ATTRIBUTE, 3, GL_FLOAT, GL_FALSE, 0,
 						   (GLubyte *)NULL );
 	// Map index 1 to the vertex scalar buffer
-	glBindBuffer(GL_ARRAY_BUFFER, config->selectedScalarDef->buffer);
-	glVertexAttribPointer( VERTEX_SCALARPROP, 1, GL_FLOAT, GL_FALSE, config->selectedScalarDef->stride,
-						   (GLubyte *)config->selectedScalarDef->offset);
+	glBindBuffer(GL_ARRAY_BUFFER, config->selectedScalarRModelDef->getBuffer());
+	glVertexAttribPointer( VERTEX_SCALARPROP, 1, GL_FLOAT, GL_FALSE, config->selectedScalarRModelDef->getStride(),
+						   (GLubyte *)config->selectedScalarRModelDef->getOffset());
 	if(rmodel->getModelType()== 0)//vis::CONSTANTS::VERTEX_CLOUD)
 		glDrawArrays(GL_POINTS, 0, rmodel->vertexFlagsAttribute.size() );
 	else

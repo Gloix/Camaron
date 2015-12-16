@@ -25,6 +25,7 @@ class FileUtils
 		static bool saveToFile(std::string filename, std::string content);
 		static void getFileToStringsByLine(std::string filename,
 										  std::vector<std::string>& lines);
+		static std::istream& safeGetline(std::ifstream& is, std::string& t);
 	private:
 		FileUtils();
 };

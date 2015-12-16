@@ -1,4 +1,7 @@
 #include "Model/Model.h"
+#include "PropertyFieldLoading/propertyfielddef.h"
+#include "Exceptions/propertydefnotfoundexception.h"
+#include "Rendering/Renderers/baserendererconfig.h"
 
 Model::Model(std::string f):
 	filename(f)
@@ -30,3 +33,18 @@ bool Model::isLightWeight(){
 }
 
 void Model::clean(){}
+
+void Model::addPropertyFieldDef(std::shared_ptr<PropertyFieldDef> propertyFieldDef) {
+	propertyFieldDefs.push_back(propertyFieldDef);
+}
+
+unsigned char Model::getPropertyFieldPosition(PropertyFieldDef* pfd) {
+	if(!propertyFieldPositions.count(pfd)) {
+		throw new PropertyDefNotFoundException;
+	}
+	return propertyFieldPositions[pfd];
+}
+
+std::vector<std::shared_ptr<PropertyFieldDef>>& Model::getPropertyFieldDefs() {
+	return propertyFieldDefs;
+}

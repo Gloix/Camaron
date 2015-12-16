@@ -177,10 +177,16 @@ SOURCES += main.cpp\
     Rendering/Renderers/ScalarPropertyRenderer/scalarpropertyrendererconfig.cpp \
     Rendering/Renderers/baserendererconfig.cpp \
     PropertyFieldLoading/PropertyFieldLoadingStrategy.cpp \
+    #PropertyFieldLoading/propertyfieldloadingtqs.cpp \
     PropertyFieldLoading/propertyfieldloadingply.cpp \
-    PropertyFieldLoading/propertyfieldloadingelenode.cpp \
     Model/Element/edge.cpp \
-    UI/propertyfieldloaddialog.cpp
+    UI/propertyfieldloaddialog.cpp \
+    PropertyFieldLoading/propertyfielddef.cpp \
+    PropertyFieldLoading/scalarfielddef.cpp \
+    PropertyFieldLoading/tqspropertyfielddef.cpp \
+    Rendering/RModel/rmodelpropertyfielddef.cpp \
+    Exceptions/propertydefnotfoundexception.cpp \
+    PropertyFieldLoading/scalarfieldlistaddervisitor.cpp
 
 HEADERS  += visualizador.h \
     Common/Constants.h \
@@ -348,10 +354,18 @@ HEADERS  += visualizador.h \
     Rendering/Renderers/ScalarPropertyRenderer/scalarpropertyrendererconfig.h \
     Rendering/Renderers/baserendererconfig.h \
     PropertyFieldLoading/PropertyFieldLoadingStrategy.h \
+    #PropertyFieldLoading/propertyfieldloadingtqs.h \
     PropertyFieldLoading/propertyfieldloadingply.h \
-    PropertyFieldLoading/propertyfieldloadingelenode.h \
     Model/Element/edge.h \
-    UI/propertyfieldloaddialog.h
+    UI/propertyfieldloaddialog.h \
+    PropertyFieldLoading/propertyfielddef.h \
+    PropertyFieldLoading/scalarfielddef.h \
+    PropertyFieldLoading/tqspropertyfielddef.h \
+    Rendering/RModel/rmodelpropertyfielddef.h \
+    Exceptions/propertydefnotfoundexception.h \
+    Model/modelvisitor.h \
+    PropertyFieldLoading/propertyfielddefvisitor.h \
+    PropertyFieldLoading/scalarfieldlistaddervisitor.h
 
 FORMS    += visualizador.ui \
     Rendering/Renderers/ModelMainRenderer/mainrendererconfig.ui \

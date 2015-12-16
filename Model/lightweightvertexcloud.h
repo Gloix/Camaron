@@ -2,6 +2,7 @@
 #define LIGHTWEIGHTVERTEXCLOUD_H
 #include "Model/Model.h"
 #include "Model/LWElements/lwvertex.h"
+#include "Model/modelvisitor.h"
 class LightWeightVertexCloud: public Model
 {
 	public:

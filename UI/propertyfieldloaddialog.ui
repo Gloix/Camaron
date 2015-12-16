@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Model Loading Progress</string>
+   <string>Load a Property Field</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -35,7 +35,7 @@
     <widget class="QWidget" name="widget_2" native="true">
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QListView" name="listView_select_property_field"/>
+       <widget class="QListWidget" name="listWidget_select_property_field"/>
       </item>
      </layout>
     </widget>
@@ -64,7 +64,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_ok_close">
+       <widget class="QPushButton" name="pushButton_load_close">
         <property name="text">
          <string>Close</string>
         </property>

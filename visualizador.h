@@ -46,7 +46,9 @@ class Visualizador : public QMainWindow
 		void closeModel();
 		void openFile();
 		void openFileLowWeight();
-		void importFileScalarField();
+		void importFilePropertyField();
+		void loadPropertyFields(std::string, std::vector<std::shared_ptr<PropertyFieldDef>>);
+		void onLoadedPropertyFields();
 		void exportModel();
 		void exportSelection();
 		void selectUsingSelectionStrategy();
@@ -88,9 +90,8 @@ class Visualizador : public QMainWindow
 		void setupEvaluationStrategiesStatics();
 		void openModelFromFilePath(QString, bool addToRecentFiles);
 		void openModelFromFilePathQThread(QString filename,bool lw);
+		void openPropertyFieldDialogFromFilePathQThread(QString filename);
 		Ui::Visualizador *ui;
-
-		void onLoadedPropertyFields();
 
 		//Model
 		bool modelGeneralStaticsCollected;

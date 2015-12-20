@@ -43,7 +43,7 @@ class PropertyFieldLoadingStrategy:public QThread
 		void loadPropertyFieldQThread(std::string filename, Model* model, std::vector<std::shared_ptr<PropertyFieldDef>> propertyFieldDefs);
 	signals:
 		void propertyFieldsLoadedSuccesfully();
-		void setupProgressBarForNewPropertyField(std::vector<std::shared_ptr<PropertyFieldDef>>);
+		void setupDialog(std::string, std::vector<std::shared_ptr<PropertyFieldDef>>);
 		void setLoadedProgress(unsigned int);
 		void addMessage(QString);
 		void errorLoadingPropertyField(QString);

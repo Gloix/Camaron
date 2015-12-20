@@ -3,13 +3,14 @@
 
 ScalarFieldDef::ScalarFieldDef(int id, std::string name, int elements) :
 	PropertyFieldDef(id, name, elements),
-	bounds(2)
+	bounds(0)
 {
 }
 
 ScalarFieldDef::ScalarFieldDef(int id, std::string name, int elements, float min, float max) :
 	ScalarFieldDef(id, name, elements)
 {
+	bounds.resize(2);
 	bounds[0] = min;
 	bounds[1] = max;
 }
@@ -32,7 +33,7 @@ void ScalarFieldDef::expandBounds(float value)
 	{
 		bounds[0] = value;
 	}
-	else
+	else if (bounds[1] < value)
 	{
 		bounds[1] = value;
 	}

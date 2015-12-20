@@ -57,17 +57,19 @@ std::vector<std::shared_ptr<PropertyFieldDef>> PropertyFieldLoadingPly::loadDefs
 		//std::istringstream iss(line);
 		std::smatch sm;
 		if( regex_match(line, sm,
-						std::regex(R"(^\s*element\s+(\S+)\s*$)")) ) {
+						std::regex(R"(^\s*element\s+(\S+)\s+([0-9]+)\s*$)")) ) {
 			readingVertexProperties = false;
-			if(!sm[0].compare("vertex")) {
+			if(!sm[1].compare("vertex")) {
 				readingVertexProperties = true;
+				std::istringstream iss(sm[2]);
+				iss >> np;
 			}
 		}
 		else if ( regex_match (line, sm,
 								std::regex(R"(^\s*property\s+(\S+)\s+(\S+)\s*$)")) ) {
 			if(readingVertexProperties) {
-				if(sm[1].compare("x") && sm[1].compare("y") && sm[1].compare("z")) { //property name
-					std::string propertyName = sm[1];
+				if(sm[2].compare("x") && sm[2].compare("y") && sm[2].compare("z")) { //property name
+					std::string propertyName = sm[2];
 					std::shared_ptr<ScalarFieldDef> newPtr(new ScalarFieldDef(propertyIndex, propertyName, np));
 					vertexProperties.push_back(newPtr);
 				}
@@ -77,12 +79,13 @@ std::vector<std::shared_ptr<PropertyFieldDef>> PropertyFieldLoadingPly::loadDefs
 			break;
 		} else if ( regex_match (line, sm,
 									std::regex(R"(^\s*format\s+(\S+)\s*$)")) ) {
-			bool isBinary = std::string(sm[0]).find("ascii") != 0;
+			bool isBinary = std::string(sm[1]).find("ascii") != 0;
 			if(isBinary) {
 				throw ExceptionMessage("Can't read properties from binary format file");
 			}
 		}
 	}
+	emit setupDialog(filename, vertexProperties);
 	return vertexProperties;
 }
 
@@ -124,7 +127,12 @@ bool PropertyFieldLoadingPly::readModelProperties( std::string filename, VertexC
 	int startingIndex = pol->getPropertyFieldDefs().size();
 	for(int i=0;i<pol->getVerticesCount();i++) {
 		propertyReader.setup(pol->getVertices()[i], startingIndex);
+		// We assume properties are sorted by their id
+		int currPropId = 0;
 		for(std::shared_ptr<PropertyFieldDef> prop : selectedProperties) {
+			while(currPropId++ != prop->getId()) {
+				propertyReader.skipProperty();
+			}
 			prop->accept(propertyReader);
 		}
 		//std::vector<float> properties = readVertexProperties(file, i, selectedProperties);

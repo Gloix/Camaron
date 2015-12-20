@@ -36,6 +36,7 @@ void Model::clean(){}
 
 void Model::addPropertyFieldDef(std::shared_ptr<PropertyFieldDef> propertyFieldDef) {
 	propertyFieldDefs.push_back(propertyFieldDef);
+	propertyFieldPositions[propertyFieldDef.get()] = propertyFieldDefs.size()-1;
 }
 
 unsigned char Model::getPropertyFieldPosition(PropertyFieldDef* pfd) {

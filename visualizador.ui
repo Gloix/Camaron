@@ -100,7 +100,7 @@ background-color: rgb(255, 255, 255);
     </widget>
     <addaction name="actionOpen"/>
     <addaction name="actionOpen_Low_RAM_mode"/>
-    <addaction name="actionImport_scalar_field"/>
+    <addaction name="actionImport_property_field"/>
     <addaction name="menuRecent_files"/>
     <addaction name="menuExport_As"/>
     <addaction name="actionClose_Model"/>
@@ -627,9 +627,9 @@ background-color: rgb(255, 255, 255);
     <string>Open (Low RAM mode)...</string>
    </property>
   </action>
-  <action name="actionImport_scalar_field">
+  <action name="actionImport_property_field">
    <property name="text">
-    <string>Import scalar field...</string>
+    <string>Import property field...</string>
    </property>
   </action>
  </widget>

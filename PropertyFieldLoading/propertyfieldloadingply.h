@@ -50,6 +50,11 @@ class PropertyReader : public PropertyFieldDefVisitor {
 			currentIndex = index;
 		}
 
+		void skipProperty() {
+			float value = 0.0;
+			*iss >> value;
+		}
+
 		void visit(std::shared_ptr<ScalarFieldDef> scalarFieldDef)
 		{
 			//std::vector<float> properties;

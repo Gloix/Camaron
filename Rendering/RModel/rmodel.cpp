@@ -246,7 +246,7 @@ void RModel::loadVertexPositionAndNormals(VertexCloud* model){
 
 std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>> RModel::loadPropertyField(VertexCloud* model, std::shared_ptr<ScalarFieldDef> pfd){
 	// First check if the current property field is the one we're asked for
-	if(currentRModelPropertyFieldDef->getPropertyFieldDef().get() == pfd.get()) {
+	if(currentRModelPropertyFieldDef && currentRModelPropertyFieldDef->getPropertyFieldDef().get() == pfd.get()) {
 		return std::dynamic_pointer_cast<RModelPropertyFieldDef<ScalarFieldDef>>(currentRModelPropertyFieldDef);
 		//return std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>>(currentRModelPropertyFieldDef, static_cast<RModelPropertyFieldDef<ScalarFieldDef>*>(currentRModelPropertyFieldDef.get()));
 	}
@@ -262,11 +262,11 @@ std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>> RModel::loadPropertyFiel
 	floatContainer.resize(nVertices* propertyFieldDef->getElementSize());
 	std::vector<vis::Vertex*>& vertices = model->getVertices();
 	//coords
-	for( auto i = 0u; i < vertices.size(); i++ ) {
+	for( decltype(vertices.size()) i = 0u; i < vertices.size(); i++ ) {
 		vis::Vertex* currentVertex = vertices[i];
 		//std::vector<VScalar> scalarProps = currentVertex->getScalarProperties();
 		std::vector<int>& rmodelPos = currentVertex->getRmodelPositions();
-		for( auto j = 0u; j < rmodelPos.size(); j++ )
+		for( decltype(rmodelPos.size()) j = 0u; j < rmodelPos.size(); j++ )
 			floatContainer[rmodelPos[j]] = currentVertex->getScalarProperty(pfdposition);
 	}
 	GLuint buffer = ShaderUtils::createDataBuffer<float>(floatContainer);
@@ -408,8 +408,10 @@ void RModel::freeRAMFromVideoCardBuffer(){
 	glDeleteBuffers(1,&this->vertexFlagsDataBufferObject);
 	glDeleteBuffers(1,&this->positionDataBufferObject);
 	glDeleteBuffers(1,&this->vertexNormalDataBufferObject);
-	GLuint rModelPropertyFieldDefBuffer = currentRModelPropertyFieldDef->getBuffer();
-	glDeleteBuffers(1,&rModelPropertyFieldDefBuffer);
+	if(currentRModelPropertyFieldDef) {
+		GLuint rModelPropertyFieldDefBuffer = currentRModelPropertyFieldDef->getBuffer();
+		glDeleteBuffers(1,&rModelPropertyFieldDefBuffer);
+	}
 	glDeleteBuffers(1,&rmodelVertexPositionBufferObject);
 	glDeleteBuffers(1,&polygonPolyhedronIdsBufferObject);
 	glDeleteBuffers(1,&tetrahedronVertexIdsBufferObject);

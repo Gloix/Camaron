@@ -71,7 +71,7 @@ Visualizador::Visualizador(QWidget *parent) :
 	connect(ui->actionKey_Shortcuts,SIGNAL(triggered()),&shortcutconfig,SLOT(show()));
 	connect(ui->actionOpen,SIGNAL(triggered()),this,SLOT(openFile()));
 	connect(ui->actionOpen_Low_RAM_mode,SIGNAL(triggered()),this,SLOT(openFileLowWeight()));
-	connect(ui->actionImport_scalar_field,SIGNAL(triggered()),this,SLOT(importFileScalarField()));
+	connect(ui->actionImport_property_field,SIGNAL(triggered()),this,SLOT(importFilePropertyField()));
 	connect(renderersList,SIGNAL(secondaryRendererRemoved()),this,SLOT(secondaryRendererRemoved()));
 	connect(ui->actionExport_complete,SIGNAL(triggered()),this,SLOT(exportModel()));
 	connect(ui->actionSelection_As,SIGNAL(triggered()),this,SLOT(exportSelection()));
@@ -100,6 +100,10 @@ Visualizador::Visualizador(QWidget *parent) :
 	connect(ui->comboBox_evalStrategies,SIGNAL(currentIndexChanged(int)),this,SLOT(changeEvaluationStrategy(int)));
 	connect(ui->actionDetected_Video_Adapter,SIGNAL(triggered()),this,SLOT(glVersionPopup()));
 	connect(ui->chkShowAxes,SIGNAL(toggled(bool)),this,SLOT(showAxesChanged(bool)));
+	connect(&propertyFieldDialog,
+			SIGNAL(onReadyToLoad(std::string, std::vector<std::shared_ptr<PropertyFieldDef> >)),
+			this,
+			SLOT(loadPropertyFields(std::string, std::vector<std::shared_ptr<PropertyFieldDef> >)));
 	modelLoadingFactory = ModelLoadingFactory::getSingletonInstance();
 	modelLoadingFactoryLW = ModelLoadingFactory::getLightWeightSingletonInstance();
 	propertyFieldLoadingFactory = PropertyFieldLoadingFactory::getSingletonInstance();
@@ -245,6 +249,7 @@ void Visualizador::mouseDoubleClickEvent(QMouseEvent *e) {
 		this->showFullScreen();
 	}
 }
+
 std::string Visualizador::getModelAcceptedExtensions(ModelLoadingFactory* factory){
 	std::string fileformats;
 	std::vector<ModelLoadingStrategy*>& strategies = factory->getModelLoadingStrategies();
@@ -368,18 +373,18 @@ void Visualizador::connectPropertyFieldLoadingStrategies(PropertyFieldLoadingFac
 		connect(loadingStrategies[i],SIGNAL(propertyFieldsLoadedSuccesfully()),
 				this,SLOT(onLoadedPropertyFields()));
 		connect(loadingStrategies[i],SIGNAL(
-					setupProgressBarForNewPropertyField(
+					setupDialog(std::string,
 						std::vector<std::shared_ptr<PropertyFieldDef>>)),
-				&propertyFieldDialog,SLOT(setupForNewFile(
+				&propertyFieldDialog,SLOT(setupForNewFile(std::string,
 											  std::vector<std::shared_ptr<PropertyFieldDef>>)));
 		connect(loadingStrategies[i],SIGNAL(setLoadedProgress(unsigned int)),
 				&propertyFieldDialog,SLOT(setLoadedProgress(unsigned int)));
 		connect(loadingStrategies[i],SIGNAL(addMessage(QString)),
-				&progressDialog,SLOT(addMessage(QString)));
+				&propertyFieldDialog,SLOT(addMessage(QString)));
 		connect(loadingStrategies[i],SIGNAL(errorLoadingPropertyField(QString)),
-				&progressDialog,SLOT(displayError(QString)));
-		connect(loadingStrategies[i],SIGNAL(warningLoadingModel(QString)),
-				&progressDialog,SLOT(displayWarning(QString)));
+				&propertyFieldDialog,SLOT(displayError(QString)));
+		connect(loadingStrategies[i],SIGNAL(warningLoadingPropertyField(QString)),
+				&propertyFieldDialog,SLOT(displayWarning(QString)));
 	}
 }
 
@@ -494,7 +499,7 @@ void Visualizador::openFileLowWeight()
 	openModelFromFilePathQThread(filename,true);
 
 }
-void Visualizador::importFileScalarField() {
+void Visualizador::importFilePropertyField() {
 	if(progressDialog.isVisible())
 		return;
 	QString filename = QFileDialog::getOpenFileName(this,
@@ -502,7 +507,7 @@ void Visualizador::importFileScalarField() {
 													fileFormatsLW.c_str());
 	if(filename.size()==0)
 		return;
-	openModelFromFilePathQThread(filename,true);
+	openPropertyFieldDialogFromFilePathQThread(filename);
 }
 
 void Visualizador::openModelFromFilePath(QString filename, bool addToRecentFiles){
@@ -591,6 +596,70 @@ void Visualizador::openModelFromFilePathQThread(QString filename,bool lw){
 								 QString("Not enough RAM to load the model, try the x64 version"),QMessageBox::Ok);
 	}
 }
+
+void Visualizador::openPropertyFieldDialogFromFilePathQThread(QString filename){
+	try{
+		PropertyFieldLoadingStrategy* selectedStrategy;
+		selectedStrategy = propertyFieldLoadingFactory->loadPropertyFieldQThread(filename.toStdString());
+		std::vector<std::shared_ptr<PropertyFieldDef>> props = selectedStrategy->loadDefs(filename.toStdString());
+		propertyFieldDialog.setupForPropertyFields(filename.toStdString(), props);
+		propertyFieldDialog.show();
+	}
+	catch(ExceptionMessage& e){
+		propertyFieldDialog.close();
+		QMessageBox::information(0,
+								 QString("Failed to open property field"),
+								 QString(e.getMessage().c_str()), QMessageBox::Ok);
+	}catch(UnknownExtensionException& e){
+		propertyFieldDialog.close();
+		std::string message;
+		message += "Extension not recognized to load property field<br>";
+		message += "Filename: " +e.getFilename() +"<br>";
+		message += "Extension: " + e.getExtension();
+		QMessageBox::information(0,
+								 QString("Property field loading failed"),
+								 QString(message.c_str()), QMessageBox::Ok);
+	}catch(std::bad_alloc &ba){
+		propertyFieldDialog.close();
+		closeModel();
+		QMessageBox::information(0,
+								 QString("Property field loading Failed"),
+								 QString("Not enough RAM to load the model, try the x64 version"),QMessageBox::Ok);
+	}
+}
+
+void Visualizador::loadPropertyFields(std::string filename,std::vector<std::shared_ptr<PropertyFieldDef>> props) {
+	std::cout << "Loading property field " << filename;
+	try{
+		//this->customGLViewer->refreshHelpers();
+		//propertyFieldDialog.setPropertyFieldName(.setModelName(FileUtils::getFileNameWithoutPath(filename.toStdString()));
+		PropertyFieldLoadingStrategy* selectedStrategy;
+		selectedStrategy = propertyFieldLoadingFactory->loadPropertyFieldQThread(filename);
+		selectedStrategy->loadPropertyFieldQThread(filename,model,props);
+	}
+	catch(ExceptionMessage& e){
+		propertyFieldDialog.close();
+		QMessageBox::information(0,
+								 QString("Failed to open Model"),
+								 QString(e.getMessage().c_str()), QMessageBox::Ok);
+	}catch(UnknownExtensionException& e){
+		propertyFieldDialog.close();
+		std::string message;
+		message += "Extension not recognized to load model<br>";
+		message += "Filename: " +e.getFilename() +"<br>";
+		message += "Extension: " + e.getExtension();
+		QMessageBox::information(0,
+								 QString("Model loading failed"),
+								 QString(message.c_str()), QMessageBox::Ok);
+	}catch(std::bad_alloc &ba){
+		propertyFieldDialog.close();
+		closeModel();
+		QMessageBox::information(0,
+								 QString("Model Loading Failed"),
+								 QString("Not enough RAM to load the model, try the x64 version"),QMessageBox::Ok);
+	}
+}
+
 void Visualizador::getLoadedModelFromLoadingStrategy(){
 	ModelLoadingStrategy *loadingstrategy;
 	loadingstrategy = qobject_cast<ModelLoadingStrategy *>(sender());
@@ -615,7 +684,7 @@ void Visualizador::getLoadedModelFromLoadingStrategy(){
 			modelGeneralStaticsWidget.setData(&modelGeneralStaticsCollector);
 			modelGeneralStaticsCollected = true;
 		}
-		std::cout << "Model loaded in: "<<timer.getTranscurredSeconds()<<std::endl;		
+		std::cout << "Model loaded in: "<<timer.getTranscurredSeconds()<<std::endl;
 		addRecentFiles(QString::fromStdString(loaded->getFilename()));
 		loaded->clean();//will clear unused data for LightWeight models
 		this->customGLViewer->forceReRendering();
@@ -625,7 +694,7 @@ void Visualizador::getLoadedModelFromLoadingStrategy(){
 void Visualizador::enableAndDisableWidgets(){
 	ui->actionClose_Model->setEnabled(model != 0);
 	ui->menuExport_As->setEnabled(model != 0);
-	ui->actionImport_scalar_field->setEnabled(model != 0);
+	ui->actionImport_property_field->setEnabled(model != 0);
 	if(!model)
 		return;
 	ui->dockWidget_evaluation_strategies->setDisabled(model->isLightWeight());

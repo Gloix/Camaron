@@ -64,9 +64,16 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_load_close">
+       <widget class="QPushButton" name="pushButton_close">
         <property name="text">
          <string>Close</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_load">
+        <property name="text">
+         <string>Load</string>
         </property>
        </widget>
       </item>

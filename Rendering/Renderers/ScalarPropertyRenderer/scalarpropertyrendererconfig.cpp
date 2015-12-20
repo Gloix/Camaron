@@ -69,6 +69,7 @@ void ScalarPropertyRendererConfig::onNewModelLoaded()
 		for(decltype(scalarDefs.size()) i = 0;i<scalarDefs.size();i++){
 			float max = scalarDefs[i]->getMax();
 			float min = scalarDefs[i]->getMin();
+			selectedBounds[(PropertyFieldDef*)scalarDefs[i].get()] = std::vector<float>(2);
 			selectedBounds[(PropertyFieldDef*)scalarDefs[i].get()][0] = min;
 			selectedBounds[(PropertyFieldDef*)scalarDefs[i].get()][1] = max;
 			scalarDefIdsMap.insert(std::make_pair(i,scalarDefs[i]));

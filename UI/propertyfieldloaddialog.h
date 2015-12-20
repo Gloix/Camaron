@@ -18,17 +18,25 @@ class PropertyFieldLoadDialog : public QWidget
 		explicit PropertyFieldLoadDialog(QWidget *parent = 0);
 		~PropertyFieldLoadDialog();
 		void setPropertyFieldName(std::string propertyFieldName);
-		void setupForPropertyFields(std::vector<std::shared_ptr<PropertyFieldDef>> propertyFieldDefs);
+		void setupForPropertyFields(std::string filename, std::vector<std::shared_ptr<PropertyFieldDef>> propertyFieldDefs);
+	signals:
+		void onReadyToLoad(std::string, std::vector<std::shared_ptr<PropertyFieldDef>>);
+	private slots:
+		void onLoadClick(bool);
+		void onCloseClick(bool);
 	public slots:
-		void stageComplete(PropertyFieldDef*);
+		void setLoadedProgress(unsigned int);
 		void addMessage(QString message);
 		void displayError(QString message);
 		void displayWarning(QString message);
 	private:
+		std::vector<std::shared_ptr<PropertyFieldDef>> propsList;
+		std::string filename;
 		Ui::PropertyFieldLoadDialog *ui;
 		void updateProgressBar();
 		//int progressBarValue;
-		int progressStages;
+		unsigned int progress;
+		//int progressStages;
 		//int progressVarMax;
 		int modelType;
 };

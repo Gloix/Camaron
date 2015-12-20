@@ -52,6 +52,9 @@ void ScalarPropertyRenderer::draw(RModel* rmodel){
 	if(!rmodel)
 		return;
 	config->setRModel(rmodel);
+	if(!config->selectedScalarRModelDef) {
+		return;
+	}
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	// FIRST DRAW

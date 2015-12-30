@@ -27,17 +27,6 @@ PropertyFieldLoadingPly::~PropertyFieldLoadingPly(){}
 bool PropertyFieldLoadingPly::validate(std::string filename)
 {
 	return ModelLoadingPly().validate(filename);
-//	fileBuffer = FileUtils::getFileToBuffer(filename,&fileSize);
-//	if(fileSize==0)
-//		return false;
-//	scanner.reset(fileSize);
-//	char word [256];
-//	bool valid = false;
-//	scanner.readString(fileBuffer, word,false);
-//	if( !strcmp( word, "ply\0" ) )
-//		valid = true;
-//	delete[] fileBuffer;
-//	return valid;
 }
 
 std::vector<std::shared_ptr<PropertyFieldDef>> PropertyFieldLoadingPly::loadDefs(std::string filename)
@@ -92,7 +81,6 @@ std::vector<std::shared_ptr<PropertyFieldDef>> PropertyFieldLoadingPly::loadDefs
 void PropertyFieldLoadingPly::load(std::string filename, Model* model,
 								   std::vector<std::shared_ptr<PropertyFieldDef>> selectedProperties)
 {
-	//vertexProperties.clear();
 	try{
 		this->filename = filename;
 		this->selectedProperties = selectedProperties;
@@ -135,12 +123,6 @@ bool PropertyFieldLoadingPly::readModelProperties( std::string filename, VertexC
 			}
 			prop->accept(propertyReader);
 		}
-		//std::vector<float> properties = readVertexProperties(file, i, selectedProperties);
-
-		//for(std::vector<float>::iterator it=properties.begin(); it<properties.end();++it ) {
-		//	int propertyIndex = pol->getPropertyFieldDefs().size()+(it-properties.begin());
-		//	pol->getVertices()[i]->addScalarProperty(propertyIndex,*it);
-		//}
 		if(i%1000 == 0) {
 			emit setLoadedProgress(i);
 		}

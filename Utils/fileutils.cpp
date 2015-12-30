@@ -86,7 +86,7 @@ bool FileUtils::saveToFile(std::string filename, std::string content){
 	return true;
 }
 
-
+// Method for cutting a stream in lines using either \n, \r or \r\n as separator.
 std::istream& FileUtils::safeGetline(std::ifstream& is, std::string& t)
 {
 	t.clear();

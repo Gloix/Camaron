@@ -25,7 +25,7 @@ class IsolineRendererConfig : public BaseRendererConfig, public ModelVisitor
 		glm::vec4 gradientEndColor;
 		glm::vec4 wireframeColor;
 		std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>> selectedScalarRModelDef;
-		std::vector<float> isolinesSteps;
+		std::vector<float> isolevels;
 		int wireFrameOption;
 		void readConfig();
 		void setRModel(RModel*);

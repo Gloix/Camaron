@@ -82,7 +82,7 @@ void IsolineRendererConfig::changeInputType(int tabIndex) {
 }
 
 void IsolineRendererConfig::sweepValueChanged(int value) {
-	isolinesSteps.clear();
+	isolevels.clear();
 	int maxSliderValue = ui->horizontalSlider_sweep_value->maximum();
 	int minSliderValue = ui->horizontalSlider_sweep_value->minimum();
 	std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>> selected = std::dynamic_pointer_cast<RModelPropertyFieldDef<ScalarFieldDef>>(selectedScalarRModelDef->getPropertyFieldDef());
@@ -90,8 +90,8 @@ void IsolineRendererConfig::sweepValueChanged(int value) {
 	float maxScalar = selected->getPropertyFieldDef()->getMax();
 	float isolineValue = minScalar + 1.0*value*(maxScalar-minScalar)/(maxSliderValue-minSliderValue);
 	ui->label_sweep_value->setText(QString::number(isolineValue));
-	isolinesSteps.push_back(-1);
-	isolinesSteps.push_back(isolineValue);
+	isolevels.push_back(-1);
+	isolevels.push_back(isolineValue);
 	forceUpdate();
 }
 
@@ -111,11 +111,11 @@ void IsolineRendererConfig::readConfig(){
 	wireframeColor.w = QtUtils::readFloatFromQText(ui->lineEdit_wf_a->text(),1.0f);
 
 	if(this->currentInputType == INPUT_VALUES_LIST) {
-		isolinesSteps.clear();
+		isolevels.clear();
 		QString stepsStr = ui->lineEdit_steps->displayText();
 		QStringList parts = stepsStr.split(QString(","), QString::SkipEmptyParts);
 		foreach (const QString part, parts ) {
-			isolinesSteps.push_back(atof(part.toStdString().c_str()));
+			isolevels.push_back(atof(part.toStdString().c_str()));
 		}
 	}
 

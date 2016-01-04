@@ -2,6 +2,7 @@
 #include "ui_propertyfieldloaddialog.h"
 #include "Common/Constants.h"
 #include "PropertyFieldLoading/propertyfielddef.h"
+#include "Utils/fileutils.h"
 #include <iostream>
 #include <memory>
 #include <QListWidgetItem>
@@ -39,6 +40,8 @@ void PropertyFieldLoadDialog::onCloseClick(bool) {
 
 void PropertyFieldLoadDialog::setupForPropertyFields(std::string filename, std::vector<std::shared_ptr<PropertyFieldDef>> propertyFieldDefs){
 	this->filename = filename;
+	std::string bareFilename = FileUtils::getFileNameWithoutPath(filename);
+	ui->label_property_field_name->setText(QString::fromStdString(bareFilename));
 	propsList.clear();
 	propsList.insert(propsList.begin(), propertyFieldDefs.begin(), propertyFieldDefs.end());
 	ui->pushButton_close->setVisible(false);

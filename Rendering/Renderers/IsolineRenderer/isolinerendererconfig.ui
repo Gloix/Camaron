@@ -473,7 +473,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Steps (comma separated)</string>
+         <string>Property</string>
         </property>
        </widget>
       </item>

@@ -47,7 +47,7 @@ class Visualizador : public QMainWindow
 		void openFile();
 		void openFileLowWeight();
 		void importFilePropertyField();
-		void loadPropertyFields(std::string, std::vector<std::shared_ptr<PropertyFieldDef>>);
+		void loadPropertyFieldsQThread(std::string, std::vector<std::shared_ptr<PropertyFieldDef>>);
 		void onLoadedPropertyFields();
 		void exportModel();
 		void exportSelection();
@@ -90,7 +90,7 @@ class Visualizador : public QMainWindow
 		void setupEvaluationStrategiesStatics();
 		void openModelFromFilePath(QString, bool addToRecentFiles);
 		void openModelFromFilePathQThread(QString filename,bool lw);
-		void openPropertyFieldDialogFromFilePathQThread(QString filename);
+		void openPropertyFieldDialogFromFilePath(QString filename);
 		Ui::Visualizador *ui;
 
 		//Model

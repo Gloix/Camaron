@@ -21,14 +21,14 @@ bool ModelExportEleNode::exportModel(PolygonMesh* m, std::string filename) throw
 	std::ofstream outputFile(filenameEle.c_str());
 	std::vector<vis::Polygon*>& polygons = m->getPolygons();
 	int numberOfTriangles = 0;
-	for(std::vector<vis::Polygon*>::size_type i = 0;i<polygons.size();i++)
-		numberOfTriangles += (polygons[i]->getVertices().size()-2);
+	for( vis::Polygon* polygon : polygons )
+		numberOfTriangles += (polygon->getVertices().size()-2);
 	outputFile << numberOfTriangles << " 3 0" << std::endl;
 
 	int currentTriangleId = 1;
-	for(std::vector<vis::Polygon*>::size_type i = 0;i<polygons.size();i++){
-		std::vector<vis::Vertex*>& currentPolygonVertices = polygons[i]->getVertices();
-		for( std::vector<vis::Vertex*>::size_type j = 1; j < currentPolygonVertices.size() - 1; j++ ) {
+	for( vis::Polygon* polygon : polygons){
+		std::vector<vis::Vertex*>& currentPolygonVertices = polygon->getVertices();
+		for( decltype(currentPolygonVertices.size()) j = 1; j < currentPolygonVertices.size() - 1; j++ ) {
 			outputFile << currentTriangleId++ << " ";
 			outputFile << currentPolygonVertices[0]->getId() << " ";
 			outputFile << currentPolygonVertices[j]->getId() << " ";
@@ -47,18 +47,18 @@ bool ModelExportEleNode::exportModel(PolyhedronMesh* m, std::string filename) th
 	std::ofstream outputFile(filenameEle.c_str());
 	std::vector<vis::Polyhedron*>& polyhedrons = m->getPolyhedrons();
 	int numberOfTetrahedrons = 0;
-	for(std::vector<vis::Polyhedron*>::size_type i = 0;i<polyhedrons.size();i++)
-		if(polyhedrons[i]->getPolyhedronPolygons().size()==4)
+	for( vis::Polyhedron* polyhedron : polyhedrons)
+		if(polyhedron->getPolyhedronPolygons().size()==4)
 			numberOfTetrahedrons++;
 	outputFile << numberOfTetrahedrons << " 4 0" << std::endl;
-	for(std::vector<vis::Polyhedron*>::size_type i = 0;i<polyhedrons.size();i++){
-		if(polyhedrons[i]->getPolyhedronPolygons().size()!=4)
+	for( vis::Polyhedron* polyhedron : polyhedrons ){
+		if(polyhedron->getPolyhedronPolygons().size()!=4)
 			continue;
 		std::vector<vis::Vertex*> currentTetraVertices;
-		PolyhedronUtils::getPolyhedronVertices(polyhedrons[i],currentTetraVertices);
+		PolyhedronUtils::getPolyhedronVertices(polyhedron,currentTetraVertices);
 		if(currentTetraVertices.size()!=4)
 			continue;
-		outputFile << polyhedrons[i]->getId() << " ";
+		outputFile << polyhedron->getId() << " ";
 		outputFile << currentTetraVertices[0]->getId() << " ";
 		outputFile << currentTetraVertices[1]->getId() << " ";
 		outputFile << currentTetraVertices[2]->getId() << " ";
@@ -72,14 +72,14 @@ void ModelExportEleNode::exportVertices(VertexCloud* m,std::string filename)thro
 	std::ofstream outputFile(filename.c_str());
 	std::vector<vis::Vertex*>& vertices = m->getVertices();
 	outputFile << vertices.size() << " " << ((m->is2D())?2:3) << " 0 0" << std::endl;
-	for(std::vector<vis::Vertex*>::size_type i = 0;i<vertices.size();i++){
-		outputFile << vertices[i]->getId() << " ";
-		outputFile << vertices[i]->getCoords().x << " ";
+	for( vis::Vertex* vertex : vertices){
+		outputFile << vertex->getId() << " ";
+		outputFile << vertex->getCoords().x << " ";
 		if(m->is2D())
-			outputFile << vertices[i]->getCoords().y << std::endl;
+			outputFile << vertex->getCoords().y << std::endl;
 		else{
-			outputFile << vertices[i]->getCoords().y << " ";
-			outputFile << vertices[i]->getCoords().z << std::endl;
+			outputFile << vertex->getCoords().y << " ";
+			outputFile << vertex->getCoords().z << std::endl;
 		}
 	}
 	outputFile << "#Exported with vis";

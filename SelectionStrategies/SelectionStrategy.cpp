@@ -34,8 +34,8 @@ void SelectionStrategy::selectElement( Selection* sel) {
 	for ( std::unordered_map<int, vis::Element*>::const_iterator It = hash.begin(); It != hash.end(); ++It )
 		if(!( *( *It ).second ).applySelectionStrategyDD(this,sel))
 			erasedKeys.push_back((*It).second);
-	for ( std::vector<vis::Element*>::size_type i = 0;i < erasedKeys.size(); i++)
-		sel->removeSelectedElement(erasedKeys[i]);
+	for ( vis::Element* element : erasedKeys )
+		sel->removeSelectedElement(element);
 }
 bool SelectionStrategy::setup(){return true;}
 bool SelectionStrategy::setupPreApplying(Selection*, RModel*){return true;}
@@ -66,9 +66,8 @@ bool SelectionStrategy::selectElementsFrom( PolyhedronMesh* p,RModel* rmodel,
 	}
 	if( isFullFilled((vis::Polyhedron*)0)){
 		std::vector<vis::Polyhedron*>& polyhedrons = p->getPolyhedrons();
-		for(std::vector<vis::Polyhedron*>::size_type i = 0;
-			i < polyhedrons.size();i++)
-			selectElement(polyhedrons[i],selection);
+		for( vis::Polyhedron* polyhedron : polyhedrons )
+			selectElement(polyhedron,selection);
 		std::cout << "Strategy "<< name <<"Applying time: " << cr.getTranscurredSeconds()<<std::endl;
 		return true;
 	}
@@ -86,8 +85,8 @@ bool SelectionStrategy::selectElementsFrom( PolygonMesh* p,RModel* rmodel,
 	}
 	if( isFullFilled((vis::Polygon*)0)){
 		std::vector<vis::Polygon*>& polygons = p->getPolygons();
-		for(std::vector<vis::Polygon*>::size_type i = 0;i < polygons.size();i++)
-			selectElement(polygons[i],selection);
+		for( vis::Polygon* polygon : polygons )
+			selectElement(polygon,selection);
 		std::cout << "Strategy "<< name <<"Applying time: " << cr.getTranscurredSeconds()<<std::endl;
 		return true;
 	}
@@ -109,8 +108,8 @@ bool SelectionStrategy::selectElementsFrom( VertexCloud* p,
 	}
 	if( isFullFilled((vis::Vertex*)0)){
 		std::vector<vis::Vertex*>& vertices = p->getVertices();
-		for(std::vector<vis::Vertex*>::size_type i = 0;i < vertices.size();i++)
-			selectElement(vertices[i],selection);
+		for( vis::Vertex* vertex : vertices )
+			selectElement(vertex,selection);
 		std::cout << "Strategy "<< name <<"Applying time: " << cr.getTranscurredSeconds()<<std::endl;
 		return true;
 	}

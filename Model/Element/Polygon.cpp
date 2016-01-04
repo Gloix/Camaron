@@ -57,8 +57,8 @@ float vis::Polygon::getArea(){
 	return this->area;
 }
 bool vis::Polygon::isNeighbor(Polygon* p){
-	for( std::vector<Polygon*>::size_type i = 0; i < neighborPolygons.size(); i++ )
-		if(neighborPolygons[i] == p)
+	for( Polygon* polygon : neighborPolygons )
+		if(polygon == p)
 			return true;
 	return false;
 }
@@ -92,8 +92,8 @@ vis::Polyhedron** vis::Polygon::getNeighborPolyhedron(){
 }
 glm::vec3 vis::Polygon::getGeometricCenter(){
 	glm::vec3 center(0.0f,0.0f,0.0f);
-	for(std::vector<vis::Vertex*>::size_type i = 0;i<vertices.size();i++)
-		center += vertices[i]->getCoords();
+	for( vis::Vertex* vertex : vertices)
+		center += vertex->getCoords();
 	if(vertices.size()!=0u)
 		center /= (float)vertices.size();
 	return center;

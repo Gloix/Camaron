@@ -85,8 +85,8 @@ vis::Polygon* ModelLoadingM3D::createPolygon(std::vector<int>& indices,
 		newPolygon = new vis::Polygon(polygonIndex);
 	hashingTree.registerValue(indices,newPolygon);
 	std::vector<vis::Vertex*>& currentPolygonVertices = newPolygon->getVertices();
-	for(std::vector<int>::size_type i = 0;i<indices.size();i++)
-		currentPolygonVertices.push_back(vertices[indices[i]]);
+	for( int index : indices )
+		currentPolygonVertices.push_back(vertices[index]);
 	return newPolygon;
 }
 void ModelLoadingM3D::readM3DPolyhedron(int nVertices,
@@ -100,7 +100,7 @@ void ModelLoadingM3D::readM3DPolyhedron(int nVertices,
 		scanner.readInt(fileBuffer, &verticesIndices[j] );
 	vis::Polyhedron* polyhedron = new vis::Polyhedron(pol->getPolyhedrons().size());
 	std::vector<vis::Polygon*>& currentPolyhedronPolygons = polyhedron->getPolyhedronPolygons();
-	for(std::vector<std::vector<int> >::size_type i = 0;i<verticesIndicesPerFace.size();i++){
+	for(std::vector<std::vector<int>>::size_type i = 0;i<verticesIndicesPerFace.size();i++){
 		std::vector<int> aux;
 		for(std::vector<int>::size_type j = 0;j<verticesIndicesPerFace[i].size();j++)
 			aux.push_back(verticesIndices[verticesIndicesPerFace[i][j]]);

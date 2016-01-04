@@ -17,8 +17,8 @@ int vis::LWPolygon::getVerticesCount(){
 
 glm::vec3 vis::LWPolygon::getGeometricCenter(){
 	glm::vec3 center(0.0f,0.0f,0.0f);
-	for(std::vector<vis::LWVertex*>::size_type i = 0;i<vertices.size();i++)
-		center += vertices[i]->getCoords();
+	for( vis::LWVertex* lwVertex : vertices)
+		center += lwVertex->getCoords();
 	if(vertices.size()!=0u)
 		center /= (float)vertices.size();
 	return center;

@@ -21,11 +21,11 @@ VertexCloud::VertexCloud(std::string f):
 
 VertexCloud::~VertexCloud()
 {
-	for( std::vector<vis::Vertex*>::size_type i = 0; i != vertices.size(); i++ )
-		delete vertices[i];
+	for( vis::Vertex* vertex : vertices )
+		delete vertex;
 
-	for( std::vector<vis::Edge*>::size_type i = 0; i != additionalEdges.size(); i++ )
-		delete additionalEdges[i];
+	for( vis::Edge* edge : additionalEdges )
+		delete edge;
 }
 
 int VertexCloud::getVerticesCount() {

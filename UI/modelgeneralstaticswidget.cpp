@@ -21,10 +21,9 @@ void ModelGeneralStaticsWidget::setData(ModelGeneralStaticsCollector* m){
 	std::stringstream content;
 	content << std::setprecision(std::numeric_limits<float>::digits10);
 	std::vector<ModelStaticsItem>& modelStaticsItems = m->getModelStatics();
-	for(std::vector<ModelStaticsItem>::size_type i = 0;
-		i<modelStaticsItems.size();i++){
-		content << "<h4>" << modelStaticsItems[i].itemTitle << "</h4>";
-		std::map<std::string, std::string>& stats = modelStaticsItems[i].stats;
+	for( ModelStaticsItem item : modelStaticsItems ){
+		content << "<h4>" << item.itemTitle << "</h4>";
+		std::map<std::string, std::string>& stats = item.stats;
 		for(std::map<std::string, std::string>::iterator j = stats.begin();
 			j!=stats.end();j++){
 			content << j->first << " " << j->second << "<br/>";

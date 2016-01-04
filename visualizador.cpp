@@ -180,13 +180,11 @@ void Visualizador::clearRecentFiles(){
 void Visualizador::updateRecentFilesQActions(){
 	//hide All
 	ui->menuRecent_files->setEnabled(false);
-	std::vector<QAction*>::size_type i = 0;
-	for(i = 0;i<recentFilesQActions.size();i++){
-		QAction* actionRecentFile = recentFilesQActions[i];
-		actionRecentFile->setVisible(false);
+	for( QAction* action : recentFilesQActions){
+		action->setVisible(false);
 	}
-	i = 0;
 	std::list<std::string>::iterator it;
+	std::vector<QAction*>::size_type i = 0;
 	for(it = recentFilesnames.begin();
 		it!=recentFilesnames.end() && i < recentFilesQActions.size();it++){
 		QAction* actionRecentFile = recentFilesQActions[i];
@@ -253,14 +251,11 @@ void Visualizador::mouseDoubleClickEvent(QMouseEvent *e) {
 std::string Visualizador::getModelAcceptedExtensions(ModelLoadingFactory* factory){
 	std::string fileformats;
 	std::vector<ModelLoadingStrategy*>& strategies = factory->getModelLoadingStrategies();
-	typedef std::vector<ModelLoadingStrategy*>::size_type it_type;
-	for(it_type iterator = 0; iterator < strategies.size(); iterator++) {
-		ModelLoadingStrategy* p = strategies[iterator];
-		std::vector<AcceptedFileFormat>& acceptedfileFormats = p->getFileFormats();
-		typedef std::vector<AcceptedFileFormat>::size_type ffit;
-		for(ffit i = 0;i<acceptedfileFormats.size();i++){
-			fileformats += ";;"+acceptedfileFormats[i].fileFormatName+"(*."+
-						   acceptedfileFormats[i].fileFormatExt+")";
+	for( ModelLoadingStrategy* strategy : strategies ) {
+		std::vector<AcceptedFileFormat>& acceptedfileFormats = strategy->getFileFormats();
+		for(AcceptedFileFormat& fileFormat : acceptedfileFormats ){
+			fileformats += ";;"+fileFormat.fileFormatName+"(*."+
+						   fileFormat.fileFormatExt+")";
 		}
 	}
 	return "All Files(*)"+fileformats;
@@ -268,14 +263,11 @@ std::string Visualizador::getModelAcceptedExtensions(ModelLoadingFactory* factor
 std::string Visualizador::getPropertyFieldAcceptedExtensions(PropertyFieldLoadingFactory* factory){
 	std::string fileformats;
 	std::vector<PropertyFieldLoadingStrategy*>& strategies = factory->getPropertyFieldLoadingStrategies();
-	typedef std::vector<PropertyFieldLoadingStrategy*>::size_type it_type;
-	for(it_type iterator = 0; iterator < strategies.size(); iterator++) {
-		PropertyFieldLoadingStrategy* p = strategies[iterator];
-		std::vector<AcceptedFileFormat>& acceptedfileFormats = p->getFileFormats();
-		typedef std::vector<AcceptedFileFormat>::size_type ffit;
-		for(ffit i = 0;i<acceptedfileFormats.size();i++){
-			fileformats += ";;"+acceptedfileFormats[i].fileFormatName+"(*."+
-						   acceptedfileFormats[i].fileFormatExt+")";
+	for(PropertyFieldLoadingStrategy* strategy : strategies ) {
+		std::vector<AcceptedFileFormat>& acceptedfileFormats = strategy->getFileFormats();
+		for( AcceptedFileFormat& fileFormat : acceptedfileFormats ){
+			fileformats += ";;"+fileFormat.fileFormatName+"(*."+
+						   fileFormat.fileFormatExt+")";
 		}
 	}
 	return "All Files(*)"+fileformats;
@@ -340,50 +332,47 @@ void Visualizador::fillRendererComboBox(){
 }
 
 void Visualizador::connectModelLoadingStrategies(ModelLoadingFactory *factory){
-	typedef std::vector<ModelLoadingStrategy*>::size_type size_t;
-	std::vector<ModelLoadingStrategy*>& loadingStrategies = factory->getModelLoadingStrategies();
-	for(size_t i = 0; i < loadingStrategies.size(); i++) {
-		connect(loadingStrategies[i],SIGNAL(modelLoadedSuccesfully()),
+	for( ModelLoadingStrategy* strategy : factory->getModelLoadingStrategies() ) {
+		connect(strategy,SIGNAL(modelLoadedSuccesfully()),
 				this,SLOT(getLoadedModelFromLoadingStrategy()));
-		connect(loadingStrategies[i],SIGNAL(setupProgressBarForNewModel(int,int,int,int)),
+		connect(strategy,SIGNAL(setupProgressBarForNewModel(int,int,int,int)),
 				&progressDialog,SLOT(setupProgressBarForNewModel(int,int,int,int)));
-		connect(loadingStrategies[i],SIGNAL(setLoadedVertices(int)),
+		connect(strategy,SIGNAL(setLoadedVertices(int)),
 				&progressDialog,SLOT(setLoadedVertices(int)));
-		connect(loadingStrategies[i],SIGNAL(setLoadedPolygons(int)),
+		connect(strategy,SIGNAL(setLoadedPolygons(int)),
 				&progressDialog,SLOT(setLoadedPolygons(int)));
-		connect(loadingStrategies[i],SIGNAL(setLoadedPolyhedrons(int)),
+		connect(strategy,SIGNAL(setLoadedPolyhedrons(int)),
 				&progressDialog,SLOT(setLoadedPolyhedrons(int)));
-		connect(loadingStrategies[i],SIGNAL(stageComplete(int)),
+		connect(strategy,SIGNAL(stageComplete(int)),
 				&progressDialog,SLOT(stageComplete(int)));
-		connect(loadingStrategies[i],SIGNAL(addMessage(QString)),
+		connect(strategy,SIGNAL(addMessage(QString)),
 				&progressDialog,SLOT(addMessage(QString)));
-		connect(loadingStrategies[i],SIGNAL(errorLoadingModel(QString)),
+		connect(strategy,SIGNAL(errorLoadingModel(QString)),
 				&progressDialog,SLOT(displayError(QString)));
-		connect(loadingStrategies[i],SIGNAL(warningLoadingModel(QString)),
+		connect(strategy,SIGNAL(warningLoadingModel(QString)),
 				&progressDialog,SLOT(displayWarning(QString)));
 	}
 }
 
 void Visualizador::connectPropertyFieldLoadingStrategies(PropertyFieldLoadingFactory *factory){
-	typedef std::vector<PropertyFieldLoadingStrategy*>::size_type size_t;
 	std::vector<PropertyFieldLoadingStrategy*>& loadingStrategies =
 			factory->getPropertyFieldLoadingStrategies();
 
-	for(size_t i = 0; i < loadingStrategies.size(); i++) {
-		connect(loadingStrategies[i],SIGNAL(propertyFieldsLoadedSuccesfully()),
+	for( PropertyFieldLoadingStrategy* strategy : loadingStrategies ) {
+		connect(strategy,SIGNAL(propertyFieldsLoadedSuccesfully()),
 				this,SLOT(onLoadedPropertyFields()));
-		connect(loadingStrategies[i],SIGNAL(
+		connect(strategy,SIGNAL(
 					setupDialog(std::string,
 						std::vector<std::shared_ptr<PropertyFieldDef>>)),
 				&propertyFieldDialog,SLOT(setupForNewFile(std::string,
 											  std::vector<std::shared_ptr<PropertyFieldDef>>)));
-		connect(loadingStrategies[i],SIGNAL(setLoadedProgress(unsigned int)),
+		connect(strategy,SIGNAL(setLoadedProgress(unsigned int)),
 				&propertyFieldDialog,SLOT(setLoadedProgress(unsigned int)));
-		connect(loadingStrategies[i],SIGNAL(addMessage(QString)),
+		connect(strategy,SIGNAL(addMessage(QString)),
 				&propertyFieldDialog,SLOT(addMessage(QString)));
-		connect(loadingStrategies[i],SIGNAL(errorLoadingPropertyField(QString)),
+		connect(strategy,SIGNAL(errorLoadingPropertyField(QString)),
 				&propertyFieldDialog,SLOT(displayError(QString)));
-		connect(loadingStrategies[i],SIGNAL(warningLoadingPropertyField(QString)),
+		connect(strategy,SIGNAL(warningLoadingPropertyField(QString)),
 				&propertyFieldDialog,SLOT(displayWarning(QString)));
 	}
 }

@@ -55,8 +55,8 @@ std::vector<std::pair<glm::vec2,int> >& DynamicOrderedContainerWithMaxSize::getO
 		for(std::map<float,std::vector<std::pair<glm::vec2,int> > >::iterator it = storage.begin();
 			it!=storage.end();it++){
 			std::vector<std::pair<glm::vec2,int> >& current = it->second;
-			for(std::vector<std::pair<glm::vec2,int> >::size_type j = 0;j<current.size();j++)
-				orderedElements.push_back(current[j]);
+			for( std::pair<glm::vec2,int> pair : current )
+				orderedElements.push_back(pair);
 		}
 	}
 	return orderedElements;

@@ -27,9 +27,8 @@ void ModelGeneralStaticsCollector::fillModelStatics(VertexCloud* v){
 void ModelGeneralStaticsCollector::fillModelStatics(PolygonMesh* mesh){
 	std::unordered_map<int,int> verticesCount;
 	std::vector<vis::Polygon*>& polygons = mesh->getPolygons();
-	typedef std::vector<vis::Polygon*>::size_type it_t;
-	for(it_t i = 0;i<polygons.size();i++)
-		verticesCount[polygons[i]->getVertices().size()]++;
+	for(vis::Polygon* polygon : polygons)
+		verticesCount[polygon->getVertices().size()]++;
 
 	ModelStaticsItem item("Polygon Statistics");
 	typedef std::unordered_map<int,int>::const_iterator map_it;
@@ -48,9 +47,8 @@ void ModelGeneralStaticsCollector::fillModelStatics(PolygonMesh* mesh){
 void ModelGeneralStaticsCollector::fillModelStatics(PolyhedronMesh* mesh){
 	std::unordered_map<int,int> facesCount;
 	std::vector<vis::Polyhedron*>& polyhedrons = mesh->getPolyhedrons();
-	typedef std::vector<vis::Polyhedron*>::size_type it_t;
-	for(it_t i = 0;i<polyhedrons.size();i++)
-		facesCount[polyhedrons[i]->getPolyhedronPolygons().size()]++;
+	for(vis::Polyhedron* polyhedron : polyhedrons)
+		facesCount[polyhedron->getPolyhedronPolygons().size()]++;
 
 	ModelStaticsItem item("Polyhedron Statistics");
 	item.addStat("Total Polyhedrons Count:",(int)mesh->getPolyhedrons().size());

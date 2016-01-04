@@ -60,10 +60,10 @@ bool ModelExportVisF::exportModel(PolyhedronMesh* m, std::string filename) throw
 bool ModelExportVisF::exportVertices(VertexCloud* m, std::ofstream& outputFile){
 	std::vector<vis::Vertex*>& vertices = m->getVertices();
 	writeData(outputFile,(int)vertices.size());
-	for(std::vector<vis::Vertex*>::size_type i = 0;i<vertices.size();i++){
-		writeData(outputFile,vertices[i]->getCoords().x);
-		writeData(outputFile,vertices[i]->getCoords().y);
-		writeData(outputFile,vertices[i]->getCoords().z);
+	for( vis::Vertex* vertex : vertices ){
+		writeData(outputFile,vertex->getCoords().x);
+		writeData(outputFile,vertex->getCoords().y);
+		writeData(outputFile,vertex->getCoords().z);
 	}
 	return true;
 }
@@ -71,19 +71,19 @@ bool ModelExportVisF::exportVertices(VertexCloud* m, std::ofstream& outputFile){
 bool ModelExportVisF::exportPolygons(PolygonMesh * m, std::ofstream& outputFile){
 	std::vector<vis::Polygon*>& polygons = m->getPolygons();
 	writeData(outputFile,(int)polygons.size());
-	for(std::vector<vis::Polygon*>::size_type i = 0;i<polygons.size();i++){
-		std::vector<vis::Vertex*>& currentPolygonVertices = polygons[i]->getVertices();
+	for(vis::Polygon* polygon : polygons){
+		std::vector<vis::Vertex*>& currentPolygonVertices = polygon->getVertices();
 		writeData(outputFile,(int)currentPolygonVertices.size());
-		for(std::vector<vis::Vertex*>::size_type j = 0;j<currentPolygonVertices.size();j++)
-			writeData(outputFile,currentPolygonVertices[j]->getPos());
+		for(vis::Vertex* vertex : currentPolygonVertices)
+			writeData(outputFile,vertex->getPos());
 	}
 	//saving neighbors
 	writeData(outputFile,1); //exported with neighborhood info
-	for(std::vector<vis::Polygon*>::size_type i = 0;i<polygons.size();i++){
-		std::vector<vis::Polygon*>& neighbors = polygons[i]->getNeighborPolygons();
+	for( vis::Polygon* polygon : polygons){
+		std::vector<vis::Polygon*>& neighbors = polygon->getNeighborPolygons();
 		writeData(outputFile,(int)neighbors.size());
-		for(std::vector<vis::Polygon*>::size_type j = 0;j<neighbors.size();j++)
-			writeData(outputFile,neighbors[j]->getId());
+		for( vis::Polygon* neighbor : neighbors)
+			writeData(outputFile,neighbor->getId());
 	}
 	return true;
 }
@@ -91,11 +91,11 @@ bool ModelExportVisF::exportPolygons(PolygonMesh * m, std::ofstream& outputFile)
 bool ModelExportVisF::exportPolyhedrons(PolyhedronMesh * m, std::ofstream& outputFile){
 	std::vector<vis::Polyhedron*>& polyhedrons = m->getPolyhedrons();
 	writeData(outputFile,(int)polyhedrons.size());
-	for(std::vector<vis::Polyhedron*>::size_type i = 0;i<polyhedrons.size();i++){
-		std::vector<vis::Polygon*>& currentPolygons = polyhedrons[i]->getPolyhedronPolygons();
+	for( vis::Polyhedron* polyhedron : polyhedrons){
+		std::vector<vis::Polygon*>& currentPolygons = polyhedron->getPolyhedronPolygons();
 		writeData(outputFile,(int)currentPolygons.size());
-		for(std::vector<vis::Polygon*>::size_type j = 0;j<currentPolygons.size();j++)
-			writeData(outputFile,currentPolygons[j]->getId());
+		for(vis::Polygon* polygon : currentPolygons)
+			writeData(outputFile,polygon->getId());
 	}
 	return true;
 }
@@ -112,9 +112,8 @@ bool ModelExportVisF::exportSelectedPolygons(std::unordered_map<int,vis::Element
 	for(it_type it = selectedElements.begin();it!=selectedElements.end();it++){
 		vis::Polygon* polygon = (vis::Polygon*)it->second;
 		std::vector<vis::Vertex*>& polygonVertices = polygon->getVertices();
-		for(std::vector<vis::Vertex*>::size_type v = 0;
-			v<polygonVertices.size();v++)
-			exportedVertices[polygonVertices[v]->getId()] = polygonVertices[v];
+		for( vis::Vertex* vertex : polygonVertices)
+			exportedVertices[vertex->getId()] = vertex;
 	}
 	outputFile << exportedVertices.size() << " " << selectedElements.size() << " 0" << std::endl;
 	typedef std::unordered_map<int,vis::Vertex*>::const_iterator it_vertex_type;
@@ -132,9 +131,8 @@ bool ModelExportVisF::exportSelectedPolygons(std::unordered_map<int,vis::Element
 		vis::Polygon* polygon = (vis::Polygon*)it->second;
 		std::vector<vis::Vertex*>& polygonVertices = polygon->getVertices();
 		outputFile << polygonVertices.size();
-		for(std::vector<vis::Vertex*>::size_type v = 0;
-			v<polygonVertices.size();v++)
-			outputFile << " " << vertexIdVsVertexExportedPos[polygonVertices[v]->getId()];
+		for(vis::Vertex* vertex : polygonVertices)
+			outputFile << " " << vertexIdVsVertexExportedPos[vertex->getId()];
 		outputFile << std::endl;
 	}
 	vertexIdVsVertexExportedPos.clear();
@@ -152,9 +150,8 @@ bool ModelExportVisF::exportSelectedPolyhedrons(std::unordered_map<int,vis::Elem
 	for(it_type it = selectedElements.begin();it!=selectedElements.end();it++){
 		vis::Polyhedron* polyhedron = (vis::Polyhedron*)it->second;
 		std::vector<vis::Polygon*>& polyhedronPolygons = polyhedron->getPolyhedronPolygons();
-		for(std::vector<vis::Polygon*>::size_type v = 0;
-			v<polyhedronPolygons.size();v++){
-			selectedPolygons[polyhedronPolygons[v]->getId()] = polyhedronPolygons[v];
+		for(vis::Polygon* polygon : polyhedronPolygons){
+			selectedPolygons[polygon->getId()] = polygon;
 		}
 	}
 	return exportSelectedPolygons(selectedPolygons,filename);

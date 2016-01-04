@@ -17,15 +17,13 @@ void PolygonPolygonNeighborhoodWorker::doWork(){
 		std::unordered_map<int,int> neighboringPolygons;
 		std::vector<vis::Vertex*>& currentVertices = p[j]->getVertices();
 		std::vector<vis::Polygon*>& neighborPolygons = p[j]->getNeighborPolygons();
-		for(std::vector<vis::Vertex*>::size_type s = 0; s < currentVertices.size(); s++ ) {
-			vis::Vertex* currentVertex = currentVertices[s];
-			std::vector<vis::Polygon*>& pols = currentVertex->getVertexPolygons();
-			for(std::vector<vis::Polygon*>::size_type h = 0; h < pols.size(); h++ ){
-				if(pols[h]==p[j])
+		for( vis::Vertex* vertex : currentVertices ) {
+			for( vis::Polygon* polygon : vertex->getVertexPolygons() ){
+				if(polygon==p[j])
 					continue;
-				if((++neighboringPolygons[pols[h]->getId()])==2){
+				if((++neighboringPolygons[polygon->getId()])==2){
 					//if(pols[h]!=p[j] && !p[j]->isNeighbor(pols[h])){
-					neighborPolygons.push_back(pols[h]);
+					neighborPolygons.push_back(polygon);
 					//	pols[h]->getNeighborPolygons().push_back(p[j]);
 				}
 

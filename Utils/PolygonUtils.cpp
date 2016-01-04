@@ -232,10 +232,9 @@ glm::vec3 getBiggestAnglePoint(glm::vec3& p1,
 	return chosen;
 }
 glm::vec3 getCenter(std::vector<glm::vec3>& vec){
-	typedef std::vector<glm::vec3>::size_type s_type;
 	glm::vec3 center(0.0f,0.0f,0.0f);
-	for(s_type i = 0;i<vec.size();i++)
-		center+=vec[i];
+	for(glm::vec3 pos : vec )
+		center+=pos;
 	center/=(float)vec.size();
 	return center;
 }

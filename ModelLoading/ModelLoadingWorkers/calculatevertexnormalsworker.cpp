@@ -12,18 +12,16 @@ CalculateVertexNormalsWorker::CalculateVertexNormalsWorker(PolygonMesh * mesh,
 	rangeMax = max;
 }
 void CalculateVertexNormalsWorker::doWork(){
-	typedef std::vector<vis::Polygon*>::size_type polygonSizeType;
 	std::vector<vis::Vertex*>& vertices = pmesh->getVertices();
 	for(unsigned int i = rangeMin;i<rangeMax;i++){
 		glm::vec3 normal(0.0f,0.0f,0.0f);
 		vis::Vertex* currentVertex = vertices[i];
 		std::vector<vis::Polygon*>& vertexPolygons = currentVertex->getVertexPolygons();
-		polygonSizeType nPolygons = vertexPolygons.size();
 		int np = 0;
-		if(nPolygons > 0){
-			for( polygonSizeType j = 0; j < nPolygons; j++ ){
-				if(vertexPolygons[j]->isAtSurface()){
-					normal += vertexPolygons[j]->getNormal();
+		if(!vertexPolygons.empty()){
+			for( vis::Polygon* polygon : vertexPolygons ){
+				if(polygon->isAtSurface()){
+					normal += polygon->getNormal();
 					np++;
 				}
 			}

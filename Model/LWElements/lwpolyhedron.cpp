@@ -21,20 +21,18 @@ int vis::LWPolyhedron::getPolygonsCount(){
 glm::vec3 vis::LWPolyhedron::getGeometricCenter(){
 	glm::vec3 geoCenter(0.0f,0.0f,0.0f);
 	int n = 0;
-	for(std::vector<vis::LWPolygon*>::size_type i = 0; i< polygons.size();i++){
-		std::vector<vis::LWVertex*>& polygonVertices = polygons[i]->getVertices();
-		for(std::vector<vis::LWVertex*>::size_type v = 0; v< polygonVertices.size();v++)
-			geoCenter += polygonVertices[v]->getCoords();
-		n += polygonVertices.size();
+	for( vis::LWPolygon* lwPolygon : polygons){
+		for(vis::LWVertex* lwVertex : lwPolygon->getVertices())
+			geoCenter += lwVertex->getCoords();
+		n += lwPolygon->getVertices().size();
 	}
 	geoCenter /= (float)n;
 	return geoCenter;
 }
 
 bool vis::LWPolyhedron::isAtSurface(){
-	typedef std::vector<vis::LWPolygon*>::size_type local_size_type;
-	for(local_size_type i = 0; i<polygons.size();i++)
-		if(polygons[i]->isAtSurface())
+	for( vis::LWPolygon* lwPolygon : polygons )
+		if(lwPolygon->isAtSurface())
 			return true;
 	return false;
 }

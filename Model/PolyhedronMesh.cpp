@@ -14,8 +14,8 @@ PolyhedronMesh::PolyhedronMesh(std::string f):PolygonMesh(f)
 
 PolyhedronMesh::~PolyhedronMesh()
 {
-	for(std::vector<vis::Polyhedron*>::size_type i = 0; i != polyhedrons.size(); i++)
-		delete polyhedrons[i];
+	for(vis::Polyhedron* polyhedron : polyhedrons)
+		delete polyhedron;
 }
 int PolyhedronMesh::getPolyhedronsCount(){
 	return polyhedronsCount;

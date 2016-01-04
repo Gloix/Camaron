@@ -22,7 +22,7 @@ float MinimumInternalAngle::value( vis::Polygon* m ) {
 	if(vec.size()<=2u){
 		minimumAngle = 0.0;
 	}else{
-		for( std::vector<vis::Vertex*>::size_type i = 0; i != vec.size(); i++ ) {
+		for( decltype(vec.size()) i = 0; i != vec.size(); i++ ) {
 			glm::vec3 u = vec[(i+2)%vec.size()]->getCoords()-vec[(i+1)%vec.size()]->getCoords();
 			glm::vec3 v = vec[i]->getCoords()-vec[(i+1)%vec.size()]->getCoords();
 			float dots = std::acos(glm::dot(u,v)/(glm::length(u)*glm::length(v)));

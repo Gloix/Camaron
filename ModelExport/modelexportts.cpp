@@ -19,15 +19,15 @@ bool ModelExportTS::exportModel(PolyhedronMesh* m,
 	std::vector<vis::Vertex*>& vertices = m->getVertices();
 	std::vector<vis::Polyhedron*>& polyhedrons = m->getPolyhedrons();
 	outputFile << vertices.size() << " " << polyhedrons.size() << std::endl;
-	for(std::vector<vis::Vertex*>::size_type i = 0;i<vertices.size();i++){
-		outputFile << vertices[i]->getCoords().x << " ";
-		outputFile << vertices[i]->getCoords().y << " ";
-		outputFile << vertices[i]->getCoords().z << " ";
+	for( vis::Vertex* vertex : vertices){
+		outputFile << vertex->getCoords().x << " ";
+		outputFile << vertex->getCoords().y << " ";
+		outputFile << vertex->getCoords().z << " ";
 		outputFile << "1.0" << std::endl;
 	}
-	for(std::vector<vis::Polyhedron*>::size_type i = 0;i<polyhedrons.size();i++){
+	for( vis::Polyhedron* polyhedron : polyhedrons ){
 		std::vector<vis::Vertex*> currentTetraVertices;
-		PolyhedronUtils::getPolyhedronVertices(polyhedrons[i],currentTetraVertices);
+		PolyhedronUtils::getPolyhedronVertices(polyhedron,currentTetraVertices);
 		if(currentTetraVertices.size()!=4)
 			continue;
 		outputFile << currentTetraVertices[0]->getPos() << " ";

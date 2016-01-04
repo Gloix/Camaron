@@ -7,28 +7,28 @@
 #include "Utils/PolygonUtils.h"
 PolyhedronUtils::PolyhedronUtils(){}
 void addUniqueElement(vis::Vertex* vertex,std::vector<vis::Vertex*>& vertices){
-	for(std::vector<vis::Vertex*>::size_type j = 0; j < vertices.size();j++)
-		if(vertices[j] == vertex)
+	for( vis::Vertex* v : vertices )
+		if(v == vertex)
 			return;//already in vector
 	vertices.push_back(vertex);
 }
 
 void PolyhedronUtils::getPolyhedronVertices(vis::Polyhedron* p, std::vector<vis::Vertex*>& ver){
 	std::vector<vis::Polygon*>& polygons = p->getPolyhedronPolygons();
-	for(std::vector<vis::Polygon*>::size_type i = 0;i<polygons.size();i++){
-		std::vector<vis::Vertex*>& vertices = polygons[i]->getVertices();
-		for(std::vector<vis::Vertex*>::size_type j = 0; j < vertices.size();j++)
-			addUniqueElement(vertices[j],ver);
+	for( vis::Polygon* polygon : polygons ){
+		std::vector<vis::Vertex*>& vertices = polygon->getVertices();
+		for( vis::Vertex* vertex : vertices )
+			addUniqueElement(vertex,ver);
 	}
 }
 
 void PolyhedronUtils::setPolyhedronRModelPositions(vis::Polyhedron* p){
 	std::vector<int>& rmodelPos = p->getRmodelPositions();
 	std::vector<vis::Polygon*>& polygons = p->getPolyhedronPolygons();
-	for(std::vector<vis::Polygon*>::size_type i = 0;i<polygons.size();i++){
-		std::vector<int>& polygonRmodelPos = polygons[i]->getRmodelPositions();
-		for(std::vector<int>::size_type j = 0;j<polygonRmodelPos.size();j++)
-			rmodelPos.push_back(polygonRmodelPos[j]);
+	for( vis::Polygon* polygon : polygons ){
+		std::vector<int>& polygonRmodelPos = polygon->getRmodelPositions();
+		for( int position : polygonRmodelPos)
+			rmodelPos.push_back(position);
 	}
 }
 
@@ -58,20 +58,19 @@ float PolyhedronUtils::getPolyhedronSolidAngleFromVertex(vis::Polyhedron* p,
 	std::vector<vis::Polygon*> projectedFaces;
 	std::vector<vis::Polygon*>& polygons = p->getPolyhedronPolygons();
 	glm::vec3 geocenterToVertexV = v->getCoords()-p->getGeometricCenter();
-	for(std::vector<vis::Polygon*>::size_type i = 0;i<polygons.size();i++){
-		if(glm::dot(p->getOutwardNormal(polygons[i]),
+	for( vis::Polygon* polygon : polygons ){
+		if(glm::dot(p->getOutwardNormal(polygon),
 					geocenterToVertexV)<0)
-			projectedFaces.push_back(polygons[i]);
+			projectedFaces.push_back(polygon);
 	}
 	float totalProjectedArea = 0.0f;
-	for(std::vector<vis::Polygon*>::size_type i = 0;i<projectedFaces.size();i++){
-		std::vector<vis::Vertex*>& polygonVertices = projectedFaces[i]->getVertices();
+	for( vis::Polygon* polygon : projectedFaces ){
+		std::vector<vis::Vertex*>& polygonVertices = polygon->getVertices();
 		if(polygonVertices.size()<=2)
 			continue;
 		std::vector<glm::vec3> translatedCoords;
-		for(std::vector<vis::Vertex*>::size_type j = 0;
-			j<polygonVertices.size();j++)
-			translatedCoords.push_back(glm::normalize(polygonVertices[j]->getCoords()-
+		for( vis::Vertex* vertex : polygonVertices )
+			translatedCoords.push_back(glm::normalize(vertex->getCoords()-
 													  v->getCoords()));
 		//For each vertex, its coordinates are projeted to a sphere centered in v
 		glm::vec3& v0(translatedCoords[0]);

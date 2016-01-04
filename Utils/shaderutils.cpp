@@ -58,11 +58,11 @@ GLuint ShaderUtils::CreateShader(ShaderLoadingData data)
 		return FAIL_CREATING_SHADER;
 	}
 	std::string filedata;
-	for(std::vector<std::string>::size_type i = 0 ; i < data.strShaderFiles.size();i++){
-		QFile qfile(QString::fromStdString(SHADER_RESOURCES+data.strShaderFiles[i]));
+	for( std::string file : data.strShaderFiles ){
+		QFile qfile(QString::fromStdString(SHADER_RESOURCES+file));
 		if(!qfile.open(QIODevice::ReadOnly)){
 			std::cerr << "Shader file not found: " <<
-						 (SHADER_RESOURCES+data.strShaderFiles[i]) << std::endl;
+						 (SHADER_RESOURCES+file) << std::endl;
 			return FAIL_CREATING_SHADER;
 		}
 		QTextStream in(&qfile);
@@ -152,8 +152,8 @@ GLuint ShaderUtils::CreateProgram(const std::vector<ShaderLoadingData> &shaderLi
 		std::cerr << "Failed to Link: "<<std::endl;
 		for(size_t iLoop = 0; iLoop < shaderList.size(); iLoop++){
 			std::vector<std::string> shaderFiles = shaderList[iLoop].strShaderFiles;
-			for(std::vector<std::string>::size_type j = 0;j<shaderFiles.size();j++)
-				std::cerr << shaderFiles[j] <<std::endl;
+			for( std::string file : shaderFiles )
+				std::cerr << file <<std::endl;
 		}
 		std::cerr <<std::endl;
 	}

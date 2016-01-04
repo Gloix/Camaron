@@ -14,8 +14,8 @@ LightWeightPolygonMesh::LightWeightPolygonMesh(std::string s,
 
 LightWeightPolygonMesh::~LightWeightPolygonMesh()
 {
-	for(std::vector<vis::LWPolygon*>::size_type i = 0; i != polygons.size(); i++)
-		delete polygons[i];
+	for(vis::LWPolygon* lwPolygon : polygons)
+		delete lwPolygon;
 }
 
 int LightWeightPolygonMesh::getPolygonsCount() {
@@ -28,8 +28,8 @@ std::vector<vis::LWPolygon*>& LightWeightPolygonMesh::getPolygons() {
 	return polygons;
 }
 void LightWeightPolygonMesh::clean(){
-	for(std::vector<vis::LWPolygon*>::size_type i = 0; i != polygons.size(); i++)
-		delete polygons[i];
+	for(vis::LWPolygon* lwPolygon : polygons)
+		delete lwPolygon;
 	polygons.clear();
 	LightWeightVertexCloud::clean();
 }

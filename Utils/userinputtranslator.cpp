@@ -70,12 +70,10 @@ void UserInputTranslator::deleteSingletonInstance(){
 
 int UserInputTranslator::getTranslatedAction(KeyboardState& kstate){
 	typedef std::map<std::string,std::vector<UserInputTranslationUnit> >::iterator it_type;
-	typedef std::vector<UserInputTranslationUnit>::size_type size_type;
 	for(it_type iterator = keysDictionary.begin();
 		iterator != keysDictionary.end(); iterator++) {
 		std::vector<UserInputTranslationUnit>& units = iterator->second;
-		for(size_type i = 0;i<units.size();i++){
-			UserInputTranslationUnit& unit = units[i];
+		for( UserInputTranslationUnit& unit : units ){
 			if(unit.isItComplete(kstate))
 				return unit.getCode();
 		}

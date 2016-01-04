@@ -16,8 +16,8 @@ float PolyhedronArea::value( vis::Polyhedron* m ) {
 	float totalArea = 0.0;
 
 	std::vector<vis::Polygon*> &vecPol = m->getPolyhedronPolygons();
-	for( std::vector<vis::Polygon*>::size_type i = 0; i != vecPol.size(); i++ ) {
-		float areaPolygon = vecPol[i]->getArea();
+	for( vis::Polygon* polygon : vecPol ) {
+		float areaPolygon = polygon->getArea();
 		totalArea += areaPolygon;
 	}
 	m->addProperty(this->id, totalArea);

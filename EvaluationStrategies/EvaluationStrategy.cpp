@@ -135,12 +135,12 @@ void EvaluationStrategy::evaluateElementsFrom( PolyhedronMesh* p, std::vector<fl
 		return;
 	}
 	std::vector<vis::Polyhedron*> &vec = p->getPolyhedrons();
-	for( std::vector<vis::Polyhedron*>::size_type i = 0; i != vec.size(); i++ ) {
-		float value = vec[i]->evaluateUsingEvaluationStrategy(this);
+	for( vis::Polyhedron* polyhedron : vec) {
+		float value = polyhedron->evaluateUsingEvaluationStrategy(this);
 		if(savePropertyToArray){
-			std::vector<int>& rmodelPositions = vec[i]->getRmodelPositions();
-			for(std::vector<int>::size_type j = 0;j < rmodelPositions.size();j++){
-				values[rmodelPositions[j]] = value;
+			std::vector<int>& rmodelPositions = polyhedron->getRmodelPositions();
+			for(int rmodelPosition : rmodelPositions){
+				values[rmodelPosition] = value;
 			}
 		}
 	}
@@ -153,12 +153,12 @@ void EvaluationStrategy::evaluateElementsFrom( PolygonMesh* p, std::vector<float
 		return;
 	}
 	std::vector<vis::Polygon*> &vec = p->getPolygons();
-	for( std::vector<vis::Polygon*>::size_type i = 0; i != vec.size(); i++ ) {
-		float value = vec[i]->evaluateUsingEvaluationStrategy(this);
+	for( vis::Polygon* polygon : vec ) {
+		float value = polygon->evaluateUsingEvaluationStrategy(this);
 		if(savePropertyToArray){
-			std::vector<int>& rmodelPositions = vec[i]->getRmodelPositions();
-			for(std::vector<int>::size_type j = 0;j < rmodelPositions.size();j++){
-				values[rmodelPositions[j]] = value;
+			std::vector<int>& rmodelPositions = polygon->getRmodelPositions();
+			for(int rmodelPosition : rmodelPositions){
+				values[rmodelPosition] = value;
 			}
 		}
 	}
@@ -168,17 +168,17 @@ void EvaluationStrategy::evaluateElementsFrom( VertexCloud* p, std::vector<float
 	bool savePropertyToArray = values.size()!=0;
 	if( !isFullFilled( ( vis::Vertex* )0 ) ){
 		if(savePropertyToArray)
-			for(std::vector<float>::size_type j = 0;j < values.size();j++)
+			for(decltype(values.size()) j = 0;j < values.size();j++)
 				values[j] = getNullValue();
 		return;
 	}
 	std::vector<vis::Vertex*> &vec = p->getVertices();
-	for( std::vector<vis::Vertex*>::size_type i = 0; i != vec.size(); i++ ) {
-		float value = vec[i]->evaluateUsingEvaluationStrategy(this);
+	for( vis::Vertex* vertex : vec ) {
+		float value = vertex->evaluateUsingEvaluationStrategy(this);
 		if(savePropertyToArray){
-			std::vector<int>& rmodelPositions = vec[i]->getRmodelPositions();
-			for(std::vector<int>::size_type j = 0;j < rmodelPositions.size();j++){
-				values[rmodelPositions[j]] = value;
+			std::vector<int>& rmodelPositions = vertex->getRmodelPositions();
+			for(int rmodelPosition : rmodelPositions){
+				values[rmodelPosition] = value;
 			}
 		}
 	}

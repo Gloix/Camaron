@@ -49,9 +49,9 @@ void PropertyFieldLoadDialog::setupForPropertyFields(std::string filename, std::
 	ui->progressBar->setValue(0);
 	ui->listWidget_select_property_field->clear();
 	ui->listWidget_select_property_field->setEnabled(true);
-	for(decltype(propertyFieldDefs.size()) i=0;i<propertyFieldDefs.size();i++) {
+	for(std::shared_ptr<PropertyFieldDef> field : propertyFieldDefs) {
 		QListWidgetItem* listItem = new QListWidgetItem(
-					QString::fromStdString( propertyFieldDefs[i]->getName() ),
+					QString::fromStdString( field->getName() ),
 					ui->listWidget_select_property_field);
 		listItem->setCheckState(Qt::Unchecked);
 		ui->listWidget_select_property_field->addItem(listItem);

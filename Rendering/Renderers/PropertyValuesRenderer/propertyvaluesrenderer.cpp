@@ -93,8 +93,7 @@ bool PropertyValuesRenderer::rmodelChanged(RModel* rmodel){
 		glDeleteBuffers(1,&this->vertexPropertyValueBuffer);
 	propertyData.clear();
 	propertyData.resize(rmodel->vertexFlagsAttribute.size());
-	for(std::vector<float>::size_type i = 0; i< propertyData.size();i++)
-		propertyData[i] = config->evaluationStrategy->getNullValue();
+	propertyData.assign(propertyData.size(),config->evaluationStrategy->getNullValue());
 	vertexPropertyValueBuffer = ShaderUtils::createDataBuffer<GLfloat>(propertyData);
 	return true;
 }

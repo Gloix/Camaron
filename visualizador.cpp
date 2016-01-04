@@ -103,7 +103,7 @@ Visualizador::Visualizador(QWidget *parent) :
 	connect(&propertyFieldDialog,
 			SIGNAL(onReadyToLoad(std::string, std::vector<std::shared_ptr<PropertyFieldDef> >)),
 			this,
-			SLOT(loadPropertyFields(std::string, std::vector<std::shared_ptr<PropertyFieldDef> >)));
+			SLOT(loadPropertyFieldsQThread(std::string, std::vector<std::shared_ptr<PropertyFieldDef> >)));
 	modelLoadingFactory = ModelLoadingFactory::getSingletonInstance();
 	modelLoadingFactoryLW = ModelLoadingFactory::getLightWeightSingletonInstance();
 	propertyFieldLoadingFactory = PropertyFieldLoadingFactory::getSingletonInstance();
@@ -508,7 +508,7 @@ void Visualizador::importFilePropertyField() {
 													fileFormatsLW.c_str());
 	if(filename.size()==0)
 		return;
-	openPropertyFieldDialogFromFilePathQThread(filename);
+	openPropertyFieldDialogFromFilePath(filename);
 }
 
 void Visualizador::openModelFromFilePath(QString filename, bool addToRecentFiles){
@@ -598,7 +598,7 @@ void Visualizador::openModelFromFilePathQThread(QString filename,bool lw){
 	}
 }
 
-void Visualizador::openPropertyFieldDialogFromFilePathQThread(QString filename){
+void Visualizador::openPropertyFieldDialogFromFilePath(QString filename){
 	try{
 		PropertyFieldLoadingStrategy* selectedStrategy;
 		selectedStrategy = propertyFieldLoadingFactory->loadPropertyFieldQThread(filename.toStdString());
@@ -629,7 +629,7 @@ void Visualizador::openPropertyFieldDialogFromFilePathQThread(QString filename){
 	}
 }
 
-void Visualizador::loadPropertyFields(std::string filename,std::vector<std::shared_ptr<PropertyFieldDef>> props) {
+void Visualizador::loadPropertyFieldsQThread(std::string filename,std::vector<std::shared_ptr<PropertyFieldDef>> props) {
 	std::cout << "Loading property field " << filename;
 	try{
 		//this->customGLViewer->refreshHelpers();

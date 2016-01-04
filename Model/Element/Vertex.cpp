@@ -56,9 +56,8 @@ void vis::Vertex::setNormal(glm::vec3 newNormal){
 DOUBLE_DISPATCH_ELEMENT_DEF(vis::Vertex)
 
 bool vis::Vertex::isAtSurface(){
-	typedef std::vector<vis::Polygon*>::size_type local_size_type;
-	for(local_size_type i = 0; i<polygons.size();i++)
-		if(polygons[i]->isAtSurface())
+	for( vis::Polygon* polygon : polygons )
+		if(polygon->isAtSurface())
 			return true;
 	return false;
 }

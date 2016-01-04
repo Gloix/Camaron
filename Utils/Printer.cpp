@@ -22,9 +22,9 @@ void Printer::print( vis::Vertex* v ) {
 void Printer::print( vis::Polygon* p ) {
 	std::cout << "Polygon " << p->getId() << ":\n";
 	std::vector<vis::Vertex*> &vecPol = p->getVertices();
-	for( std::vector<vis::Vertex*>::size_type i = 0; i != vecPol.size(); i++ ) {
+	for( vis::Vertex* vertex : vecPol ) {
 		std::cout << "\t";
-		Printer::print( vecPol[i] );
+		Printer::print( vertex );
 		std::cout << std::endl;
 	}
 	std::cout << "Neighboring Polygons: ";

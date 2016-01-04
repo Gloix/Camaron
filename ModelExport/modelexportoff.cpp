@@ -21,16 +21,16 @@ bool ModelExportOFF::exportModel(PolygonMesh* m, std::string filename) throw(Exc
 	std::vector<vis::Polygon*>& polygons = m->getPolygons();
 	outputFile << vertices.size() << " " << polygons.size() << " 0" << "\n";
 
-	for(std::vector<vis::Vertex*>::size_type i = 0;i<vertices.size();i++){
-		outputFile << vertices[i]->getCoords().x << " ";
-		outputFile << vertices[i]->getCoords().y << " ";
-		outputFile << vertices[i]->getCoords().z << "\n";
+	for( vis::Vertex* vertex : vertices){
+		outputFile << vertex->getCoords().x << " ";
+		outputFile << vertex->getCoords().y << " ";
+		outputFile << vertex->getCoords().z << "\n";
 	}
-	for(std::vector<vis::Polygon*>::size_type i = 0;i<polygons.size();i++){
-		std::vector<vis::Vertex*>& currentPolygonVertices = polygons[i]->getVertices();
+	for( vis::Polygon* polygon : polygons ){
+		std::vector<vis::Vertex*>& currentPolygonVertices = polygon->getVertices();
 		outputFile << currentPolygonVertices.size() << " ";
-		for(std::vector<vis::Vertex*>::size_type j = 0;j<currentPolygonVertices.size();j++){
-			outputFile << currentPolygonVertices[j]->getPos() << " ";
+		for( vis::Vertex* vertex : currentPolygonVertices ){
+			outputFile << vertex->getPos() << " ";
 
 		}
 		outputFile << "\n";
@@ -46,16 +46,16 @@ bool ModelExportOFF::exportModel(PolyhedronMesh* m, std::string filename) throw(
 	std::vector<vis::Vertex*>& vertices = m->getVertices();
 	std::vector<vis::Polygon*>& polygons = m->getPolygons();
 	outputFile << vertices.size() << " " << polygons.size() << " 0" << "\n";
-	for(std::vector<vis::Vertex*>::size_type i = 0;i<vertices.size();i++){
-		outputFile << vertices[i]->getCoords().x << " ";
-		outputFile << vertices[i]->getCoords().y << " ";
-		outputFile << vertices[i]->getCoords().z << "\n";
+	for( vis::Vertex* vertex : vertices ){
+		outputFile << vertex->getCoords().x << " ";
+		outputFile << vertex->getCoords().y << " ";
+		outputFile << vertex->getCoords().z << "\n";
 	}
-	for(std::vector<vis::Polygon*>::size_type i = 0;i<polygons.size();i++){
-		std::vector<vis::Vertex*>& currentPolygonVertices = polygons[i]->getVertices();
+	for(vis::Polygon* polygon : polygons){
+		std::vector<vis::Vertex*>& currentPolygonVertices = polygon->getVertices();
 		outputFile << currentPolygonVertices.size() << " ";
-		for(std::vector<vis::Vertex*>::size_type j = 0;j<currentPolygonVertices.size();j++){
-			outputFile << currentPolygonVertices[j]->getPos() << " ";
+		for(vis::Vertex* vertex : currentPolygonVertices){
+			outputFile << vertex->getPos() << " ";
 
 		}
 		outputFile << "\n";
@@ -74,9 +74,8 @@ bool exportSelectedPolygons(std::unordered_map<int,vis::Element*>& selectedEleme
 	for(it_type it = selectedElements.begin();it!=selectedElements.end();it++){
 		vis::Polygon* polygon = (vis::Polygon*)it->second;
 		std::vector<vis::Vertex*>& polygonVertices = polygon->getVertices();
-		for(std::vector<vis::Vertex*>::size_type v = 0;
-			v<polygonVertices.size();v++)
-			exportedVertices[polygonVertices[v]->getId()] = polygonVertices[v];
+		for( vis::Vertex* vertex : polygonVertices)
+			exportedVertices[vertex->getId()] = vertex;
 	}
 	outputFile << exportedVertices.size() << " " << selectedElements.size() << " 0" << "\n";
 	typedef std::unordered_map<int,vis::Vertex*>::const_iterator it_vertex_type;
@@ -94,9 +93,8 @@ bool exportSelectedPolygons(std::unordered_map<int,vis::Element*>& selectedEleme
 		vis::Polygon* polygon = (vis::Polygon*)it->second;
 		std::vector<vis::Vertex*>& polygonVertices = polygon->getVertices();
 		outputFile << polygonVertices.size();
-		for(std::vector<vis::Vertex*>::size_type v = 0;
-			v<polygonVertices.size();v++)
-			outputFile << " " << vertexIdVsVertexExportedPos[polygonVertices[v]->getId()];
+		for( vis::Vertex* vertex : polygonVertices)
+			outputFile << " " << vertexIdVsVertexExportedPos[vertex->getId()];
 		outputFile << "\n";
 	}
 	vertexIdVsVertexExportedPos.clear();
@@ -112,9 +110,8 @@ bool exportSelectedPolyhedrons(std::unordered_map<int,vis::Element*>& selectedEl
 	for(it_type it = selectedElements.begin();it!=selectedElements.end();it++){
 		vis::Polyhedron* polyhedron = (vis::Polyhedron*)it->second;
 		std::vector<vis::Polygon*>& polyhedronPolygons = polyhedron->getPolyhedronPolygons();
-		for(std::vector<vis::Polygon*>::size_type v = 0;
-			v<polyhedronPolygons.size();v++){
-			selectedPolygons[polyhedronPolygons[v]->getId()] = polyhedronPolygons[v];
+		for( vis::Polygon* polygon : polyhedronPolygons){
+			selectedPolygons[polygon->getId()] = polygon;
 		}
 	}
 	return exportSelectedPolygons(selectedPolygons,filename);

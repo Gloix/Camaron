@@ -59,8 +59,8 @@ QThread* QtUtils::runWorkerInThread(QtWorkerBase *worker, bool autodelete){
 void QtUtils::runWorkersInThread(std::vector<QtWorkerBase*>& workers,
 												 bool wait){
 	std::vector<QThread*> threads;
-	for(std::vector<QtWorkerBase*>::size_type i = 0;i<workers.size();i++){
-		threads.push_back(runWorkerInThread(workers[i],!wait));
+	for( QtWorkerBase* worker : workers ){
+		threads.push_back(runWorkerInThread(worker,!wait));
 	}
 	bool throwBadAlloc = false;
 	if(wait){

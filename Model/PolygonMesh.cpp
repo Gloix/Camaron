@@ -18,8 +18,8 @@ PolygonMesh::PolygonMesh(std::string f,int nver, int npol):VertexCloud(f) {
 
 PolygonMesh::~PolygonMesh()
 {
-	for(std::vector<vis::Polygon*>::size_type i = 0; i != polygons.size(); i++)
-		delete polygons[i];
+	for(vis::Polygon* polygon : polygons)
+		delete polygon;
 }
 
 int PolygonMesh::getPolygonsCount() {

@@ -120,8 +120,8 @@ bool ModelLoadingVisF::readVertices( VertexCloud* mesh){
 	}
 	if(fileEndianness != Endianess::findEndianness()){
 		//fix endianness
-		for(std::vector<vis::Vertex*>::size_type i = 0;i<vertices.size();i++){
-			glm::vec3& currentCoords = vertices[i]->getCoords();
+		for(vis::Vertex* vertex : vertices){
+			glm::vec3& currentCoords = vertex->getCoords();
 			currentCoords.x = Endianess::reverseBytes(currentCoords.x);
 			currentCoords.y = Endianess::reverseBytes(currentCoords.y);
 			currentCoords.z = Endianess::reverseBytes(currentCoords.z);

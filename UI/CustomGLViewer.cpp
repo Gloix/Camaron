@@ -168,8 +168,8 @@ void CustomGLViewer::initializeGL()
 void CustomGLViewer::paintUsingRenderers(){
 	this->renderer->draw(this->rmodel);
 	std::vector<Renderer*>& second = secondaryRenderers.getRenderers();
-	for(std::vector<Renderer*>::size_type i = 0;i<second.size();i++)
-		if(second[i]!=renderer)second[i]->draw(this->rmodel);
+	for( Renderer* r : second )
+		if(r!=renderer)r->draw(this->rmodel);
 
 	SceneHelpers::getInstance()->drawHelpers(this->rmodel);
 }

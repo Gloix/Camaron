@@ -31,11 +31,10 @@ void vis::Polyhedron::setGeoCenter(glm::vec3 g){
 void vis::Polyhedron::calculateGeoCenter(){
 	geoCenter = glm::vec3(0.0f,0.0f,0.0f);
 	int n = 0;
-	for(std::vector<vis::Polygon*>::size_type i = 0; i< polygons.size();i++){
-		std::vector<vis::Vertex*>& polygonVertices = polygons[i]->getVertices();
-		for(std::vector<vis::Vertex*>::size_type v = 0; v< polygonVertices.size();v++)
-			geoCenter += polygonVertices[v]->getCoords();
-		n += polygonVertices.size();
+	for( vis::Polygon* polygon : polygons){
+		for( vis::Vertex* vertex : polygon->getVertices())
+			geoCenter += vertex->getCoords();
+		n += polygon->getVertices().size();
 	}
 	geoCenter /= (float)n;
 }
@@ -57,8 +56,8 @@ glm::vec3 vis::Polyhedron::getOutwardNormal(vis::Polygon* p){
 float vis::Polyhedron::getArea(){
 	if(area == NULL_VALUE){
 		area = 0.0f;
-		for(std::vector<vis::Polygon*>::size_type i = 0; i< polygons.size();i++)
-			area += polygons[i]->getArea();
+		for(vis::Polygon* polygon : polygons )
+			area += polygon->getArea();
 	}
 	return area;
 }
@@ -66,23 +65,21 @@ float vis::Polyhedron::getArea(){
 float vis::Polyhedron::getVolume(){
 	if(volume == NULL_VALUE){
 		volume = 0.0f;
-		for(std::vector<vis::Polygon*>::size_type i = 0; i< polygons.size();i++){
-			vis::Polygon* current = polygons[i];
-			glm::vec3 inwardNormal = getInwardNormal(polygons[i]);
+		for( vis::Polygon* polygon : polygons){
+			glm::vec3 inwardNormal = getInwardNormal(polygon);
 			glm::vec3 inwardVectorF = geoCenter -
-									  current->getVertices()[0]->getCoords();
+									  polygon->getVertices()[0]->getCoords();
 			//distance: distance from geoCenter to polygon plane
 			float distance = glm::dot(inwardNormal,
 									  inwardVectorF);//no need to divide by normal module (normal is normalized)
-			volume += distance*current->getArea()/3.0f;
+			volume += distance*polygon->getArea()/3.0f;
 		}
 	}
 	return volume;
 }
 bool vis::Polyhedron::isAtSurface(){
-	typedef std::vector<vis::Polygon*>::size_type local_size_type;
-	for(local_size_type i = 0; i<polygons.size();i++)
-		if(polygons[i]->isAtSurface())
+	for( vis::Polygon* polygon : polygons )
+		if(polygon->isAtSurface())
 			return true;
 	return false;
 }

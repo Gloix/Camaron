@@ -9,8 +9,8 @@ LightWeightVertexCloud::LightWeightVertexCloud(std::string s):
 }
 LightWeightVertexCloud::~LightWeightVertexCloud()
 {
-	for( std::vector<vis::LWVertex*>::size_type i = 0; i != vertices.size(); i++ )
-		delete vertices[i];
+	for( vis::LWVertex* lwVertex : vertices )
+		delete lwVertex;
 }
 
 int LightWeightVertexCloud::getVerticesCount() {
@@ -31,8 +31,8 @@ void LightWeightVertexCloud::set2D(bool b){
 	_2d = b;
 }
 void LightWeightVertexCloud::clean(){
-	for(std::vector<vis::LWVertex*>::size_type i = 0; i != vertices.size(); i++)
-		delete vertices[i];
+	for( vis::LWVertex* vertex : vertices )
+		delete vertex;
 	vertices.clear();
 	Model::clean();
 }

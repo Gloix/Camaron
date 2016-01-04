@@ -41,12 +41,12 @@ void ConvexGeometryDefinedByPlanes::calculateCorners(){
 			planesIntersections.push_back(currentPlaneCorners);
 	}
 	//discardInsidePoints();
-	for(std::vector<std::vector<glm::vec3> >::size_type i = 0;i<planesIntersections.size();i++)
-		PolygonUtils::orderVerticesToCCWPolygon(planesIntersections[i]);
+	for( std::vector<glm::vec3> intersections : planesIntersections )
+		PolygonUtils::orderVerticesToCCWPolygon(intersections);
 	if(fromNormals){
 		//do
-		for(std::vector<std::vector<glm::vec3> >::size_type i = 0;i<planesIntersections.size();i++){
-			std::vector<glm::vec3>& currentPol = planesIntersections[i];
+		for( std::vector<glm::vec3> intersections : planesIntersections ){
+			std::vector<glm::vec3>& currentPol = intersections;
 			for(std::vector<glm::vec3>::size_type j = 1;j<currentPol.size()-1;j++){
 				triangleVertices.push_back(currentPol[0]);
 				triangleVertices.push_back(currentPol[j]);
@@ -68,14 +68,14 @@ void ConvexGeometryDefinedByPlanes::discardInsidePoints(){
 				if(!planes[p].isLeft(points[j])){
 					points[j] = points[points.size()-1];
 					points.pop_back();
-					j--;;//move back j, to check same position again
+					j--;//move back j, to check same position again
 					if(!points.size()){
 						j = points.size();//end j
 						planesIntersections[i] = planesIntersections[planesIntersections.size()-1];
 						planesIntersections.pop_back();
 						i--;//move back i
 					}
-					p = planes.size();//end p
+					break;
 				}
 			}
 		}
@@ -87,23 +87,23 @@ std::vector<Plane>& ConvexGeometryDefinedByPlanes::getOriginalPlanes(){
 std::vector<Plane>& ConvexGeometryDefinedByPlanes::getMovedPlanes(){
 	if(movedPlanes.size()!=planes.size()){
 		movedPlanes.clear();
-		for(std::vector<Plane>::size_type i = 0;i<planes.size();i++)
-			movedPlanes.push_back(planes[i]);
+		for( Plane plane : planes)
+			movedPlanes.push_back(plane);
 	}
 	return movedPlanes;
 }
 
 void ConvexGeometryDefinedByPlanes::move(glm::mat4 matrix){
 	movedPlanes.clear();
-	for(std::vector<Plane>::size_type i = 0;i<planes.size();i++)
-		movedPlanes.push_back(Plane(glm::vec3(matrix*glm::vec4(planes[i].getOrigin(),1.0f)),
-									glm::mat3(matrix)*planes[i].getNormal()));
+	for( Plane plane : planes )
+		movedPlanes.push_back(Plane(glm::vec3(matrix*glm::vec4(plane.getOrigin(),1.0f)),
+									glm::mat3(matrix)*plane.getNormal()));
 
 }
 
 bool ConvexGeometryDefinedByPlanes::isPointInside(glm::vec3 vec){
-	for(std::vector<Plane>::size_type j = 0;j<movedPlanes.size();j++){
-		if(!movedPlanes[j].isLeft(vec)){
+	for( Plane plane : movedPlanes ){
+		if(!plane.isLeft(vec)){
 			return false;
 		}
 	}
@@ -113,10 +113,9 @@ bool ConvexGeometryDefinedByPlanes::isPointInside(glm::vec3 vec){
 bool ConvexGeometryDefinedByPlanes::loadDataToGPU(glm::mat4 matrix){
 	//upload normal data
 	std::vector<glm::vec3> normals;
-	for(std::vector<Plane>::size_type i = 0;i<planes.size();i++){
-		Plane& p = planes[i];
-		normals.push_back(p.getOrigin());
-		normals.push_back(p.getOrigin()+p.getNormal()*config->normalLength);
+	for( Plane plane : planes ){
+		normals.push_back(plane.getOrigin());
+		normals.push_back(plane.getOrigin()+plane.getNormal()*config->normalLength);
 	}
 	normalsBufferObject = ShaderUtils::createDataBuffer<glm::vec3>(normals);
 	if(normalsBufferObject)
@@ -124,10 +123,9 @@ bool ConvexGeometryDefinedByPlanes::loadDataToGPU(glm::mat4 matrix){
 	if(triangleVerticesBufferObject && planes.size()){
 		OpenGLUtils::deleteTexture(planesDataTextureId);
 		std::vector<glm::vec4> planeTextureData;
-		for(std::vector<Plane>::size_type it = 0;it<planes.size();++it){
-			Plane& p = planes[it];
-			planeTextureData.push_back(glm::vec4(glm::normalize(glm::mat3(matrix)*p.getNormal()),1.0f));
-			planeTextureData.push_back(matrix*glm::vec4(p.getOrigin(),1.0f));
+		for( Plane plane : planes ){
+			planeTextureData.push_back(glm::vec4(glm::normalize(glm::mat3(matrix)*plane.getNormal()),1.0f));
+			planeTextureData.push_back(matrix*glm::vec4(plane.getOrigin(),1.0f));
 		}
 		planesDataTextureId = OpenGLUtils::uploadRaw1DTexture((unsigned char*)&planeTextureData[0],
 															  planes.size()*2u,

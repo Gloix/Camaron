@@ -49,10 +49,9 @@ bool ChartingWidget::event(QEvent *event)
 void ChartingWidget::paintEvent(QPaintEvent * /* event */)
 {
 	QPainter painter(this);
-	typedef std::vector<int>::size_type iter;
 	painter.setPen(Qt::black);
 	painter.setBrush(chartColor);
-	for(iter i = 0; i < countData.size();i ++)
+	for(std::vector<int>::size_type i = 0; i < countData.size();i ++)
 		this->drawData(countData[i], i,&painter);
 
 	//painter.setPen(pen);
@@ -86,14 +85,13 @@ void ChartingWidget::setCountData(std::vector<BarShape>& counts){
 	if(counts.size()==0)
 		return;
 	minCount = maxCount = counts[0].count;
-	typedef std::vector<int>::size_type iter;
-	for(iter i = 0; i < counts.size();i ++){
-		minCount = std::min(minCount, counts[i].count);
-		maxCount = std::max(maxCount, counts[i].count);
-		ss << "Count: " << counts[i].count << "\n";
-		ss << "Range: [" << counts[i].rangeMin << ", " << counts[i].rangeMax <<"]\n";
-		ss << "Percent: " << counts[i].percent << "%\n ";
-		countData.push_back(BarShape(counts[i].count,counts[i].rangeMin,counts[i].rangeMax,counts[i].percent,QString(ss.str().c_str())));
+	for( BarShape barShape : counts ){
+		minCount = std::min(minCount, barShape.count);
+		maxCount = std::max(maxCount, barShape.count);
+		ss << "Count: " << barShape.count << "\n";
+		ss << "Range: [" << barShape.rangeMin << ", " << barShape.rangeMax <<"]\n";
+		ss << "Percent: " << barShape.percent << "%\n ";
+		countData.push_back(BarShape(barShape.count,barShape.rangeMin,barShape.rangeMax,barShape.percent,QString(ss.str().c_str())));
 		ss.str(std::string());
 	}
 }

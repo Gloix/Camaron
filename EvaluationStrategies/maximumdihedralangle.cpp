@@ -16,8 +16,8 @@ float MaximumDihedralAngle::value( vis::Polygon* m ) {
 		return m->getProperty(this->id);
 	float maximumAngle = -std::numeric_limits<float>::max();
 	std::vector<vis::Polygon*> &vecPol = m->getNeighborPolygons();
-	for( std::vector<vis::Polygon*>::size_type i = 0; i != vecPol.size(); i++ ) {
-		float currentAngle = PolygonUtils::getDihedralAngle(m,vecPol[i]);
+	for( vis::Polygon* polygon : vecPol ) {
+		float currentAngle = PolygonUtils::getDihedralAngle(m,polygon);
 		maximumAngle = std::max(currentAngle,maximumAngle);
 	}
 	m->addProperty(this->id, maximumAngle);

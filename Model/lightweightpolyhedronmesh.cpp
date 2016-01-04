@@ -10,8 +10,8 @@ LightWeightPolyhedronMesh::LightWeightPolyhedronMesh(std::string f):
 
 LightWeightPolyhedronMesh::~LightWeightPolyhedronMesh()
 {
-	for(std::vector<vis::LWPolyhedron*>::size_type i = 0; i != polyhedrons.size(); i++)
-		delete polyhedrons[i];
+	for(vis::LWPolyhedron* lwPolyhedron : polyhedrons)
+		delete lwPolyhedron;
 }
 int LightWeightPolyhedronMesh::getPolyhedronsCount(){
 	return polyhedronsCount;
@@ -24,8 +24,8 @@ std::vector<vis::LWPolyhedron*>& LightWeightPolyhedronMesh::getPolyhedrons(){
 	return polyhedrons;
 }
 void LightWeightPolyhedronMesh::clean(){
-	for(std::vector<vis::LWPolyhedron*>::size_type i = 0; i != polyhedrons.size(); i++)
-		delete polyhedrons[i];
+	for( vis::LWPolyhedron* lwPolyhedron : polyhedrons)
+		delete lwPolyhedron;
 	polyhedrons.clear();
 	LightWeightPolygonMesh::clean();
 }

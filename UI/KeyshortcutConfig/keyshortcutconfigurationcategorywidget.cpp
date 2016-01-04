@@ -11,10 +11,9 @@ KeyShortcutConfigurationCategoryWidget::KeyShortcutConfigurationCategoryWidget(s
 {
 	ui->setupUi(this);
 	ui->label_cat_name->setText(QString::fromStdString(categoryname));
-	for(std::vector<UserInputTranslationUnit>::size_type i = 0;
-		i<translationUnits.size();i++){
+	for( UserInputTranslationUnit uInputTranslationUnit : translationUnits ){
 		KeyShortcutConfigurationItemWidget* unit;
-		unit = new KeyShortcutConfigurationItemWidget(translationUnits[i],this);
+		unit = new KeyShortcutConfigurationItemWidget(uInputTranslationUnit,this);
 		ui->widget_unit_container->layout()->addWidget(unit);
 	}
 }

@@ -13,23 +13,19 @@ PropertyFieldLoadingFactory::PropertyFieldLoadingFactory(): RegistryTemplate<std
 
 PropertyFieldLoadingFactory::~PropertyFieldLoadingFactory()
 {
-	typedef std::vector<PropertyFieldLoadingStrategy*>::size_type it_type;
-	for(it_type iterator = 0; iterator < propertyFieldLoadingStrategies.size();iterator++) {
-		// iterator->first = key
-		PropertyFieldLoadingStrategy* p = propertyFieldLoadingStrategies[iterator];
+	for( PropertyFieldLoadingStrategy* strategy : propertyFieldLoadingStrategies) {
 
 #ifdef DEBUG_MOD
 		std::cout << "Deleting Property Field Loading Strategy from Factory: ";
-		std::cout << p->getFileFormats()[0].fileFormatName << std::endl;
+		std::cout << strategy->getFileFormats()[0].fileFormatName << std::endl;
 #endif
-		delete p;
+		delete strategy;
 	}
 }
 bool PropertyFieldLoadingFactory::addNewPropertyFieldLoadingStrategy( PropertyFieldLoadingStrategy* pfl){
 	bool added = false;
-	for(std::vector<AcceptedFileFormat>::size_type i = 0;i < pfl->getFileFormats().size();i++){
-		AcceptedFileFormat current = pfl->getFileFormats()[i];
-		this->registerInstance(current.fileFormatExt,pfl);
+	for( AcceptedFileFormat& fileFormat : pfl->getFileFormats()){
+		this->registerInstance(fileFormat.fileFormatExt,pfl);
 		added = true;
 	}
 	if(added)

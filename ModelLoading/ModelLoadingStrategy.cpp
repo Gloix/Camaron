@@ -33,12 +33,9 @@ ModelLoadingStrategy::~ModelLoadingStrategy()
 	//dtor
 }
 void ModelLoadingStrategy::completeVertexPolygonRelations(PolygonMesh* pmesh){
-	std::vector<vis::Polygon*> &p = pmesh->getPolygons();
-	for( std::vector<vis::Polygon*>::size_type j = 0; j < p.size(); j++ ) {
-		vis::Polygon* current = p[j];
-		std::vector<vis::Vertex*> &polygonVertices = current->getVertices();
-		for( std::vector<vis::Vertex*>::size_type i = 0; i < polygonVertices.size(); i++){
-			polygonVertices[i]->getVertexPolygons().push_back(current);
+	for( vis::Polygon* polygon : pmesh->getPolygons() ) {
+		for( vis::Vertex* vertex : polygon->getVertices()){
+			vertex->getVertexPolygons().push_back(polygon);
 		}
 	}
 }
@@ -70,13 +67,9 @@ std::vector<AcceptedFileFormat>& ModelLoadingStrategy::getFileFormats(){
 }
 
 void ModelLoadingStrategy::completePolygonPolyhedronRelations(PolyhedronMesh* m){
-	typedef std::vector<vis::Polyhedron*>::size_type polyhedronSizeType;
-	typedef std::vector<vis::Polygon*>::size_type polygonSizeType;
-	std::vector<vis::Polyhedron*>& polyhedrons = m->getPolyhedrons();
-	for(polyhedronSizeType i = 0;i<polyhedrons.size();i++){
-		std::vector<vis::Polygon*>& polygons = polyhedrons[i]->getPolyhedronPolygons();
-		for(polygonSizeType j = 0; j<polygons.size(); j++){
-			polygons[j]->addPolyhedron(polyhedrons[i]);
+	for(vis::Polyhedron* polyhedron : m->getPolyhedrons()){
+		for(vis::Polygon* polygon : polyhedron->getPolyhedronPolygons()){
+			polygon->addPolyhedron(polyhedron);
 		}
 	}
 }
@@ -102,15 +95,11 @@ void ModelLoadingStrategy::calculateNormalsPolygons(PolygonMesh* m, int nThreads
 void ModelLoadingStrategy::calculateNormalsVertices(LightWeightPolygonMesh* m,bool nThreads){
 	if(nThreads<=1 || m->getPolygonsCount()<10000)
 		nThreads = 1;
-	typedef std::vector<vis::LWPolygon*>::size_type polygonSizeType;
-	typedef std::vector<vis::LWVertex*>::size_type verticesSizeType;
-	std::vector<vis::LWPolygon*>& polygons = m->getPolygons();
-	for(polygonSizeType i = 0;i<polygons.size();i++){
-		vis::LWPolygon* current = polygons[i];
-		if(current->isAtSurface()){
-			std::vector<vis::LWVertex*>& currentVertices = current->getVertices();
-			for(verticesSizeType j = 0;j<currentVertices.size();j++){
-				currentVertices[j]->setNormal(currentVertices[j]->getNormal()+current->getNormal());
+	for( vis::LWPolygon* lwPolygon : m->getPolygons() ){
+		if(lwPolygon->isAtSurface()){
+			std::vector<vis::LWVertex*>& currentVertices = lwPolygon->getVertices();
+			for( vis::LWVertex* lwVertex : currentVertices ){
+				lwVertex->setNormal(lwVertex->getNormal()+lwPolygon->getNormal());
 			}
 		}
 	}

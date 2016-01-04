@@ -171,18 +171,18 @@ bool ConvexGeometryIntersectionRenderer::createInsideAttributeBufferObject(RMode
 	convexGeometry->move(rmodel->getMV());
 	VertexCloud* model = (VertexCloud*)rmodel->getOriginalModel();
 	std::vector<vis::Vertex*>& polygons = model->getVertices();
-	for(std::vector<vis::Vertex*>::size_type i = 0;i<polygons.size();i++){
-		glm::vec4 newPosition = rmodel->getMV()*glm::vec4(polygons[i]->getGeometricCenter(),1.0f);
+	for( vis::Vertex* vertex : polygons ){
+		glm::vec4 newPosition = rmodel->getMV()*glm::vec4(vertex->getGeometricCenter(),1.0f);
 		newPosition/=newPosition.w;
 		bool in = convexGeometry->isPointInside(glm::vec3(newPosition));
 		if(configRenderer->invertIntersection)
 			in = !in;
-		std::vector<int>& rmodelPos = polygons[i]->getRmodelPositions();
-		for(std::vector<int>::size_type j = 0;j<rmodelPos.size();j++){
+		std::vector<int>& rmodelPos = vertex->getRmodelPositions();
+		for( int position : rmodelPos){
 			if(in)
-				inside[rmodelPos[j]].enableFlag(RVertexFlagAttribute::INSIDE_CONVEX_GEOMETRY);
+				inside[position].enableFlag(RVertexFlagAttribute::INSIDE_CONVEX_GEOMETRY);
 			else
-				inside[rmodelPos[j]].disableFlag(RVertexFlagAttribute::INSIDE_CONVEX_GEOMETRY);
+				inside[position].disableFlag(RVertexFlagAttribute::INSIDE_CONVEX_GEOMETRY);
 
 		}
 	}
@@ -286,8 +286,8 @@ bool ConvexGeometryIntersectionRenderer::selectElementFollowModel( vis::Element 
 	//all vertices must be inside the convex geometry
 	std::vector<int>& rmodelPos = e->getRmodelPositions();
 	std::vector<RVertexFlagAttribute>& rvertexflags = rmodel->vertexFlagsAttribute;
-	for(std::vector<int>::size_type i = 0;i<rmodelPos.size();i++)
-		if(!rvertexflags[rmodelPos[i]].
+	for( int position : rmodelPos )
+		if(!rvertexflags[position].
 				isFlagEnabled(RVertexFlagAttribute::INSIDE_CONVEX_GEOMETRY))
 			return false;
 	return true;
@@ -296,16 +296,16 @@ bool ConvexGeometryIntersectionRenderer::selectElementFollowModel( vis::Element 
 bool ConvexGeometryIntersectionRenderer::selectCPU(vis::Polyhedron* e){
 	std::vector<vis::Vertex*> vertices;
 	PolyhedronUtils::getPolyhedronVertices(e,vertices);
-	for(std::vector<vis::Vertex*>::size_type i = 0;i<vertices.size();i++)
-		if(!selectCPU(vertices[i]))
+	for( vis::Vertex* vertex : vertices )
+		if(!selectCPU(vertex))
 			return false;
 	return true;
 }
 
 bool ConvexGeometryIntersectionRenderer::selectCPU(vis::Polygon* e){
 	std::vector<vis::Vertex*>& vertices = e->getVertices();
-	for(std::vector<vis::Vertex*>::size_type i = 0;i<vertices.size();i++)
-		if(!selectCPU(vertices[i]))
+	for( vis::Vertex* vertex : vertices )
+		if(!selectCPU(vertex))
 			return false;
 	return true;
 }

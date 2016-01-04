@@ -145,10 +145,9 @@ bool MouseSelection::isFullFilled( Selection * s){
 
 bool MouseSelection::hasFaceFacingCamera(vis::Polyhedron *p){
 	std::vector<vis::Polygon*>& polygons = p->getPolyhedronPolygons();
-	for(std::vector<vis::Polygon*>::size_type i = 0;i < polygons.size();i++){
-		vis::Polygon* current = polygons[i];
-		if(current->isAtSurface())
-			if(glm::dot(normalMatrix*current->getNormal(),
+	for( vis::Polygon* polygon : polygons ){
+		if(polygon ->isAtSurface())
+			if(glm::dot(normalMatrix*polygon ->getNormal(),
 						cameraPosition) < 0.0f)
 				return true;
 	}
@@ -156,12 +155,11 @@ bool MouseSelection::hasFaceFacingCamera(vis::Polyhedron *p){
 }
 vis::Polygon* MouseSelection::getFaceFacingCamera(vis::Polyhedron *p){
 	std::vector<vis::Polygon*>& polygons = p->getPolyhedronPolygons();
-	for(std::vector<vis::Polygon*>::size_type i = 0;i < polygons.size();i++){
-		vis::Polygon* current = polygons[i];
-		if(current->isAtSurface())
-			if(glm::dot(normalMatrix*current->getNormal(),
+	for( vis::Polygon* polygon : polygons ){
+		if(polygon ->isAtSurface())
+			if(glm::dot(normalMatrix*polygon ->getNormal(),
 						cameraPosition) < 0.0f)
-				return current;
+				return polygon ;
 	}
 	return (vis::Polygon*)0;
 }
@@ -182,17 +180,16 @@ bool MouseSelection::selectCPU( vis::Polyhedron *p){
 	else if(config.onlyInterior && p->isAtSurface() )
 		return false;
 
-	typedef std::vector<vis::Polygon*>::size_type st;
 	std::vector<vis::Polygon*>& polygons = p->getPolyhedronPolygons();
 	if(rectSelection){
-		for(st i = 0; i<polygons.size();i++){
-			if(!selectCPU(polygons[i]))
+		for(vis::Polygon* polygon : polygons ){
+			if(!selectCPU(polygon))
 				return false;//there is one unselected vertex
 		}
 		return true;
 	}
-	for(st i = 0; i<polygons.size();i++){
-		if(pointInsidePolygon(polygons[i]))
+	for( vis::Polygon* polygon : polygons ){
+		if(pointInsidePolygon(polygon))
 			return true;//there is one unselected vertex
 	}
 	return false;
@@ -214,11 +211,9 @@ bool MouseSelection::selectCPU( vis::Polygon * p){
 		return false;
 
 	if(rectSelection){
-
-		typedef std::vector<vis::Vertex*>::size_type st;
 		std::vector<vis::Vertex*>& vertices = p->getVertices();
-		for(st i = 0; i<vertices.size();i++){
-			if(!selectCPU(vertices[i]))
+		for( vis::Vertex* vertex : vertices ){
+			if(!selectCPU(vertex))
 				return false;//there is one unselected vertex
 		}
 		return true;
@@ -259,17 +254,16 @@ bool MouseSelection::selectFBO( vis::Polyhedron *p){
 	else if(config.onlyInterior && p->isAtSurface() )
 		return false;
 
-	typedef std::vector<vis::Polygon*>::size_type st;
 	std::vector<vis::Polygon*>& polygons = p->getPolyhedronPolygons();
 	if(rectSelection){
-		for(st i = 0; i<polygons.size();i++){
-			if(!selectFBO(polygons[i]))
+		for( vis::Polygon* polygon : polygons ){
+			if(!selectFBO(polygon))
 				return false;//there is one unselected vertex
 		}
 		return true;
 	}
-	for(st i = 0; i<polygons.size();i++){
-		if(selectFBO(polygons[i]))
+	for( vis::Polygon* polygon : polygons ){
+		if(selectFBO(polygon))
 			return true;//there is one unselected vertex
 	}
 	return false;
@@ -294,9 +288,8 @@ bool MouseSelection::selectFBO( vis::Polygon * p){
 }
 bool MouseSelection::selectFBO( vis::Vertex * v){
 	std::vector<int>& rmodelPos = v->getRmodelPositions();
-	typedef std::vector<int>::size_type st;
-	for(st i = 0;i<rmodelPos.size();i++)
-		if(isElementSelected(rmodelPos[i]))
+	for( int position : rmodelPos )
+		if(isElementSelected(position))
 			return true;
 	return false;
 }
@@ -553,10 +546,10 @@ void MouseSelection::resizeBuffer(int n){
 	if(n<0)n = 0;
 	else{
 		std::cout << "N: "<<n<<std::endl;
-		for(unsigned int i = 0;i<renderBufferSideSizes.size();i++){
-			if((renderBufferSideSizes[i]*renderBufferSideSizes[i]*32)>n){
-				n = renderBufferSideSizes[i];
-				i = renderBufferSideSizes.size();
+		for( int renderBufferSideSize : renderBufferSideSizes ){
+			if((renderBufferSideSize*renderBufferSideSize*32)>n){
+				n = renderBufferSideSize;
+				break;
 			}
 		}
 	}

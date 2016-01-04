@@ -42,7 +42,7 @@ Model* ModelLoadingEleNode::load(std::string filename){
 	try{
 		if(isPolygonMesh){
 			PolygonMesh* polygonMeshModel = new PolygonMesh(filename,numberOfNodes,numberOfElements);
-			for(std::vector<std::shared_ptr<PropertyFieldDef>>::size_type i=0; i<vertexProperties.size(); i++) {
+			for(decltype(vertexProperties.size()) i=0; i<vertexProperties.size(); i++) {
 				polygonMeshModel->addPropertyFieldDef(vertexProperties[i]);
 			}
 			model = polygonMeshModel;
@@ -65,8 +65,8 @@ Model* ModelLoadingEleNode::load(std::string filename){
 		}
 		else{
 			PolyhedronMesh* polyhedronMeshModel = new PolyhedronMesh(filename);
-			for(std::vector<std::shared_ptr<PropertyFieldDef>>::size_type i=0; i<vertexProperties.size(); i++) {
-				polyhedronMeshModel->addPropertyFieldDef(vertexProperties[i]);
+			for(std::shared_ptr<PropertyFieldDef> field : vertexProperties ) {
+				polyhedronMeshModel->addPropertyFieldDef(field);
 			}
 			model = polyhedronMeshModel;
 			emit setupProgressBarForNewModel(vis::CONSTANTS::POLYHEDRON_MESH,

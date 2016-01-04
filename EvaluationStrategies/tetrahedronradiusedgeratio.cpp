@@ -37,8 +37,8 @@ float TetrahedronRadiusEdgeRatio::value( vis::Polyhedron* m ) {
 	float radius = glm::abs(top/div);
 	float minLength = std::numeric_limits<float>::max();
 	std::vector<vis::Polygon*> &triangles = m->getPolyhedronPolygons();
-	for(std::vector<vis::Polygon*>::size_type i = 0;i<triangles.size();i++){
-		vis::Triangle* current = (vis::Triangle*)triangles[i];
+	for( vis::Polygon* polygon : triangles ){
+		vis::Triangle* current = (vis::Triangle*)polygon;
 		minLength = std::min(minLength,current->getLMin());
 	}
 	float ratio = radius/minLength;

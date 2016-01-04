@@ -70,10 +70,10 @@ void FrameBufferObjectHandle::initialize(int w, int h,
 
 	// create color buffer object and attached to fbo
 	GLuint tempRenderBufferColor;
-	for(std::vector<ColorRenderBufferData>::size_type i = 0;i<colorRenderBuffers.size();i++){
+	for( ColorRenderBufferData colorRenderBuffer : colorRenderBuffers ){
 		glGenRenderbuffers(1, &tempRenderBufferColor);
 		glBindRenderbuffer(GL_RENDERBUFFER, tempRenderBufferColor);
-		glRenderbufferStorage(GL_RENDERBUFFER, colorRenderBuffers[i].internalformat,
+		glRenderbufferStorage(GL_RENDERBUFFER, colorRenderBuffer.internalformat,
 							  width, height);
 		renderBufferColors.push_back(tempRenderBufferColor);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0); //UnBind
@@ -89,12 +89,11 @@ void FrameBufferObjectHandle::initialize(int w, int h,
 	for(std::vector<ColorRenderBufferData>::size_type i = 0;i<colorRenderBuffers.size();i++)
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, colorRenderBuffers[i].attachment,
 								  GL_RENDERBUFFER, renderBufferColors[i]);
-	for(std::vector<TextureBufferData>::size_type i = 0;i<textureBufferDatas.size();i++){
-		TextureBufferData& tmp = textureBufferDatas[i];
-		if(tmp.textureTarget==GL_TEXTURE_2D)
-			glFramebufferTexture2D(GL_FRAMEBUFFER, tmp.attachment,
-								   tmp.textureTarget, tmp.textureHandle, 0);
-		else if(tmp.textureTarget==GL_TEXTURE_1D)
+	for( TextureBufferData& textureBufferData : textureBufferDatas ){
+		if(textureBufferData.textureTarget==GL_TEXTURE_2D)
+			glFramebufferTexture2D(GL_FRAMEBUFFER, textureBufferData.attachment,
+								   textureBufferData.textureTarget, textureBufferData.textureHandle, 0);
+		else if(textureBufferData.textureTarget==GL_TEXTURE_1D)
 			continue;
 	}
 	ok = OpenGLUtils::checkAndPrintFramebufferStatus();

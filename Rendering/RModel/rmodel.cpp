@@ -83,9 +83,8 @@ void RModel::loadRModelData(VertexCloud* model){
 	RVertexFlagAttribute flag;
 	flag.disableAll();
 	flag.enableFlag(RVertexFlagAttribute::SURFACE_VERTEX);
-	std::vector<vis::Vertex*> &modelVertices = model->getVertices();
-	for( std::vector<vis::Vertex*>::size_type i = 0; i < modelVertices.size(); i++ ) {
-		vertices.push_back(modelVertices[i]->getCoords());
+	for( vis::Vertex* vertex : model->getVertices() ) {
+		vertices.push_back(vertex->getCoords());
 		vertexFlagsAttribute.push_back(flag);
 	}
 	nVertices = vertices.size();
@@ -137,8 +136,8 @@ void RModel::loadRModelData(VertexCloud* model){
 void RModel::copyModelBounds(Model* model){
 	this->bounds.clear();
 	this->bounds.reserve(model->getBounds().size());
-	for(std::vector<float>::size_type i = 0; i< model->getBounds().size(); i++)
-		this->bounds.push_back(model->getBounds()[i]);
+	for( float bounds : model->getBounds())
+		this->bounds.push_back(bounds);
 }
 
 void RModel::loadRModelData(PolygonMesh* mesh){
@@ -149,8 +148,8 @@ void RModel::loadRModelData(PolygonMesh* mesh){
 	copyModelBounds(mesh);
 	modelToCameraSpace = MatrixTransformationUtils::generateModelToCameraSpaceMatrix(mesh->getBounds());
 	std::vector<vis::Polygon*> &modelPolygons = mesh->getPolygons();
-	for( std::vector<vis::Polygon*>::size_type i = 0; i < modelPolygons.size(); i++ )
-		PolygonUtils::getTriangleVertices(modelPolygons[i],vertexFlagsAttribute);
+	for( vis::Polygon* polygon : modelPolygons )
+		PolygonUtils::getTriangleVertices(polygon,vertexFlagsAttribute);
 	nVertices = vertexFlagsAttribute.size();
 	vertexFlagsDataBufferObject = ShaderUtils::createDataBuffer<RVertexFlagAttribute>(vertexFlagsAttribute);
 	loadVertexPositionAndNormals(mesh);
@@ -170,11 +169,10 @@ void RModel::loadAdditionalEdges(VertexCloud* vcloud){
 	edgeContainer.reserve(vcloud->getAdditionalEdgesCount()*2);
 	edgeColorContainer.reserve(vcloud->getAdditionalEdgesCount()*2);
 
-	for(std::vector<vis::Edge*>::size_type i = 0;i<additionalEdges.size();i++){
-		vis::Edge* currentEdge = additionalEdges[i];
-		glm::vec3& vec0 = currentEdge->getVertex0()->getCoords();
-		glm::vec3& vec1 = currentEdge->getVertex1()->getCoords();
-		glm::vec3& color = currentEdge->getColor();
+	for( vis::Edge* edge : additionalEdges ){
+		glm::vec3& vec0 = edge->getVertex0()->getCoords();
+		glm::vec3& vec1 = edge->getVertex1()->getCoords();
+		glm::vec3& color = edge->getColor();
 		edgeContainer.push_back(vec0);
 		edgeContainer.push_back(vec1);
 		edgeColorContainer.push_back(color);
@@ -226,19 +224,15 @@ void RModel::loadVertexPositionAndNormals(VertexCloud* model){
 	vecContainer.resize(nVertices);
 	std::vector<vis::Vertex*>& vertices = model->getVertices();
 	//coords
-	for(std::vector<vis::Vertex*>::size_type i = 0;i<vertices.size();i++){
-		vis::Vertex* currentVertex = vertices[i];
-		std::vector<int>& rmodelPos = currentVertex->getRmodelPositions();
-		for(std::vector<vis::Vertex*>::size_type j = 0;j<rmodelPos.size();j++)
-			vecContainer[rmodelPos[j]] = currentVertex->getCoords();
+	for( vis::Vertex* vertex : vertices ){
+		for( int position : vertex->getRmodelPositions() )
+			vecContainer[position] = vertex->getCoords();
 	}
 	positionDataBufferObject = ShaderUtils::createDataBuffer<glm::vec3>(vecContainer);
 	//normals
-	for(std::vector<vis::Vertex*>::size_type i = 0;i<vertices.size();i++){
-		vis::Vertex* currentVertex = vertices[i];
-		std::vector<int>& rmodelPos = currentVertex->getRmodelPositions();
-		for(std::vector<int>::size_type j = 0;j<rmodelPos.size();j++)
-			vecContainer[rmodelPos[j]] = currentVertex->getNormal();
+	for( vis::Vertex* vertex : vertices ){
+		for(int position : vertex->getRmodelPositions())
+			vecContainer[position] = vertex->getNormal();
 	}
 	vertexNormalDataBufferObject = ShaderUtils::createDataBuffer<glm::vec3>(vecContainer);
 
@@ -294,11 +288,10 @@ void RModel::loadVertexPolygonPolyhedronIds(PolygonMesh* mesh){
 
 	vertexNormalDataBufferObject = ShaderUtils::createDataBuffer<glm::vec3>(vecContainer);
 //*/
-	for(std::vector<vis::Polygon*>::size_type i = 0;i<polygons.size();++i){
-		vis::Polygon* p = polygons[i];
-		int npoltriangles = p->getRmodelPositions().size()/3;
-		vis::Polyhedron** neighbors = p->getNeighborPolyhedron();
-		int id0 = p->getId();
+	for( vis::Polygon* polygon : polygons ){
+		int npoltriangles = polygon->getRmodelPositions().size()/3;
+		vis::Polyhedron** neighbors = polygon->getNeighborPolyhedron();
+		int id0 = polygon->getId();
 		int id1 = (neighbors[0])?neighbors[0]->getId():-1;
 		int id2 = (neighbors[1])?neighbors[1]->getId():-1;
 		for(int j = 0;j<npoltriangles;j++){
@@ -312,11 +305,9 @@ void RModel::loadVertexPolygonPolyhedronIds(PolygonMesh* mesh){
 		ids[i]=i;
 	rmodelVertexPositionBufferObject = ShaderUtils::createDataBuffer<int>(ids);
 	std::vector<vis::Vertex*>& modelVertices = mesh->getVertices();
-	for(std::vector<vis::Vertex*>::size_type i = 0;i<modelVertices.size();++i){
-		std::vector<int>& rmodelPos = modelVertices[i]->getRmodelPositions();
-		for(std::vector<int>::size_type j = 0;j<rmodelPos.size();j++){
-			ids[rmodelPos[j]]=modelVertices[i]->getId();
-			//polygonsPolyhedronsIds[rmodelPos[j]]=1000;
+	for( vis::Vertex* vertex : modelVertices ){
+		for(int position : vertex->getRmodelPositions()){
+			ids[position] = vertex->getId();
 		}
 	}
 	vertexIdsBufferObject = ShaderUtils::createDataBuffer<int>(ids);
@@ -325,8 +316,8 @@ void RModel::loadVertexPolygonPolyhedronIds(PolygonMesh* mesh){
 void RModel::loadTetrahedronVertexIds(PolyhedronMesh* mesh) {
 	std::vector<GLuint> ids;
 	std::vector<vis::Polyhedron*>& polyhedrons = mesh->getPolyhedrons();
-	for(std::vector<vis::Polyhedron*>::size_type i=0;i<polyhedrons.size();i++ ) {
-		PolyhedronUtils::getTetrahedronIndices(polyhedrons[i], ids);
+	for( vis::Polyhedron* polyhedron : polyhedrons ) {
+		PolyhedronUtils::getTetrahedronIndices(polyhedron, ids);
 	}
 	numberOfTetrahedrons = ids.size()/4;
 	tetrahedronVertexIdsBufferObject = ShaderUtils::createDataBuffer<GLuint>(ids);
@@ -336,8 +327,8 @@ void RModel::loadRModelData(PolyhedronMesh* mesh){
 	this->loadRModelData((PolygonMesh*)mesh);
 	modelType = vis::CONSTANTS::POLYHEDRON_MESH;
 	std::vector<vis::Polyhedron*>& polyhedrons = mesh->getPolyhedrons();
-	for(std::vector<vis::Polyhedron*>::size_type i = 0;i<polyhedrons.size();i++)
-		PolyhedronUtils::setPolyhedronRModelPositions(polyhedrons[i]);
+	for( vis::Polyhedron* polyhedron : polyhedrons )
+		PolyhedronUtils::setPolyhedronRModelPositions(polyhedron);
 	loadTetrahedronVertexIds(mesh);
 }
 void RModel::loadRModelData(LightWeightVertexCloud* vcloud){
@@ -354,8 +345,8 @@ void RModel::loadRModelData(LightWeightVertexCloud* vcloud){
 	flag.disableAll();
 	flag.enableFlag(RVertexFlagAttribute::SURFACE_VERTEX);
 	std::vector<vis::LWVertex*> &modelVertices = vcloud->getVertices();
-	for( std::vector<vis::LWVertex*>::size_type i = 0; i < modelVertices.size(); i++ ) {
-		vertices.push_back(modelVertices[i]->getCoords());
+	for( vis::LWVertex* lwVertex : modelVertices ) {
+		vertices.push_back(lwVertex->getCoords());
 		vertexFlagsAttribute.push_back(flag);
 	}
 	nVertices = vertices.size();
@@ -379,8 +370,8 @@ void RModel::loadRModelData(LightWeightPolygonMesh* mesh){
 	this->copyModelBounds(mesh);
 	modelToCameraSpace = MatrixTransformationUtils::generateModelToCameraSpaceMatrix(mesh->getBounds());
 	std::vector<vis::LWPolygon*> &modelPolygons = mesh->getPolygons();
-	for( std::vector<vis::LWPolygon*>::size_type i = 0; i < modelPolygons.size(); i++ )
-		PolygonUtils::getTriangleVertices(modelPolygons[i],vertices,
+	for( vis::LWPolygon* lwPolygon : modelPolygons )
+		PolygonUtils::getTriangleVertices(lwPolygon,vertices,
 										  normals,this->vertexFlagsAttribute,
 										  polygonsPolyhedronsIds,
 										  vertexIds);

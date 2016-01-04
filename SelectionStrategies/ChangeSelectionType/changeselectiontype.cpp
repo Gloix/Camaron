@@ -32,10 +32,11 @@ void ChangeSelectionType::selectElement( Selection* sel ) {
 						else{
 							std::vector<vis::Polygon*>& polygons = neighbors[i]->getPolyhedronPolygons();
 							bool addPolyhedron = true;
-							for(std::vector<vis::Polygon*>::size_type j = 0;j<polygons.size();++j){
-								if(!polygons[j]->isSelected()){//one polyhedron is not selected
-									j = polygons.size();
+							for( vis::Polygon* polygon : polygons){
+								if(!polygon->isSelected()){//one polyhedron is not selected
 									addPolyhedron = false;
+									break;
+
 								}
 							}
 							if(addPolyhedron)
@@ -50,20 +51,18 @@ void ChangeSelectionType::selectElement( Selection* sel ) {
 				break;
 			}
 			case vis::CONSTANTS::POLYHEDRON:{
-				typedef std::vector<vis::Polygon*>::size_type size_type;
 				for ( std::unordered_map<int, vis::Element*>::const_iterator It = sel->getSelectedElements().begin();
 					  It != sel->getSelectedElements().end(); ++It )
 				{
 					vis::Polyhedron* selected = (vis::Polyhedron*)( *It ).second;
 					std::vector<vis::Polygon*>& polyhedronPolygons = selected->getPolyhedronPolygons();
-					for(size_type k = 0;k<polyhedronPolygons.size();k++){
-						vis::Polygon* currentPolygon = polyhedronPolygons[k];
-						vis::Polyhedron* otherPolyhedron = currentPolygon->getNeighborPolyhedron(selected);
+					for(vis::Polygon* polygon : polyhedronPolygons){
+						vis::Polyhedron* otherPolyhedron = polygon->getNeighborPolyhedron(selected);
 						bool addPolygon = true;
 						if(otherPolyhedron)
 							addPolygon = otherPolyhedron->isSelected();
 						if(addPolygon)
-							newSelection[currentPolygon->getId()] = currentPolygon;
+							newSelection[polygon->getId()] = polygon;
 					}
 				}
 				break;
@@ -90,14 +89,13 @@ void ChangeSelectionType::selectElement( Selection* sel ) {
 				break;
 			}
 			case vis::CONSTANTS::POLYHEDRON:{
-				typedef std::vector<vis::Polygon*>::size_type size_type;
 				for ( std::unordered_map<int, vis::Element*>::const_iterator It = sel->getSelectedElements().begin();
 					  It != sel->getSelectedElements().end(); ++It )
 				{
 					vis::Polyhedron* selected = (vis::Polyhedron*)( *It ).second;
 					std::vector<vis::Polygon*>& polyhedronPolygons = selected->getPolyhedronPolygons();
-					for(size_type k = 0;k<polyhedronPolygons.size();k++)
-						newSelection[polyhedronPolygons[k]->getId()] = polyhedronPolygons[k];
+					for(vis::Polygon* polygon : polyhedronPolygons)
+						newSelection[polygon->getId()] = polygon;
 				}
 				break;
 			}

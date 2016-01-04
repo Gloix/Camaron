@@ -26,8 +26,8 @@ void Selection::clearSelectedElements() {
 		( *( *It ).second ).setSelected( false );
 		std::vector<int>& rmodelPositions = ( *( *It ).second ).getRmodelPositions();
 		std::vector<RVertexFlagAttribute>& flagAttributes = rmodel->vertexFlagsAttribute;
-		for(std::vector<int>::size_type i = 0; i< rmodelPositions.size(); i++){
-			RVertexFlagAttribute& flags = flagAttributes[rmodelPositions[i]];
+		for( int position : rmodelPositions ){
+			RVertexFlagAttribute& flags = flagAttributes[position];
 			flags.disableFlag(RVertexFlagAttribute::SELECTED_FLAG);
 		}
 	}
@@ -40,8 +40,8 @@ bool Selection::addSelectedElement( vis::Element* selectedElement ) {
 	this->selectedElements[selectedElement->getId()] = selectedElement;
 	std::vector<int>& rmodelPositions = selectedElement->getRmodelPositions();
 	std::vector<RVertexFlagAttribute>& flagAttributes = rmodel->vertexFlagsAttribute;
-	for(std::vector<int>::size_type i = 0; i< rmodelPositions.size(); i++)
-		flagAttributes[rmodelPositions[i]].enableFlag(RVertexFlagAttribute::SELECTED_FLAG);
+	for( int position : rmodelPositions )
+		flagAttributes[position].enableFlag(RVertexFlagAttribute::SELECTED_FLAG);
 	return true;
 }
 bool Selection::removeSelectedElement( vis::Element* selectedElement){
@@ -50,8 +50,8 @@ bool Selection::removeSelectedElement( vis::Element* selectedElement){
 	selectedElement->setSelected( false );
 	std::vector<int>& rmodelPositions = selectedElement->getRmodelPositions();
 	std::vector<RVertexFlagAttribute>& flagAttributes = rmodel->vertexFlagsAttribute;
-	for(std::vector<int>::size_type i = 0; i< rmodelPositions.size(); i++){
-		RVertexFlagAttribute& flags = flagAttributes[rmodelPositions[i]];
+	for( int position : rmodelPositions ){
+		RVertexFlagAttribute& flags = flagAttributes[position];
 		flags.disableFlag(RVertexFlagAttribute::SELECTED_FLAG);
 	}
 	if(selectedElements.count(selectedElement->getId())>0)
@@ -63,14 +63,13 @@ bool Selection::removeSelectedElement( vis::Polyhedron* selectedPolyhedron){
 	if(selectedElements.count(selectedPolyhedron->getId())>0)
 		this->selectedElements.erase(selectedPolyhedron->getId());
 	std::vector<RVertexFlagAttribute>& flagAttributes = rmodel->vertexFlagsAttribute;
-	std::vector<vis::Polygon*>& polygons = selectedPolyhedron->getPolyhedronPolygons();
-	for(std::vector<vis::Polygon>::size_type i = 0;i < polygons.size();i++){
-		vis::Polyhedron* neighbor = polygons[i]->getNeighborPolyhedron(selectedPolyhedron);
+	for( vis::Polygon* polygon : selectedPolyhedron->getPolyhedronPolygons() ){
+		vis::Polyhedron* neighbor = polygon->getNeighborPolyhedron(selectedPolyhedron);
 		if(neighbor && neighbor->isSelected())
 			continue;//must ignore this polygon
-		std::vector<int>& rmodelPositions = polygons[i]->getRmodelPositions();
-		for(std::vector<int>::size_type i = 0; i< rmodelPositions.size(); i++){
-			RVertexFlagAttribute& flags = flagAttributes[rmodelPositions[i]];
+		std::vector<int>& rmodelPositions = polygon->getRmodelPositions();
+		for( int position : rmodelPositions ){
+			RVertexFlagAttribute& flags = flagAttributes[position];
 			flags.disableFlag(RVertexFlagAttribute::SELECTED_FLAG);
 		}
 	}

@@ -75,10 +75,10 @@ void RenderElementsIds::renderIds(Renderer* renderer, RModel* rmodel,  Selection
 				if(discardSelection(polyhedron))
 					continue;
 				std::vector<vis::Polygon*>& polygons = polyhedron->getPolyhedronPolygons();
-				for(std::vector<vis::Polygon*>::size_type i = 0;i<polygons.size();i++){
-					if(processedElements.count(polygons[i]->getId())==0){
-						processElement(polygons[i],renderer,rmodel,true);
-						processedElements[polygons[i]->getId()] = 1;
+				for( vis::Polygon* polygon : polygons ){
+					if(processedElements.count(polygon->getId())==0){
+						processElement(polygon,renderer,rmodel,true);
+						processedElements[polygon->getId()] = 1;
 					}
 				}
 			}
@@ -93,10 +93,10 @@ void RenderElementsIds::renderIds(Renderer* renderer, RModel* rmodel,  Selection
 					if(discardSelection(polygon))
 						continue;
 					std::vector<vis::Vertex*>& vertices = polygon->getVertices();
-					for(std::vector<vis::Vertex*>::size_type j = 0;j<vertices.size();j++){
-						if(processedElements.count(vertices[j]->getId())==0){
-							processElement(vertices[j],renderer,rmodel,true);
-							processedElements[vertices[j]->getId()] = 1;
+					for( vis::Vertex* vertex : vertices ){
+						if(processedElements.count(vertex->getId())==0){
+							processElement(vertex,renderer,rmodel,true);
+							processedElements[vertex->getId()] = 1;
 						}
 					}
 				}
@@ -108,12 +108,12 @@ void RenderElementsIds::renderIds(Renderer* renderer, RModel* rmodel,  Selection
 					if(discardSelection(polyhedron))
 						continue;
 					std::vector<vis::Polygon*>& polygons = polyhedron->getPolyhedronPolygons();
-					for(std::vector<vis::Polygon*>::size_type i = 0;i<polygons.size();i++){
-						std::vector<vis::Vertex*>& vertices = polygons[i]->getVertices();
-						for(std::vector<vis::Vertex*>::size_type j = 0;j<vertices.size();j++){
-							if(processedElements.count(vertices[j]->getId())==0){
-								processElement(vertices[j],renderer,rmodel,true);
-								processedElements[vertices[j]->getId()] = 1;
+					for( vis::Polygon* polygon : polygons ){
+						std::vector<vis::Vertex*>& vertices = polygon->getVertices();
+						for( vis::Vertex* vertex : vertices ){
+							if(processedElements.count(vertex->getId())==0){
+								processElement(vertex,renderer,rmodel,true);
+								processedElements[vertex->getId()] = 1;
 							}
 						}
 					}
@@ -150,23 +150,23 @@ void RenderElementsIds::renderIds(Renderer* renderer, RModel* rmodel,  Selection
 }
 void RenderElementsIds::renderIds(Renderer* renderer, RModel* rmodel, QPainter& painter,VertexCloud* model){
 	std::vector<vis::Vertex*>& vertices = model->getVertices();
-	for(std::vector<vis::Vertex*>::size_type i = 0;i<vertices.size();i++)
-		processElement(vertices[i],renderer,rmodel);
+	for( vis::Vertex* vertex : vertices )
+		processElement(vertex,renderer,rmodel);
 	renderOrderedElementsIds(painter);
 }
 
 void RenderElementsIds::renderIds(Renderer* renderer, RModel* rmodel, QPainter& painter,PolygonMesh* mesh){
 	std::vector<vis::Polygon*>& polygons = mesh->getPolygons();
-	for(std::vector<vis::Polygon*>::size_type i = 0;i<polygons.size();i++)
-		processElement(polygons[i],renderer,rmodel);
+	for( vis::Polygon* polygon : polygons )
+		processElement(polygon,renderer,rmodel);
 	renderOrderedElementsIds(painter);
 }
 
 void RenderElementsIds::renderIds(Renderer* renderer, RModel* rmodel, QPainter& painter,PolyhedronMesh* mesh){
 	std::vector<vis::Polyhedron*>& polyhedrons = mesh->getPolyhedrons();
 	glm::vec3 viewPortCenter(rmodel->getViewPortSize()/2.0f,-0.5f);
-	for(std::vector<vis::Polyhedron*>::size_type i = 0;i<polyhedrons.size();i++)
-		processElement(polyhedrons[i],renderer,rmodel);
+	for( vis::Polyhedron* polyhedron : polyhedrons )
+		processElement(polyhedron,renderer,rmodel);
 	renderOrderedElementsIds(painter);
 }
 
@@ -185,11 +185,10 @@ void RenderElementsIds::processElement(vis::Element* e,Renderer* renderer, RMode
 
 void RenderElementsIds::renderOrderedElementsIds(QPainter& painter){
 	std::vector<std::pair<glm::vec2,int> >& elementsToDraw = container.getOrderedElements();
-	for(std::vector<std::pair<glm::vec2,int> >::size_type i = 0;i<elementsToDraw.size();i++){
-		std::pair<glm::vec2,int>& currentPair = elementsToDraw[i];
-		glm::vec2& vec = currentPair.first;
+	for( std::pair<glm::vec2,int> pair : elementsToDraw ){
+		glm::vec2& vec = pair.first;
 		const QFont& font = painter.font();
-		QString toDraw = QString::number(currentPair.second);
+		QString toDraw = QString::number(pair.second);
 		int height = QFontMetrics( font ).height();
 		int width = QFontMetrics( font ).width(toDraw);
 		if(textFillColor.w > 0.0f){

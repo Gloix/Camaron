@@ -17,9 +17,8 @@ float MaximumSolidAngle::value( vis::Polyhedron* m ) {
 	float maximumAngle = -std::numeric_limits<float>::max();
 	std::vector<vis::Vertex*> polyhedronVertices;
 	PolyhedronUtils::getPolyhedronVertices(m,polyhedronVertices);
-	for( std::vector<vis::Vertex*>::size_type i = 0;
-		 i != polyhedronVertices.size(); i++ ) {
-		float currentAngle = PolyhedronUtils::getPolyhedronSolidAngleFromVertex(m,polyhedronVertices[i]);
+	for( vis::Vertex* vertex : polyhedronVertices ) {
+		float currentAngle = PolyhedronUtils::getPolyhedronSolidAngleFromVertex(m, vertex);
 		maximumAngle = std::max(maximumAngle,currentAngle);
 	}
 	m->addProperty(this->id, maximumAngle);

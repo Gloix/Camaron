@@ -14,23 +14,18 @@ ModelLoadingFactory::ModelLoadingFactory(): RegistryTemplate<std::string, ModelL
 
 ModelLoadingFactory::~ModelLoadingFactory()
 {
-	typedef std::vector<ModelLoadingStrategy*>::size_type it_type;
-	for(it_type iterator = 0; iterator < modelLoadingStrategies.size();iterator++) {
-		// iterator->first = key
-		ModelLoadingStrategy* p = modelLoadingStrategies[iterator];
-
+	for( ModelLoadingStrategy* strategy : modelLoadingStrategies ) {
 #ifdef DEBUG_MOD
 		std::cout << "Deleting Model Loading Strategy from Factory: ";
-		std::cout << p->getFileFormats()[0].fileFormatName << std::endl;
+		std::cout << strategy->getFileFormats()[0].fileFormatName << std::endl;
 #endif
-		delete p;
+		delete strategy;
 	}
 }
 bool ModelLoadingFactory::addNewModelLoadingStrategy( ModelLoadingStrategy* ml){
 	bool added = false;
-	for(std::vector<AcceptedFileFormat>::size_type i = 0;i < ml->getFileFormats().size();i++){
-		AcceptedFileFormat current = ml->getFileFormats()[i];
-		this->registerInstance(current.fileFormatExt,ml);
+	for( AcceptedFileFormat& fileFormat : ml->getFileFormats() ){
+		this->registerInstance(fileFormat.fileFormatExt,ml);
 		added = true;
 	}
 	if(added)

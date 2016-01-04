@@ -39,10 +39,10 @@ void ExpandToNeighbors::expandSelectionSurface(Selection* sel){
 			{
 				vis::Polygon* selected = (vis::Polygon*)( *It ).second;
 				std::vector<vis::Polygon*>& neighborPolygons = selected->getNeighborPolygons();
-				for(std::vector<vis::Polygon*>::size_type i = 0;i<neighborPolygons.size();i++)
-					if(neighborPolygons[i]->isAtSurface()&&
-							!neighborPolygons[i]->isSelected())
-						newSelectedElements[neighborPolygons[i]->getId()] = neighborPolygons[i];
+				for( vis::Polygon* polygon : neighborPolygons )
+					if(polygon->isAtSurface()&&
+							!polygon->isSelected())
+						newSelectedElements[polygon->getId()] = polygon;
 			}
 			break;
 		}
@@ -51,19 +51,18 @@ void ExpandToNeighbors::expandSelectionSurface(Selection* sel){
 			break;
 		}
 		case vis::CONSTANTS::POLYHEDRON:{
-			typedef std::vector<vis::Polygon*>::size_type size_type;
 			for ( std::unordered_map<int, vis::Element*>::const_iterator It = selectedElements.begin(); It != selectedElements.end(); ++It )
 			{
 				vis::Polyhedron* selected = (vis::Polyhedron*)( *It ).second;
 				std::vector<vis::Polygon*>& polyhedronPolygons = selected->getPolyhedronPolygons();
-				for(size_type k = 0;k<polyhedronPolygons.size();k++){
-					if(!polyhedronPolygons[k]->isAtSurface())
+				for(vis::Polygon* polygon : polyhedronPolygons ){
+					if(!polygon->isAtSurface())
 						continue;
-					std::vector<vis::Polygon*>& neighborPolygons = polyhedronPolygons[k]->getNeighborPolygons();
-					for(size_type i = 0;i<neighborPolygons.size();i++){
-						if(!neighborPolygons[i]->isAtSurface())
+					std::vector<vis::Polygon*>& neighborPolygons = polygon->getNeighborPolygons();
+					for(vis::Polygon* neighbor : neighborPolygons ){
+						if(!neighbor->isAtSurface())
 							continue;
-						vis::Polyhedron* polAsoc = neighborPolygons[i]->getNeighborPolyhedron((vis::Polyhedron*)0);
+						vis::Polyhedron* polAsoc = neighbor->getNeighborPolyhedron((vis::Polyhedron*)0);
 						if(!polAsoc->isSelected())
 							newSelectedElements[polAsoc->getId()] = polAsoc;
 					}
@@ -89,11 +88,11 @@ void ExpandToNeighbors::expandSelectionSurfaceWithAngle(Selection* sel, float an
 			{
 				vis::Polygon* selected = (vis::Polygon*)( *It ).second;
 				std::vector<vis::Polygon*>& neighborPolygons = selected->getNeighborPolygons();
-				for(std::vector<vis::Polygon*>::size_type i = 0;i<neighborPolygons.size();i++)
-					if(neighborPolygons[i]->isAtSurface()&&
-							!neighborPolygons[i]->isSelected() &&
-							PolygonUtils::getDihedralAngle(selected,neighborPolygons[i]) <= angle)
-						newSelectedElements[neighborPolygons[i]->getId()] = neighborPolygons[i];
+				for( vis::Polygon* polygon : neighborPolygons)
+					if(polygon->isAtSurface()&&
+							!polygon->isSelected() &&
+							PolygonUtils::getDihedralAngle(selected,polygon) <= angle)
+						newSelectedElements[polygon->getId()] = polygon;
 			}
 			break;
 		}
@@ -102,21 +101,18 @@ void ExpandToNeighbors::expandSelectionSurfaceWithAngle(Selection* sel, float an
 			break;
 		}
 		case vis::CONSTANTS::POLYHEDRON:{
-			typedef std::vector<vis::Polygon*>::size_type size_type;
 			for ( std::unordered_map<int, vis::Element*>::const_iterator It = selectedElements.begin(); It != selectedElements.end(); ++It )
 			{
 				vis::Polyhedron* selected = (vis::Polyhedron*)( *It ).second;
-				std::vector<vis::Polygon*>& polyhedronPolygons = selected->getPolyhedronPolygons();
-				for(size_type k = 0;k<polyhedronPolygons.size();k++){
-					if(!polyhedronPolygons[k]->isAtSurface())
+				for(vis::Polygon* polygon : selected->getPolyhedronPolygons()){
+					if(!polygon->isAtSurface())
 						continue;
-					std::vector<vis::Polygon*>& neighborPolygons = polyhedronPolygons[k]->getNeighborPolygons();
-					for(size_type i = 0;i<neighborPolygons.size();i++){
-						if(!neighborPolygons[i]->isAtSurface())
+					for(vis::Polygon* neighbor : polygon->getNeighborPolygons()){
+						if(!neighbor->isAtSurface())
 							continue;
-						vis::Polyhedron* polAsoc = neighborPolygons[i]->getNeighborPolyhedron((vis::Polyhedron*)0);
+						vis::Polyhedron* polAsoc = neighbor->getNeighborPolyhedron((vis::Polyhedron*)0);
 						if(!polAsoc->isSelected() &&
-								PolygonUtils::getDihedralAngle(polyhedronPolygons[k],neighborPolygons[i]) >= angle)
+								PolygonUtils::getDihedralAngle(polygon,neighbor) >= angle)
 							newSelectedElements[polAsoc->getId()] = polAsoc;
 					}
 
@@ -141,9 +137,9 @@ void ExpandToNeighbors::expandSelectionAll(Selection* sel){
 			{
 				vis::Polygon* selected = (vis::Polygon*)( *It ).second;
 				std::vector<vis::Polygon*>& neighborPolygons = selected->getNeighborPolygons();
-				for(std::vector<vis::Polygon*>::size_type i = 0;i<neighborPolygons.size();i++)
-					if(!neighborPolygons[i]->isSelected())
-						newSelectedElements[neighborPolygons[i]->getId()] = neighborPolygons[i];
+				for( vis::Polygon* polygon : neighborPolygons )
+					if(!polygon->isSelected())
+						newSelectedElements[polygon->getId()] = polygon;
 			}
 			break;
 		}
@@ -155,9 +151,8 @@ void ExpandToNeighbors::expandSelectionAll(Selection* sel){
 			for ( std::unordered_map<int, vis::Element*>::const_iterator It = selectedElements.begin(); It != selectedElements.end(); ++It )
 			{
 				vis::Polyhedron* selected = (vis::Polyhedron*)( *It ).second;
-				std::vector<vis::Polygon*>& polygons = selected->getPolyhedronPolygons();
-				for(std::vector<vis::Polygon*>::size_type i = 0;i<polygons.size();i++){
-					vis::Polyhedron* neighbor = polygons[i]->getNeighborPolyhedron(selected);
+				for( vis::Polygon* polygon : selected->getPolyhedronPolygons()){
+					vis::Polyhedron* neighbor = polygon->getNeighborPolyhedron(selected);
 					if(neighbor && !neighbor->isSelected())
 						newSelectedElements[neighbor->getId()] = neighbor;
 				}

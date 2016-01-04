@@ -26,11 +26,10 @@ bool RendererRegistry::insertRenderer(Renderer* r){
 	return true;
 }
 void RendererRegistry::glewIsReady(){
-	for(std::vector<Renderer*>::size_type i = 0;i<toInsert.size();i++){
-		Renderer* r = toInsert[i];
-		r->glewIsReadyRenderer();
+	for( Renderer* renderer : toInsert ){
+		renderer->glewIsReadyRenderer();
 		//if(r->isOk())
-			insertNextRenderer(r);
+			insertNextRenderer(renderer);
 		//else
 		//	delete r;
 	}

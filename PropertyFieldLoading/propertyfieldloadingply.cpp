@@ -111,6 +111,8 @@ bool PropertyFieldLoadingPly::readModelProperties( std::string filename, VertexC
 	while ( line.compare("end_header" ) ) {
 		FileUtils::safeGetline(file, line);
 	}
+	auto totalProperties = selectedProperties.size();
+	int totalProgress = 0;
 	PropertyReader propertyReader(&file);
 	int startingIndex = pol->getPropertyFieldDefs().size();
 	for(int i=0;i<pol->getVerticesCount();i++) {
@@ -123,8 +125,9 @@ bool PropertyFieldLoadingPly::readModelProperties( std::string filename, VertexC
 			}
 			prop->accept(propertyReader);
 		}
-		if(i%1000 == 0) {
-			emit setLoadedProgress(i);
+		totalProgress+=totalProperties;
+		if(totalProgress%1000 == 0) {
+			emit setLoadedProgress(totalProgress);
 		}
 	}
 	for(std::shared_ptr<PropertyFieldDef> prop : selectedProperties) {

@@ -30,6 +30,11 @@ void PropertyFieldLoadDialog::onLoadClick(bool) {
 			selectedList.push_back(propsList.at(i));
 		}
 	}
+	int totalProgress = 0;
+	for(std::shared_ptr<PropertyFieldDef> field : selectedList) {
+		totalProgress+=field->getElementsCount();
+	}
+	ui->progressBar->setMaximum(totalProgress);
 	onReadyToLoad(filename, selectedList);
 }
 
@@ -59,7 +64,6 @@ void PropertyFieldLoadDialog::setupForPropertyFields(std::string filename, std::
 	}
 	ui->plainTextEdit->clear();
 
-	ui->progressBar->setMaximum(propertyFieldDefs[0]->getElementsCount());
 	updateProgressBar();
 }
 

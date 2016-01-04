@@ -389,6 +389,7 @@ void Visualizador::connectPropertyFieldLoadingStrategies(PropertyFieldLoadingFac
 }
 
 void Visualizador::onLoadedPropertyFields() {
+	std::cout << "Property fields loaded in: "<<timer.getTranscurredSeconds()<<std::endl;
 	customGLViewer->forceReRendering();
 	propertyFieldDialog.hide();
 }
@@ -635,6 +636,7 @@ void Visualizador::loadPropertyFields(std::string filename,std::vector<std::shar
 		//propertyFieldDialog.setPropertyFieldName(.setModelName(FileUtils::getFileNameWithoutPath(filename.toStdString()));
 		PropertyFieldLoadingStrategy* selectedStrategy;
 		selectedStrategy = propertyFieldLoadingFactory->loadPropertyFieldQThread(filename);
+		timer = CrossTimer();
 		selectedStrategy->loadPropertyFieldQThread(filename,model,props);
 	}
 	catch(ExceptionMessage& e){

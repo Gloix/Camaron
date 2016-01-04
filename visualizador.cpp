@@ -592,6 +592,12 @@ void Visualizador::openPropertyFieldDialogFromFilePath(QString filename){
 		PropertyFieldLoadingStrategy* selectedStrategy;
 		selectedStrategy = propertyFieldLoadingFactory->loadPropertyFieldQThread(filename.toStdString());
 		std::vector<std::shared_ptr<PropertyFieldDef>> props = selectedStrategy->loadDefs(filename.toStdString());
+		if(props.size() == 0) {
+			QMessageBox::information(0,
+									 QString("No property fields"),
+									 QString("There are no property fields in the file"),QMessageBox::Ok);
+			return;
+		}
 		propertyFieldDialog.setupForPropertyFields(filename.toStdString(), props);
 		propertyFieldDialog.show();
 	}

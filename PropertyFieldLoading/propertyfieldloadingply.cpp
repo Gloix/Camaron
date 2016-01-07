@@ -74,7 +74,6 @@ std::vector<std::shared_ptr<PropertyFieldDef>> PropertyFieldLoadingPly::loadDefs
 			}
 		}
 	}
-	emit setupDialog(filename, vertexProperties);
 	return vertexProperties;
 }
 

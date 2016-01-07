@@ -5,10 +5,11 @@
 #include "Common/Constants.h"
 #include "Rendering/RModel/rmodelpropertyfielddef.h"
 #include "PropertyFieldLoading/scalarfielddef.h"
+#include "Utils/openglutils.h"
 #define POSITION_ATTRIBUTE 0
 #define VERTEX_SCALARPROP 1
 
-int triTable[16][8] = {
+char triTable[16][8] = {
 	{-1, -1, -1, -1, -1, -1, -1, -1}, //0000
 	{ 0,  2,  3, -1, -1, -1, -1, -1},
 	{ 0,  1,  4, -1, -1, -1, -1, -1}, //0010
@@ -45,19 +46,18 @@ void IsosurfaceRenderer::glewIsReadyRenderer(){
 	if(this->ok) {
 		glGenTransformFeedbacks(1, &transformFeedback);
 		glGenBuffers(1, &isosurfacesBuffer);
-
-
-		glGenTextures(1, &(this->triTableTex));
-		glActiveTexture(GL_TEXTURE0);
-		glEnable(GL_TEXTURE_2D);
+		
+		
+		this->triTableTex = OpenGLUtils::uploadRaw2DTexture((unsigned char*)&triTable,8
+											   ,16, GL_R32I, GL_RED_INTEGER,GL_BYTE);
 		glBindTexture(GL_TEXTURE_2D, this->triTableTex);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexImage2D( GL_TEXTURE_2D, 0, GL_R32I, 8, 16, 0,
-		GL_RED_INTEGER, GL_INT, &triTable);
-		std::cout << "ErrorGlewIsReadyRenderer " << glGetError() << std::endl;
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+						GL_LINEAR);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+						GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT );
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT );
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }
 

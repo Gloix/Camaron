@@ -361,11 +361,6 @@ void Visualizador::connectPropertyFieldLoadingStrategies(PropertyFieldLoadingFac
 	for( PropertyFieldLoadingStrategy* strategy : loadingStrategies ) {
 		connect(strategy,SIGNAL(propertyFieldsLoadedSuccesfully()),
 				this,SLOT(onLoadedPropertyFields()));
-		connect(strategy,SIGNAL(
-					setupDialog(std::string,
-						std::vector<std::shared_ptr<PropertyFieldDef>>)),
-				&propertyFieldDialog,SLOT(setupForNewFile(std::string,
-											  std::vector<std::shared_ptr<PropertyFieldDef>>)));
 		connect(strategy,SIGNAL(setLoadedProgress(unsigned int)),
 				&propertyFieldDialog,SLOT(setLoadedProgress(unsigned int)));
 		connect(strategy,SIGNAL(addMessage(QString)),

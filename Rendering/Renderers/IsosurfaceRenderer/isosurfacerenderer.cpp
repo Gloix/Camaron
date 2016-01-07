@@ -142,7 +142,6 @@ void IsosurfaceRenderer::draw(RModel* rmodel){
 	//ShaderUtils::setUniform(renderProgram, "WireFrameColor", config->wireframeColor);
 	//ShaderUtils::setUniform(renderProgram, "WireFrameOption", config->wireFrameOption);
 
-
 	//In the render function, bind to the vertex array object and call glDrawArrays to
 	// Enable the vertex attribute arrays
 	glEnableVertexAttribArray(POSITION_ATTRIBUTE); // Vertex position
@@ -160,13 +159,7 @@ void IsosurfaceRenderer::draw(RModel* rmodel){
 	//glBindBuffer(GL_ARRAY_BUFFER, rmodel->vertexFlagsDataBufferObject);
 	//glVertexAttribIPointer( VERTEX_FLAGS, 1, GL_UNSIGNED_INT, 0,
 	//						(GLubyte *)NULL );
-	std::cout << "before draw " << glGetError() << std::endl;
-	float valuess[12];
-	glGetBufferSubData(GL_ARRAY_BUFFER, 0, 48, valuess);
-	for (int i = 0; i < 12; i++)
-		std::cout << valuess[i] << std::endl;
 	glDrawTransformFeedback(GL_TRIANGLES, transformFeedback);
-	std::cout << "after draw " << glGetError() << std::endl;
 	//glDrawArrays(GL_TRIANGLES, 0, rmodel->vertexFlagsAttribute.size() );
 
 	glDisableVertexAttribArray(POSITION_ATTRIBUTE); // Vertex position
@@ -181,16 +174,12 @@ void IsosurfaceRenderer::draw(RModel* rmodel){
 void IsosurfaceRenderer::generateIsosurface(RModel* rmodel, std::vector<float> values){
 	glUseProgram(generateProgram);
 
+	glEnable(GL_TEXTURE_2D);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, triTableTex);
-
 	ShaderUtils::setUniform(generateProgram, "Isolevels", values);
 	ShaderUtils::setUniform(generateProgram, "IsolevelsSize", (int)values.size());
-	ShaderUtils::setUniformTexture(generateProgram, "triTableTex", 0);
-
-
-
-
+	ShaderUtils::setUniformTexture(generateProgram, "triTableTex", GL_TEXTURE0);
 
 	// We don't want to rasterize anything. We just want to generate the isosurfaces.
 	glEnable(GL_RASTERIZER_DISCARD);

@@ -96,14 +96,18 @@ void PropertyFieldLoadingPly::visit(VertexCloud* model) {
 }
 
 void PropertyFieldLoadingPly::visit(PolygonMesh* model) {
-	readModelProperties(this->filename, model, this->selectedProperties);
+	visit((VertexCloud*)model);
 }
 
 void PropertyFieldLoadingPly::visit(PolyhedronMesh* model) {
-	readModelProperties(this->filename, (VertexCloud*)model, this->selectedProperties);
+	visit((VertexCloud*) model);
 }
 
-bool PropertyFieldLoadingPly::readModelProperties( std::string filename, VertexCloud* pol, std::vector<std::shared_ptr<PropertyFieldDef>> selectedProperties) {
+bool PropertyFieldLoadingPly::readModelProperties( std::string filename, VertexCloud* vcloud, std::vector<std::shared_ptr<PropertyFieldDef>> selectedProperties) {
+	std::vector<std::shared_ptr<ScalarFieldDef>> selectedScalars;
+	for(std::shared_ptr<PropertyFieldDef> prop : selectedProperties) {
+		selectedScalars.push_back(std::dynamic_pointer_cast<ScalarFieldDef>(prop));
+	}
 	std::ifstream file(filename);
 	std::string line;
 	// skip header
@@ -112,17 +116,22 @@ bool PropertyFieldLoadingPly::readModelProperties( std::string filename, VertexC
 	}
 	auto totalProperties = selectedProperties.size();
 	int totalProgress = 0;
-	PropertyReader propertyReader(&file);
-	int startingIndex = pol->getPropertyFieldDefs().size();
-	for(int i=0;i<pol->getVerticesCount();i++) {
-		propertyReader.setup(pol->getVertices()[i], startingIndex);
+	for(vis::Vertex* vertex : vcloud->getVertices()) {
+		//propertyReader.setup(pol->getVertices()[i], startingIndex);
 		// We assume properties are sorted by their id
 		int currPropId = 0;
-		for(std::shared_ptr<PropertyFieldDef> prop : selectedProperties) {
-			while(currPropId++ != prop->getId()) {
-				propertyReader.skipProperty();
+		auto currInsertionPropId = vcloud->getPropertyFieldDefs().size();
+		FileUtils::safeGetline(file, line);
+		std::istringstream iss(line);
+		for(std::shared_ptr<ScalarFieldDef> prop : selectedScalars) {
+			float value;
+			while(currPropId <= prop->getId()){
+				iss >> value;
+				currPropId++;
 			}
-			prop->accept(propertyReader);
+			//std::vector<std::shared_ptr<PropertyFieldDef>>::iterator it = find(propertyIds.begin(), propertyIds.end(), i);
+			vertex->addScalarProperty(currInsertionPropId++, value);
+			prop->expandBounds(value);
 		}
 		totalProgress+=totalProperties;
 		if(totalProgress%1000 == 0) {
@@ -130,7 +139,7 @@ bool PropertyFieldLoadingPly::readModelProperties( std::string filename, VertexC
 		}
 	}
 	for(std::shared_ptr<PropertyFieldDef> prop : selectedProperties) {
-		pol->addPropertyFieldDef(prop);
+		vcloud->addPropertyFieldDef(prop);
 	}
 	return true;
 }

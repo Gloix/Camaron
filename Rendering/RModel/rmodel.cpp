@@ -256,12 +256,11 @@ std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>> RModel::loadPropertyFiel
 	floatContainer.resize(nVertices* propertyFieldDef->getElementSize());
 	std::vector<vis::Vertex*>& vertices = model->getVertices();
 	//coords
-	for( decltype(vertices.size()) i = 0u; i < vertices.size(); i++ ) {
-		vis::Vertex* currentVertex = vertices[i];
+	for( vis::Vertex* currentVertex : vertices ) {
 		//std::vector<VScalar> scalarProps = currentVertex->getScalarProperties();
 		std::vector<int>& rmodelPos = currentVertex->getRmodelPositions();
-		for( decltype(rmodelPos.size()) j = 0u; j < rmodelPos.size(); j++ )
-			floatContainer[rmodelPos[j]] = currentVertex->getScalarProperty(pfdposition);
+		for( int pos : rmodelPos )
+			floatContainer[pos] = currentVertex->getScalarProperty(pfdposition);
 	}
 	GLuint buffer = ShaderUtils::createDataBuffer<float>(floatContainer);
 	std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>> ret(new RModelPropertyFieldDef<ScalarFieldDef>(

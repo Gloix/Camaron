@@ -38,6 +38,7 @@ class IsosurfaceRendererConfig : public BaseRendererConfig, public ModelVisitor
 	signals:
 		void applyChangesPushButton();
 	private:
+		readInputIsolevels();
 		void loadScalarDefs();
 		static const int NO_WIREFRAME = 0;
 		static const int COMPLETE_WIREFRAME = 1;

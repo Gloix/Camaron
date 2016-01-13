@@ -42,11 +42,13 @@ void IsosurfaceRendererConfig::visit(PolyhedronMesh* model) {
 	if(scalarDefs.size() > 0) {
 		ui->comboBox_prop_select->setEnabled(true);
 		ui->horizontalSlider_sweep_value->setEnabled(true);
+		ui->horizontalSlider_sweep_value->setValue(ui->horizontalSlider_sweep_value->minimum());
 		for(decltype(scalarDefs.size()) i = 0;i<scalarDefs.size();i++){
 			scalarDefIdsMap.insert(std::make_pair(i,scalarDefs[i]));
 			ui->comboBox_prop_select->addItem(QString::fromStdString(scalarDefs[i]->getName()), QVariant(i));
 		}
 		selectedScalarRModelDef = rmodel->loadPropertyField((VertexCloud*)model, std::dynamic_pointer_cast<ScalarFieldDef>(scalarDefs[0]));
+		ui->label_sweep_value->setText(QString::number(selectedScalarRModelDef->getPropertyFieldDef()->getMin()));
 	} else {
 		ui->comboBox_prop_select->setEnabled(false);
 		ui->horizontalSlider_sweep_value->setEnabled(false);
@@ -73,6 +75,12 @@ void IsosurfaceRendererConfig::changeScalarPropFunc(int index){
 
 void IsosurfaceRendererConfig::changeInputType(int tabIndex) {
 	this->currentInputType = tabIndex;
+	if(tabIndex == INPUT_SWEEP) {
+		sweepValueChanged(ui->horizontalSlider_sweep_value->value());
+	} else {
+		readInputIsolevels();
+		forceUpdate();
+	}
 }
 
 void IsosurfaceRendererConfig::sweepValueChanged(int value) {
@@ -103,12 +111,7 @@ void IsosurfaceRendererConfig::readConfig(){
 	wireframeColor.w = QtUtils::readFloatFromQText(ui->lineEdit_wf_a->text(),1.0f);
 
 	if(this->currentInputType == INPUT_VALUES_LIST) {
-		isolevels.clear();
-		QString stepsStr = ui->lineEdit_steps->displayText();
-		QStringList parts = stepsStr.split(QString(","), QString::SkipEmptyParts);
-		foreach (const QString part, parts ) {
-			isolevels.push_back(atof(part.toStdString().c_str()));
-		}
+		readInputIsolevels();
 	}
 
 
@@ -119,4 +122,13 @@ void IsosurfaceRendererConfig::readConfig(){
 	if(ui->radioButton_wf_surface->isChecked())
 		wireFrameOption = SURFACE_WIREFRAME;
 
+}
+
+IsosurfaceRendererConfig::readInputIsolevels() {
+	isolevels.clear();
+	QString stepsStr = ui->lineEdit_steps->displayText();
+	QStringList parts = stepsStr.split(QString(","), QString::SkipEmptyParts);
+	foreach (const QString part, parts ) {
+		isolevels.push_back(atof(part.toStdString().c_str()));
+	}
 }

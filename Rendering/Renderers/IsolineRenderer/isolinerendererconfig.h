@@ -38,6 +38,7 @@ class IsolineRendererConfig : public BaseRendererConfig, public ModelVisitor
 		void applyChangesPushButton();
 	private:
 		void loadScalarDefs();
+		readInputIsolevels();
 		static const int NO_WIREFRAME = 0;
 		static const int COMPLETE_WIREFRAME = 1;
 		static const int SURFACE_WIREFRAME = 2;

@@ -39,11 +39,13 @@ void IsolineRendererConfig::visit(PolygonMesh* model) {
 	if(scalarDefs.size() > 0) {
 		ui->comboBox_prop_select->setEnabled(true);
 		ui->horizontalSlider_sweep_value->setEnabled(true);
+		ui->horizontalSlider_sweep_value->setValue(ui->horizontalSlider_sweep_value->minimum());
 		for(auto i = 0u;i<scalarDefs.size();i++){
 			scalarDefIdsMap.insert(std::make_pair(i,scalarDefs[i]));
 			ui->comboBox_prop_select->addItem(QString::fromStdString(scalarDefs[i]->getName()), QVariant(i));
 		}
 		selectedScalarRModelDef = rmodel->loadPropertyField(model, std::dynamic_pointer_cast<ScalarFieldDef>(scalarDefs[0]));
+		ui->label_sweep_value->setText(QString::number(selectedScalarRModelDef->getPropertyFieldDef()->getMin()));
 	} else {
 		ui->comboBox_prop_select->setEnabled(false);
 		ui->horizontalSlider_sweep_value->setEnabled(false);
@@ -79,15 +81,21 @@ void IsolineRendererConfig::changeScalarPropFunc(int index){
 
 void IsolineRendererConfig::changeInputType(int tabIndex) {
 	this->currentInputType = tabIndex;
+	if(tabIndex == INPUT_SWEEP) {
+		sweepValueChanged(ui->horizontalSlider_sweep_value->value());
+	} else {
+		readInputIsolevels();
+		forceUpdate();
+	}
 }
 
 void IsolineRendererConfig::sweepValueChanged(int value) {
 	isolevels.clear();
 	int maxSliderValue = ui->horizontalSlider_sweep_value->maximum();
 	int minSliderValue = ui->horizontalSlider_sweep_value->minimum();
-	std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>> selected = std::dynamic_pointer_cast<RModelPropertyFieldDef<ScalarFieldDef>>(selectedScalarRModelDef->getPropertyFieldDef());
-	float minScalar = selected->getPropertyFieldDef()->getMin();
-	float maxScalar = selected->getPropertyFieldDef()->getMax();
+	//std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>> selected = std::dynamic_pointer_cast<RModelPropertyFieldDef<ScalarFieldDef>>(selectedScalarRModelDef->getPropertyFieldDef());
+	float minScalar = selectedScalarRModelDef->getPropertyFieldDef()->getMin();
+	float maxScalar = selectedScalarRModelDef->getPropertyFieldDef()->getMax();
 	float isolineValue = minScalar + 1.0*value*(maxScalar-minScalar)/(maxSliderValue-minSliderValue);
 	ui->label_sweep_value->setText(QString::number(isolineValue));
 	isolevels.push_back(-1);
@@ -117,6 +125,7 @@ void IsolineRendererConfig::readConfig(){
 		foreach (const QString part, parts ) {
 			isolevels.push_back(atof(part.toStdString().c_str()));
 		}
+		readInputIsolevels();
 	}
 
 
@@ -127,4 +136,13 @@ void IsolineRendererConfig::readConfig(){
 	if(ui->radioButton_wf_surface->isChecked())
 		wireFrameOption = SURFACE_WIREFRAME;
 
+}
+
+IsolineRendererConfig::readInputIsolevels() {
+	isolevels.clear();
+	QString stepsStr = ui->lineEdit_steps->displayText();
+	QStringList parts = stepsStr.split(QString(","), QString::SkipEmptyParts);
+	foreach (const QString part, parts ) {
+		isolevels.push_back(atof(part.toStdString().c_str()));
+	}
 }

@@ -65,6 +65,7 @@ SOURCES += main.cpp\
     EvaluationStrategies/trianglequalitymeasure1.cpp \
     EvaluationStrategies/triangleradiusratio.cpp \
     ModelLoading/modelloadingelenode.cpp \
+    ModelLoading/modelloadingelenodelw.cpp \
     ModelLoading/modelloadingts.cpp \
     Rendering/Renderers/ShadingEffectsRender/shadingeffectsrender.cpp \
     Rendering/Renderers/ShadingEffectsRender/shadingeffectsrenderconfig.cpp \
@@ -238,6 +239,7 @@ HEADERS  += visualizador.h \
     EvaluationStrategies/trianglequalitymeasure1.h \
     EvaluationStrategies/triangleradiusratio.h \
     ModelLoading/modelloadingelenode.h \
+    ModelLoading/modelloadingelenodelw.h \
     ModelLoading/modelloadingts.h \
     Rendering/Renderers/ShadingEffectsRender/shadingeffectsrender.h \
     Rendering/Renderers/ShadingEffectsRender/shadingeffectsrenderconfig.h \

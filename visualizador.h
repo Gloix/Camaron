@@ -90,7 +90,7 @@ class Visualizador : public QMainWindow
 		void setupEvaluationStrategiesStatics();
 		void openModelFromFilePath(QString, bool addToRecentFiles);
 		void openModelFromFilePathQThread(QString filename,bool lw);
-		void openPropertyFieldDialogFromFilePath(QString filename);
+		void openPropertyFieldDialogFromFilePath(QString filename, bool userTriggered);
 		Ui::Visualizador *ui;
 
 		//Model

@@ -492,7 +492,7 @@ void Visualizador::importFilePropertyField() {
 													fileFormatsLW.c_str());
 	if(filename.size()==0)
 		return;
-	openPropertyFieldDialogFromFilePath(filename);
+	openPropertyFieldDialogFromFilePath(filename, true);
 }
 
 void Visualizador::openModelFromFilePath(QString filename, bool addToRecentFiles){
@@ -582,12 +582,16 @@ void Visualizador::openModelFromFilePathQThread(QString filename,bool lw){
 	}
 }
 
-void Visualizador::openPropertyFieldDialogFromFilePath(QString filename){
+void Visualizador::openPropertyFieldDialogFromFilePath(QString filename, bool userTriggered){
 	try{
 		PropertyFieldLoadingStrategy* selectedStrategy;
-		selectedStrategy = propertyFieldLoadingFactory->loadPropertyFieldQThread(filename.toStdString());
+		try {
+			selectedStrategy = propertyFieldLoadingFactory->loadPropertyFieldQThread(filename.toStdString());
+		} catch(UnknownExtensionException& e) {
+			return;
+		}
 		std::vector<std::shared_ptr<PropertyFieldDef>> props = selectedStrategy->loadDefs(filename.toStdString());
-		if(props.size() == 0) {
+		if(userTriggered && props.size() == 0) {
 			QMessageBox::information(0,
 									 QString("No property fields"),
 									 QString("There are no property fields in the file"),QMessageBox::Ok);
@@ -680,6 +684,7 @@ void Visualizador::getLoadedModelFromLoadingStrategy(){
 		addRecentFiles(QString::fromStdString(loaded->getFilename()));
 		loaded->clean();//will clear unused data for LightWeight models
 		this->customGLViewer->forceReRendering();
+		openPropertyFieldDialogFromFilePath(QString::fromStdString(model->getFilename()), false);
 	}
 	progressDialog.hide();
 }

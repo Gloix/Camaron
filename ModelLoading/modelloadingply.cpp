@@ -234,7 +234,6 @@ vis::Vertex* ModelLoadingPly::readVertex(int id, float& x, float& y, float& z) {
 	x = 0.0f;
 	y = 0.0f;
 	z = 0.0f;
-	std::vector<float> properties;
 	for( std::shared_ptr<PropertyFieldDef> field : vertexProperties ) {
 		if( !field->getName().compare("x\0")) {
 			scanner.readFloat(fileBuffer, &x);
@@ -242,16 +241,9 @@ vis::Vertex* ModelLoadingPly::readVertex(int id, float& x, float& y, float& z) {
 			scanner.readFloat(fileBuffer, &y);
 		} else if( !field->getName().compare("z\0")) {
 			scanner.readFloat(fileBuffer, &z);
-		} else {
-			float f;
-			scanner.readFloat(fileBuffer, &f);
-			properties.push_back(f);
 		}
 	}
 	vis::Vertex* vertex = new vis::Vertex(id, x, y, z);
-	for( unsigned int i = 0; i < properties.size(); i++) {
-		vertex->addScalarProperty(i,properties[i]);
-	}
 	return vertex;
 }
 

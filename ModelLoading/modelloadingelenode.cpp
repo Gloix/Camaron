@@ -42,9 +42,6 @@ Model* ModelLoadingEleNode::load(std::string filename){
 	try{
 		if(isPolygonMesh){
 			PolygonMesh* polygonMeshModel = new PolygonMesh(filename,numberOfNodes,numberOfElements);
-			for(decltype(vertexProperties.size()) i=0; i<vertexProperties.size(); i++) {
-				polygonMeshModel->addPropertyFieldDef(vertexProperties[i]);
-			}
 			model = polygonMeshModel;
 			emit setupProgressBarForNewModel(vis::CONSTANTS::POLYGON_MESH,
 											 numberOfNodes,
@@ -65,9 +62,6 @@ Model* ModelLoadingEleNode::load(std::string filename){
 		}
 		else{
 			PolyhedronMesh* polyhedronMeshModel = new PolyhedronMesh(filename);
-			for(std::shared_ptr<PropertyFieldDef> field : vertexProperties ) {
-				polyhedronMeshModel->addPropertyFieldDef(field);
-			}
 			model = polyhedronMeshModel;
 			emit setupProgressBarForNewModel(vis::CONSTANTS::POLYHEDRON_MESH,
 											 numberOfNodes,
@@ -117,14 +111,6 @@ void ModelLoadingEleNode::readHeaderNode(){
 	scanner.readInt(fileBufferNode,&dimensions);
 	scanner.readInt(fileBufferNode,&numberOfAttributesPerNode);
 	scanner.readInt(fileBufferNode,&numberOfBoundaryMarkers);
-	int propertyIndex = 0;
-	for(int i=0;i< numberOfAttributesPerNode;i++) {
-		std::shared_ptr<ScalarFieldDef> propertyFieldDef(
-					new ScalarFieldDef(propertyIndex++,
-									   "Property #%d"+std::to_string(i),
-									   numberOfNodes));
-		vertexProperties.push_back(propertyFieldDef);
-	}
 }
 bool ModelLoadingEleNode::readVertices( PolygonMesh* mesh){
 	scanner.reset(fileSizeNode);
@@ -139,20 +125,12 @@ bool ModelLoadingEleNode::readVertices( PolygonMesh* mesh){
 	int index;
 	float x,y;
 	float z = 0.0f;
-	float prop = 0.0f;
 	scanner.readInt(fileBufferNode,&index,true);
 	scanner.readFloat(fileBufferNode, &x );
 	scanner.readFloat(fileBufferNode, &y );
 	if(dimensions>2)
 		scanner.readFloat(fileBufferNode, &z );
 	vis::Vertex* vertex = new vis::Vertex( index, x, y, z, 0 );
-	for(int i=0 ; i<numberOfAttributesPerNode; i++) {
-		scanner.readFloat(fileBufferNode, &prop);
-		//VScalar vscalar;
-		//vscalar.fvalue = prop;
-		vertex->addScalarProperty(i, prop);
-		vertexProperties[i]->expandBounds(prop);
-	}
 
 	vertices.push_back(vertex);
 
@@ -171,11 +149,6 @@ bool ModelLoadingEleNode::readVertices( PolygonMesh* mesh){
 		indexVsPosition[index] = i;
 
 		vertex = new vis::Vertex(index,x,y,z,i);
-		for(int i=0 ; i<numberOfAttributesPerNode; i++) {
-			scanner.readFloat(fileBufferNode, &prop);
-			vertex->addScalarProperty(i, prop);
-			vertexProperties[i]->expandBounds(prop);
-		}
 
 		vertices.push_back(vertex);
 		if( bounds[0] > x )

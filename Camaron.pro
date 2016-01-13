@@ -180,6 +180,7 @@ SOURCES += main.cpp\
     PropertyFieldLoading/PropertyFieldLoadingStrategy.cpp \
     #PropertyFieldLoading/propertyfieldloadingtqs.cpp \
     PropertyFieldLoading/propertyfieldloadingply.cpp \
+    PropertyFieldLoading/propertyfieldloadingelenode.cpp \
     Model/Element/edge.cpp \
     UI/propertyfieldloaddialog.cpp \
     PropertyFieldLoading/propertyfielddef.cpp \
@@ -357,6 +358,7 @@ HEADERS  += visualizador.h \
     Rendering/Renderers/baserendererconfig.h \
     PropertyFieldLoading/PropertyFieldLoadingStrategy.h \
     #PropertyFieldLoading/propertyfieldloadingtqs.h \
+    PropertyFieldLoading/propertyfieldloadingelenode.h \
     PropertyFieldLoading/propertyfieldloadingply.h \
     Model/Element/edge.h \
     UI/propertyfieldloaddialog.h \

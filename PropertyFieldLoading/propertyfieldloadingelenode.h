@@ -1,40 +1,31 @@
 #ifndef PROPERTYFIELDLOADINGELENODE_H
 #define PROPERTYFIELDLOADINGELENODE_H
 #include "PropertyFieldLoading/PropertyFieldLoadingStrategy.h"
+#include "Model/modelvisitor.h"
 #include "Utils/chararrayscanner.h"
 #include <unordered_map>
-struct VScalarDef;
-class PropertyFieldLoadingEleNode: public PropertyFieldLoadingStrategy
+
+class PropertyFieldLoadingEleNode: public PropertyFieldLoadingStrategy, public ModelVisitor
 {
 	public:
 		PROPERTY_FIELD_LOADING_EXTENDING_CLASS_MINIMAL(PropertyFieldLoadingEleNode)
+		void visit(VertexCloud* model);
+		void visit(PolygonMesh* model);
+		void visit(PolyhedronMesh* model);
 	protected:
 	private:
-		char* fileBufferNode;
-		long fileSizeNode;
-		char* fileBufferEle;
-		long fileSizeEle;
-		void readHeaderNode();
-		void readHeaderEle();
-		bool readBody( PolygonMesh* );
-		bool readPolygons( PolygonMesh* );
-		bool readPolyhedrons( PolyhedronMesh* );
-		bool readVertices( PolygonMesh* );
+		void readHeaderNode(std::ifstream& file);
+		bool readVertices( Model* );
+		bool readModelProperties( std::string filename, VertexCloud* vcloud, std::vector<std::shared_ptr<PropertyFieldDef>> selectedProperties);
 
-		CharArrayScanner scanner;
-
-		bool isPolygonMesh;
-		//Ele header
-		int numberOfElements;
-		int numberOfAttributesPerElement;
-		int numberOfNodesPerElement;
+		std::string filename;
+		std::vector<std::shared_ptr<PropertyFieldDef>> selectedProperties;
 		//Node header
 		int numberOfNodes;
 		int dimensions;
 		int numberOfAttributesPerNode;
 		int numberOfBoundaryMarkers;
-		std::unordered_map<int,int> indexVsPosition;
-		std::vector<VScalarDef*> vertexProperties;
+		std::vector<std::shared_ptr<PropertyFieldDef>> vertexProperties;
 
 };
 

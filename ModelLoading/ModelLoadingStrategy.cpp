@@ -73,6 +73,15 @@ void ModelLoadingStrategy::completePolygonPolyhedronRelations(PolyhedronMesh* m)
 		}
 	}
 }
+
+void ModelLoadingStrategy::completePolygonPolyhedronRelations(LightWeightPolyhedronMesh* m){
+	for(vis::LWPolyhedron* polyhedron : m->getPolyhedrons()){
+		for(vis::LWPolygon* polygon : polyhedron->getPolyhedronPolygons()){
+			polygon->addPolyhedron(polyhedron);
+		}
+	}
+}
+
 void ModelLoadingStrategy::calculateNormalsPolygons(PolygonMesh* m, int nThreads){
 	if(nThreads<=1 || m->getPolygonsCount()<10000)
 		nThreads = 1;
@@ -263,6 +272,8 @@ void ModelLoadingStrategy::completeMesh(LightWeightPolygonMesh* mesh){
 }
 
 void ModelLoadingStrategy::completeMesh(LightWeightPolyhedronMesh* mesh){
+	completePolygonPolyhedronRelations(mesh);
+	emit stageComplete(ModelLoadingProgressDialog::COMPLETED_POLYGON_POLYHEDRON_R);
 	fixSurfacePolygonsVerticesOrder(mesh);
 	emit stageComplete(ModelLoadingProgressDialog::FIXED_SURFACE_POLYGONS_VERTICES_ORDER);
 	calculateNormalsVertices(mesh);

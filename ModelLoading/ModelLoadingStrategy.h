@@ -57,6 +57,7 @@ class ModelLoadingStrategy:public QThread
 		static void completePolygonPolygonRelations(PolygonMesh* pmesh,
 													int nThreads = N_DEFAULT_THREADS_MODEL_LOADING); //needs vertex Polygons relations
 		static void completePolygonPolyhedronRelations(PolyhedronMesh* m);
+		static void completePolygonPolyhedronRelations(LightWeightPolyhedronMesh* m);
 		static void calculateNormalsPolygons(PolygonMesh* m, int nThreads = N_DEFAULT_THREADS_MODEL_LOADING);
 		static void calculateNormalsVertices(PolygonMesh* m, bool nThreads = N_DEFAULT_THREADS_MODEL_LOADING);
 		static void calculateNormalsVertices(LightWeightPolygonMesh* m,bool nThreads = N_DEFAULT_THREADS_MODEL_LOADING);

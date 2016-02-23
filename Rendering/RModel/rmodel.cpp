@@ -238,22 +238,23 @@ void RModel::loadVertexPositionAndNormals(VertexCloud* model){
 
 }
 
-std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>> RModel::loadPropertyField(VertexCloud* model, std::shared_ptr<ScalarFieldDef> pfd){
+std::shared_ptr<RModelPropertyFieldDef<PropertyFieldDef>> RModel::loadPropertyField(std::shared_ptr<ScalarFieldDef> pfd){
+	VertexCloud *model = static_cast<VertexCloud*>(originalModel);
 	// First check if the current property field is the one we're asked for
-	if(currentRModelPropertyFieldDef && currentRModelPropertyFieldDef->getPropertyFieldDef().get() == pfd.get()) {
-		return std::dynamic_pointer_cast<RModelPropertyFieldDef<ScalarFieldDef>>(currentRModelPropertyFieldDef);
+	if(currentRModelPropertyFieldDef && currentRModelPropertyFieldDef->getPropertyFieldDef() == std::dynamic_pointer_cast<PropertyFieldDef>(pfd)) {
+		return currentRModelPropertyFieldDef;
 		//return std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>>(currentRModelPropertyFieldDef, static_cast<RModelPropertyFieldDef<ScalarFieldDef>*>(currentRModelPropertyFieldDef.get()));
 	}
 	// Delete the currently loaded property field
-	if(currentRModelPropertyFieldDef) {
-		GLuint buffer = currentRModelPropertyFieldDef->getBuffer();
-		glDeleteBuffers(1,&buffer);
-	}
+	currentRModelPropertyFieldDef = nullptr;
+	//if(currentRModelPropertyFieldDef) {
+	//	GLuint buffer = currentRModelPropertyFieldDef->getBuffer();
+	//	glDeleteBuffers(1,&buffer);
+	//}
 	// Load the new RModelPropertyFieldDef
 	unsigned char pfdposition = model->getPropertyFieldPosition(pfd.get());
 	std::vector<float> floatContainer;
-	std::shared_ptr<PropertyFieldDef> propertyFieldDef = model->getPropertyFieldDefs()[pfdposition];
-	floatContainer.resize(nVertices* propertyFieldDef->getElementSize());
+	floatContainer.resize(nVertices* pfd->getElementSize());
 	std::vector<vis::Vertex*>& vertices = model->getVertices();
 	//coords
 	for( vis::Vertex* currentVertex : vertices ) {
@@ -263,13 +264,19 @@ std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>> RModel::loadPropertyFiel
 			floatContainer[pos] = currentVertex->getScalarProperty(pfdposition);
 	}
 	GLuint buffer = ShaderUtils::createDataBuffer<float>(floatContainer);
-	std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>> ret(new RModelPropertyFieldDef<ScalarFieldDef>(
-													std::dynamic_pointer_cast<ScalarFieldDef>(propertyFieldDef),
+	currentRModelPropertyFieldDef = std::make_shared<RModelPropertyFieldDef<PropertyFieldDef>>(
+													std::dynamic_pointer_cast<PropertyFieldDef>(pfd),
 													buffer,
 													0,
-													0));
-	currentRModelPropertyFieldDef = std::dynamic_pointer_cast<RModelPropertyFieldDef<PropertyFieldDef>>(ret);
-	return ret;
+													(GLvoid*)0);
+	return currentRModelPropertyFieldDef;
+	//currentRModelPropertyFieldDef = std::shared_ptr<RModelPropertyFieldDef>(new RModelPropertyFieldDef<ScalarFieldDef>(
+	//												pfd,
+	//												buffer,
+	//												0,
+	//												0));
+	//currentRModelPropertyFieldDef = std::static_pointer_cast<RModelPropertyFieldDef<PropertyFieldDef>>(ret);
+	//return ret;
 }
 
 void RModel::loadVertexPolygonPolyhedronIds(PolygonMesh* mesh){

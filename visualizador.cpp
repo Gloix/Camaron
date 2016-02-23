@@ -374,6 +374,7 @@ void Visualizador::connectPropertyFieldLoadingStrategies(PropertyFieldLoadingFac
 
 void Visualizador::onLoadedPropertyFields() {
 	std::cout << "Property fields loaded in: "<<timer.getTranscurredSeconds()<<std::endl;
+	this->fillRendererComboBox();
 	customGLViewer->forceReRendering();
 	propertyFieldDialog.hide();
 }

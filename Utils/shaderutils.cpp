@@ -8,49 +8,6 @@
 #include <Common/Constants.h>
 ShaderUtils::ShaderUtils(){}
 
-GLuint ShaderUtils::CreateProgram(const std::vector<GLuint> &shaderList,
-								  const std::vector<VertexAttributeBindingData> &attributes,
-								  const std::vector<VertexAttributeBindingData> &fragData,
-								  const TransformFeedbackData *transformFeedbackData){
-	GLuint program = glCreateProgram();
-	bool ok = true;
-	for(size_t iLoop = 0; iLoop < shaderList.size(); iLoop++)
-		glAttachShader(program, shaderList[iLoop]);
-	for(size_t iLoop = 0; iLoop < attributes.size(); iLoop++)
-		glBindAttribLocation(program, attributes[iLoop].index, attributes[iLoop].strShaderFile );
-	for(size_t iLoop = 0; iLoop < fragData.size(); iLoop++)
-		glBindFragDataLocation(program, fragData[iLoop].index, fragData[iLoop].strShaderFile );
-	if(transformFeedbackData != NULL) {
-		const char* varyings[transformFeedbackData->varyings.size()];
-		for(std::vector<std::string>::size_type i=0;i<transformFeedbackData->varyings.size();i++) {
-			varyings[i] = transformFeedbackData->varyings[i].c_str();
-		}
-		glTransformFeedbackVaryings(program, transformFeedbackData->varyings.size(),
-									varyings, transformFeedbackData->bufferMode);
-	}
-
-	glLinkProgram(program);
-
-	GLint status;
-	glGetProgramiv (program, GL_LINK_STATUS, &status);
-
-	if (status == GL_FALSE)
-	{
-		GLint infoLogLength;
-		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
-
-		GLchar *strInfoLog = new GLchar[infoLogLength + 1];
-		glGetProgramInfoLog(program, infoLogLength, NULL, strInfoLog);
-		std::cerr << "Linker failure: " << std::endl << strInfoLog << std::endl;
-		delete[] strInfoLog;
-		ok = false;
-	}
-
-	for(size_t iLoop = 0; iLoop < shaderList.size(); iLoop++)
-		glDetachShader(program, shaderList[iLoop]);
-	return (ok)?program:ShaderUtils::FAIL_CREATING_PROGRAM;
-}
-
 GLuint ShaderUtils::CreateShader(ShaderLoadingData data)
 {
 	if(!glCreateShader){
@@ -125,40 +82,53 @@ GLuint ShaderUtils::CreateProgram(const std::vector<ShaderLoadingData> &shaderLi
 }
 GLuint ShaderUtils::CreateProgram(const std::vector<ShaderLoadingData> &shaderList,
 								  const std::vector<VertexAttributeBindingData> &attributes,
-								  const std::vector<VertexAttributeBindingData> &fragAt){
-	return CreateProgram(shaderList,attributes,fragAt, NULL);
+								  const TransformFeedbackData &transformFeedbackData){
+	return CreateProgram(shaderList,attributes,std::vector<VertexAttributeBindingData>(),transformFeedbackData);
 }
 GLuint ShaderUtils::CreateProgram(const std::vector<ShaderLoadingData> &shaderList,
 								  const std::vector<VertexAttributeBindingData> &attributes,
-								  const TransformFeedbackData *transformFeedbackVaryings){
-	return CreateProgram(shaderList,attributes,std::vector<VertexAttributeBindingData>(),transformFeedbackVaryings);
-}
-GLuint ShaderUtils::CreateProgram(const std::vector<ShaderLoadingData> &shaderList,
-								  const std::vector<VertexAttributeBindingData> &attributes,
-								  const std::vector<VertexAttributeBindingData> &fragAt,
-								  const TransformFeedbackData *transformFeedbackVaryings){
-	std::vector<GLuint> compiledShaderList;
-	for(size_t iLoop = 0; iLoop < shaderList.size(); iLoop++){
-		GLuint shaderId = ShaderUtils::CreateShader(shaderList[iLoop]);
-		if(shaderId == ShaderUtils::FAIL_CREATING_SHADER){
-			std::for_each(compiledShaderList.begin(), compiledShaderList.end(), glDeleteShader);
-			return ShaderUtils::FAIL_CREATING_PROGRAM;
-		}
-		compiledShaderList.push_back(shaderId);
-	}
-	GLuint program = ShaderUtils::CreateProgram(compiledShaderList,attributes,fragAt,transformFeedbackVaryings);
+								  const std::vector<VertexAttributeBindingData> &fragData){
+	std::vector<GLuint> compiledShaderList = ShaderUtils::compileShaders(shaderList);
+	GLuint program = ShaderUtils::CreateProgramWithShaders(compiledShaderList,attributes,fragData);
+	ShaderUtils::LinkProgram(program, compiledShaderList);
 	std::for_each(compiledShaderList.begin(), compiledShaderList.end(), glDeleteShader);
 	if(program==ShaderUtils::FAIL_CREATING_PROGRAM){
-		std::cerr << "Failed to Link: "<<std::endl;
-		for(size_t iLoop = 0; iLoop < shaderList.size(); iLoop++){
-			std::vector<std::string> shaderFiles = shaderList[iLoop].strShaderFiles;
-			for( std::string file : shaderFiles )
-				std::cerr << file <<std::endl;
-		}
-		std::cerr <<std::endl;
+		ShaderUtils::printErrors(shaderList);
 	}
 	return program;
 }
+GLuint ShaderUtils::CreateProgram(const std::vector<ShaderLoadingData> &shaderList,
+								  const std::vector<VertexAttributeBindingData> &attributes,
+								  const std::vector<VertexAttributeBindingData> &fragData,
+								  const TransformFeedbackData& transformFeedbackData){
+	std::vector<GLuint> compiledShaderList = ShaderUtils::compileShaders(shaderList);
+	GLuint program = ShaderUtils::CreateProgramWithShaders(compiledShaderList,attributes,fragData);
+	ShaderUtils::setTransformFeedback(program, transformFeedbackData);
+	ShaderUtils::LinkProgram(program, compiledShaderList);
+	std::for_each(compiledShaderList.begin(), compiledShaderList.end(), glDeleteShader);
+	if(program==ShaderUtils::FAIL_CREATING_PROGRAM){
+		ShaderUtils::printErrors(shaderList);
+	}
+	return program;
+}
+//GLuint ShaderUtils::CreateProgram(const std::vector<ShaderLoadingData> &shaderList,
+//								  const std::vector<VertexAttributeBindingData> &attributes,
+//								  const std::vector<VertexAttributeBindingData> &fragData,
+//								  const TransformFeedbackData& transformFeedbackVaryings){
+//	GLuint program = ShaderUtils::CreateProgramWithShaders(shaderList,attributes,fragData);
+//	ShaderUtils::setTransformFeedback(transformFeedbackVaryings);
+//	return ShaderUtils::LinkProgram(program);
+//}
+
+void ShaderUtils::setTransformFeedback(GLuint program, const TransformFeedbackData& transformFeedbackData){
+	const char* varyings[transformFeedbackData.varyings.size()];
+	for(std::vector<std::string>::size_type i=0;i<transformFeedbackData.varyings.size();i++) {
+		varyings[i] = transformFeedbackData.varyings[i].c_str();
+	}
+	glTransformFeedbackVaryings(program, transformFeedbackData.varyings.size(),
+							varyings, transformFeedbackData.bufferMode);
+}
+
 bool ShaderUtils::setUniform(GLuint program,const char* uniformName, glm::vec4 val){
 	GLint loc = glGetUniformLocation(program,uniformName);
 	if(loc >= 0){
@@ -236,4 +206,60 @@ bool ShaderUtils::setUniform(GLuint program,const char* uniformName, bool val){
 
 void ShaderUtils::deleteBuffer(GLuint* b){
 	glDeleteBuffers(1,b);
+}
+
+GLuint ShaderUtils::LinkProgram(const GLuint program, const std::vector<GLuint> &shaderList) {
+	glLinkProgram(program);
+
+	GLint status;
+	glGetProgramiv (program, GL_LINK_STATUS, &status);
+
+	bool ok = true;
+	if (status == GL_FALSE)
+	{
+		GLint infoLogLength;
+		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+		GLchar *strInfoLog = new GLchar[infoLogLength + 1];
+		glGetProgramInfoLog(program, infoLogLength, NULL, strInfoLog);
+		std::cerr << "Linker failure: " << std::endl << strInfoLog << std::endl;
+		delete[] strInfoLog;
+		ok = false;
+	}
+	for(const GLuint shaderLoadingData : shaderList)
+		glDetachShader(program, shaderLoadingData);
+	return (ok)?program:ShaderUtils::FAIL_CREATING_PROGRAM;
+}
+
+GLuint ShaderUtils::CreateProgramWithShaders(const std::vector<GLuint> &shaderList,
+											 const std::vector<VertexAttributeBindingData> &attributes,
+											 const std::vector<VertexAttributeBindingData> &fragData) {
+	GLuint program = glCreateProgram();
+	for(size_t iLoop = 0; iLoop < shaderList.size(); iLoop++)
+		glAttachShader(program, shaderList[iLoop]);
+	for(size_t iLoop = 0; iLoop < attributes.size(); iLoop++)
+		glBindAttribLocation(program, attributes[iLoop].index, attributes[iLoop].strShaderFile );
+	for(size_t iLoop = 0; iLoop < fragData.size(); iLoop++)
+		glBindFragDataLocation(program, fragData[iLoop].index, fragData[iLoop].strShaderFile );
+
+	return program;
+}
+
+std::vector<GLuint> ShaderUtils::compileShaders(const std::vector<ShaderLoadingData> &shaderList) {
+	std::vector<GLuint> compiledShaderList;
+	for(size_t iLoop = 0; iLoop < shaderList.size(); iLoop++){
+		GLuint shaderId = ShaderUtils::CreateShader(shaderList[iLoop]);
+		compiledShaderList.push_back(shaderId);
+	}
+	return compiledShaderList;
+}
+
+void ShaderUtils::printErrors(const std::vector<ShaderLoadingData> &shaderList) {
+	std::cerr << "Failed to Link: "<<std::endl;
+	for(size_t iLoop = 0; iLoop < shaderList.size(); iLoop++){
+		std::vector<std::string> shaderFiles = shaderList[iLoop].strShaderFiles;
+		for( std::string file : shaderFiles )
+			std::cerr << file <<std::endl;
+	}
+	std::cerr <<std::endl;
 }

@@ -2,7 +2,7 @@
 #define ISOSURFACERENDERER_H
 #include "Rendering/Renderer.h"
 #include <GL/glew.h>
-#include "Rendering/Renderers/IsosurfaceRenderer/isosurfacerendererconfig.h"
+#include "Rendering/Renderers/stepsrendererconfig.h"
 
 class IsosurfaceRenderer:public Renderer
 {
@@ -16,15 +16,18 @@ class IsosurfaceRenderer:public Renderer
 		void applyConfigChanges(RModel * = (RModel*)0);
 		bool rmodelChanged(RModel* rmodel);
 	private:
+		//std::shared_ptr<RModelPropertyFieldDef<PropertyFieldDef>> currentRModelPropertyFieldDef;
+		bool rModelChanged;
 		GLuint renderProgram;
 		GLuint generateProgram;
 		GLuint transformFeedback;
 		//std::vector<GLuint> isosurfaceBuffers;
 		GLuint isosurfacesBuffer;
 		GLuint triTableTex;
-		IsosurfaceRendererConfig* config;
+		StepsRendererConfig* config;
 		Model* lastModel;
-		std::vector<float> lastScalarLevels;
+		std::vector<float> lastConfigScalarLevels;
+		int lastConfigElementDrawnOption;
 		void generateIsosurface(RModel* rmodel, std::vector<float> values);
 		bool buildIsosurfaceRenderProgram();
 		bool buildIsosurfaceGenerationProgram();

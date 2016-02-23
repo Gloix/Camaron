@@ -35,7 +35,7 @@ class RModel
 		void loadVertexPolygonPolyhedronIds(PolygonMesh* mesh);
 		void loadVertexPositionAndNormals(VertexCloud* model);
 		void loadAdditionalEdges(VertexCloud* model);
-		std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>> loadPropertyField(VertexCloud* model, std::shared_ptr<ScalarFieldDef>);
+		std::shared_ptr<RModelPropertyFieldDef<PropertyFieldDef>> loadPropertyField(std::shared_ptr<ScalarFieldDef>);
 		void loadTetrahedronVertexIds(PolyhedronMesh* mesh);
 
 		void refreshVertexAttributes(PolyhedronMesh*);

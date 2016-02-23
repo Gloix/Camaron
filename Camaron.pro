@@ -170,9 +170,7 @@ SOURCES += main.cpp\
     EvaluationStrategies/polygonverticescount.cpp \
     EvaluationStrategies/polyhedronpolygonscount.cpp \
     Rendering/Renderers/IsolineRenderer/isolinerenderer.cpp \
-    Rendering/Renderers/IsolineRenderer/isolinerendererconfig.cpp \
     Rendering/Renderers/IsosurfaceRenderer/isosurfacerenderer.cpp \
-    Rendering/Renderers/IsosurfaceRenderer/isosurfacerendererconfig.cpp \
     Rendering/Renderers/AdditionalEdgesRenderer/additionaledgesrenderer.cpp \
     Rendering/Renderers/ScalarPropertyRenderer/scalarpropertyrenderer.cpp \
     Rendering/Renderers/ScalarPropertyRenderer/scalarpropertyrendererconfig.cpp \
@@ -188,7 +186,8 @@ SOURCES += main.cpp\
     PropertyFieldLoading/tqspropertyfielddef.cpp \
     Rendering/RModel/rmodelpropertyfielddef.cpp \
     Exceptions/propertydefnotfoundexception.cpp \
-    PropertyFieldLoading/scalarfieldlistaddervisitor.cpp
+    PropertyFieldLoading/scalarfieldlistaddervisitor.cpp \
+    Rendering/Renderers/stepsrendererconfig.cpp
 
 HEADERS  += visualizador.h \
     Common/Constants.h \
@@ -348,9 +347,7 @@ HEADERS  += visualizador.h \
     EvaluationStrategies/tetrahedronradiusedgeratio.h \
     EvaluationStrategies/polygonverticescount.h \
     EvaluationStrategies/polyhedronpolygonscount.h \
-    Rendering/Renderers/IsolineRenderer/isolinerendererconfig.h \
     Rendering/Renderers/IsolineRenderer/isolinerenderer.h \
-    Rendering/Renderers/IsosurfaceRenderer/isosurfacerendererconfig.h \
     Rendering/Renderers/IsosurfaceRenderer/isosurfacerenderer.h \
     Rendering/Renderers/AdditionalEdgesRenderer/additionaledgesrenderer.h \
     Rendering/Renderers/ScalarPropertyRenderer/scalarpropertyrenderer.h \
@@ -369,7 +366,8 @@ HEADERS  += visualizador.h \
     Exceptions/propertydefnotfoundexception.h \
     Model/modelvisitor.h \
     PropertyFieldLoading/propertyfielddefvisitor.h \
-    PropertyFieldLoading/scalarfieldlistaddervisitor.h
+    PropertyFieldLoading/scalarfieldlistaddervisitor.h \
+    Rendering/Renderers/stepsrendererconfig.h
 
 FORMS    += visualizador.ui \
     Rendering/Renderers/ModelMainRenderer/mainrendererconfig.ui \
@@ -392,8 +390,6 @@ FORMS    += visualizador.ui \
     Rendering/Renderers/ConvexGeometryIntersectionRenderer/convexgeometryintersectionconfigselection.ui \
     UI/rendererslist.ui \
     Rendering/Renderers/GlassRenderer/glassrendererconfig.ui \
-    Rendering/Renderers/IsolineRenderer/isolinerendererconfig.ui \
-    Rendering/Renderers/IsosurfaceRenderer/isosurfacerendererconfig.ui \
     Rendering/Renderers/ShaderCommonFunctions/phongconfig.ui \
     Rendering/Renderers/ShaderCommonFunctions/elementdrawnoptionconfig.ui \
     Rendering/Renderers/ShaderCommonFunctions/phong1dconfig.ui \
@@ -406,7 +402,8 @@ FORMS    += visualizador.ui \
     Rendering/Renderers/CartesianCoordinatesAxis/cartesiancoordinatesaxisconfig.ui \
     Rendering/Renderers/HeightRenderer/heightrendererconfig.ui \
     Rendering/Renderers/ScalarPropertyRenderer/scalarpropertyrendererconfig.ui \
-    UI/propertyfieldloaddialog.ui
+    UI/propertyfieldloaddialog.ui \
+    Rendering/Renderers/stepsrendererconfig.ui
 
 OTHER_FILES += \
     Rendering/Renderers/ModelMainRenderer/mmr.vert \

@@ -20,6 +20,7 @@ class RModelPropertyFieldDef
 		GLvoid* getOffset() const;
 		std::shared_ptr<T> getPropertyFieldDef() const;
 
+
 	protected:
 		std::shared_ptr<T> propertyFieldDef;
 	private:
@@ -37,7 +38,9 @@ RModelPropertyFieldDef<T>::RModelPropertyFieldDef(std::shared_ptr<T> propertyFie
 	offset(offset){}
 
 template<typename T>
-RModelPropertyFieldDef<T>::~RModelPropertyFieldDef(){}
+RModelPropertyFieldDef<T>::~RModelPropertyFieldDef(){
+	glDeleteBuffers(1,&buffer);
+}
 
 template<typename T>
 std::string& RModelPropertyFieldDef<T>::getName() const

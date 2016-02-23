@@ -6,7 +6,7 @@ in float VertexScalar;
 
 uniform mat4 MVP;
 
-smooth out float scalarValue;
+out VertexData vdata;
 
 void main()
 {

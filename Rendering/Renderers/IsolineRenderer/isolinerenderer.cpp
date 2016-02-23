@@ -23,15 +23,15 @@ IsolineRenderer::~IsolineRenderer(){
 void IsolineRenderer::glewIsReadyRenderer(){
 	config = new StepsRendererConfig();
 	ShaderLoadingData vertexShaderData(GL_VERTEX_SHADER);
-	vertexShaderData.addFile("Rendering/Renderers/IsolineRenderer/ir.vert");
-	ShaderLoadingData geometryShaderData(GL_GEOMETRY_SHADER);
-	geometryShaderData.addFile("Rendering/Renderers/IsolineRenderer/ir.geom");
+    vertexShaderData.addFile("Rendering/Renderers/IsolineRenderer/ir.vert");
+    //ShaderLoadingData geometryShaderData(GL_GEOMETRY_SHADER);
+    //geometryShaderData.addFile("Rendering/Renderers/IsolineRenderer/ir.geom");
 	ShaderLoadingData fragmentShaderData(GL_FRAGMENT_SHADER);
 	fragmentShaderData.addFile("Rendering/Renderers/IsolineRenderer/ir.frag");
 
 	std::vector<ShaderLoadingData> shaderList;
 	shaderList.push_back(vertexShaderData);
-	shaderList.push_back(geometryShaderData);
+    //shaderList.push_back(geometryShaderData);
 	shaderList.push_back(fragmentShaderData);
 
 

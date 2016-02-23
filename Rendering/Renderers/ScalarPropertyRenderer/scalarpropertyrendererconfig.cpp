@@ -25,7 +25,7 @@ void ScalarPropertyRendererConfig::loadBoundsFromModel(){
 }
 
 void ScalarPropertyRendererConfig::changedProperty(int index){
-	//int propertyIndex = this->ui->comboBox_prop_select->itemData(index).toInt();
+	if(index < 0) return;
 	selectedScalarDef = scalarFields[index];
 	std::vector<float> bounds = selectedBounds[(PropertyFieldDef*)selectedScalarDef.get()];
 	if(bounds.size() == 2) {

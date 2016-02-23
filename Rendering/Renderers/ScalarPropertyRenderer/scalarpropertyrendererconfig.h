@@ -15,7 +15,7 @@ namespace Ui {
 class ScalarPropertyRendererConfig;
 }
 class RModel;
-class ScalarPropertyRendererConfig : public BaseRendererConfig, public ModelVisitor
+class ScalarPropertyRendererConfig : public BaseRendererConfig//, public ModelVisitor
 {
 		Q_OBJECT
 		
@@ -25,22 +25,24 @@ class ScalarPropertyRendererConfig : public BaseRendererConfig, public ModelVisi
 		void readConfig();
 		bool setBoundsFromModel();
 
-		std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>> selectedScalarRModelDef;
+		//std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>> selectedScalarRModelDef;
+		std::shared_ptr<ScalarFieldDef> selectedScalarDef;
 		int coloring_type;
 		int inverse_intensity;
-		void setRModel(RModel* model);
-		virtual void visit(PolygonMesh* model);
-		virtual void visit(PolyhedronMesh* model);
+		void setScalarFields(std::vector<std::shared_ptr<ScalarFieldDef>> &scalarFields);
+		//virtual void visit(PolygonMesh* model);
+		//virtual void visit(PolyhedronMesh* model);
 		std::map<PropertyFieldDef*, std::vector<float>> selectedBounds;
 
 	private:
 		Ui::ScalarPropertyRendererConfig *ui;
-		void loadScalarDefs();
-		void onNewModelLoaded();
-		std::vector<std::shared_ptr<ScalarFieldDef>> scalarDefs;
-		std::map<int,std::shared_ptr<ScalarFieldDef>> scalarDefIdsMap;
+//		void loadScalarDefs();
+//		void onNewModelLoaded();
+		std::vector<std::shared_ptr<ScalarFieldDef>> scalarFields;
+		//std::map<int,std::shared_ptr<ScalarFieldDef>> scalarDefIdsMap;
 		RModel* rmodel;
 		Model* model;
+		Model* lastModel;
 	private slots:
 		void loadBoundsFromModel();
 		void changedProperty(int index);

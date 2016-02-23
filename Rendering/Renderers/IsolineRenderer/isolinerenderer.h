@@ -2,7 +2,7 @@
 #define ISOLINERENDERER_H
 #include "Rendering/Renderer.h"
 #include <GL/glew.h>
-#include "Rendering/Renderers/IsolineRenderer/isolinerendererconfig.h"
+#include "Rendering/Renderers/stepsrendererconfig.h"
 
 class IsolineRenderer:public Renderer
 {
@@ -16,8 +16,9 @@ class IsolineRenderer:public Renderer
 		void applyConfigChanges(RModel * = (RModel*)0);
 		bool rmodelChanged(RModel* rmodel);
 	private:
+		//std::shared_ptr<RModelPropertyFieldDef<PropertyFieldDef>> currentRModelPropertyFieldDef;
 		GLuint theProgram;
-		IsolineRendererConfig* config;
+		StepsRendererConfig* config;
 		float sizeRatio;
 };
 

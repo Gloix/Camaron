@@ -1,85 +1,63 @@
-#include "isolinerendererconfig.h"
-#include "ui_isolinerendererconfig.h"
+#include "stepsrendererconfig.h"
+#include "ui_StepsRendererConfig.h"
 #include "Utils/qtutils.h"
 #include <iostream>
 #include "Rendering/RModel/rmodel.h"
 #include "Rendering/RModel/rmodelpropertyfielddef.h"
 #include "PropertyFieldLoading/propertyfielddef.h"
+#include "Model/PolyhedronMesh.h"
 #include "PropertyFieldLoading/scalarfielddef.h"
 #include "PropertyFieldLoading/scalarfieldlistaddervisitor.h"
 
-IsolineRendererConfig::IsolineRendererConfig(QWidget *parent) :
+StepsRendererConfig::StepsRendererConfig(QWidget *parent) :
 	BaseRendererConfig(parent),
-	ui(new Ui::IsolineRendererConfig)
+	selectedScalarDef(nullptr),
+	ui(new Ui::StepsRendererConfig)
 {
 	ui->setupUi(this);
 	connect(ui->comboBox_prop_select, SIGNAL( currentIndexChanged(int)), this, SLOT(changeScalarPropFunc(int)));
 	connect(ui->tabWidget_input_type, SIGNAL( currentChanged(int)), this, SLOT(changeInputType(int)));
 	connect(ui->horizontalSlider_sweep_value, SIGNAL( valueChanged(int)), this, SLOT(sweepValueChanged(int)));
+
 	readConfig();
 }
 
-IsolineRendererConfig::~IsolineRendererConfig()
+StepsRendererConfig::~StepsRendererConfig()
 {
 	delete ui;
 }
 
-void IsolineRendererConfig::setRModel(RModel* rmodel) {
-	this->rmodel = rmodel;
-	if((Model*)this->model != rmodel->getOriginalModel()) {
-		rmodel->getOriginalModel()->accept((ModelVisitor*)this);
-	}
-}
-
-void IsolineRendererConfig::visit(PolygonMesh* model) {
-	this->model = model;
-	loadScalarDefs();
-	scalarDefIdsMap.clear();
+void StepsRendererConfig::setScalarFields(std::vector<std::shared_ptr<ScalarFieldDef>> &scalarFields)
+{
+	this->scalarFields = scalarFields;
+	//scalarDefIdsMap.clear();
 	ui->comboBox_prop_select->clear();
-	if(scalarDefs.size() > 0) {
+	if(scalarFields.size() > 0) {
 		ui->comboBox_prop_select->setEnabled(true);
 		ui->horizontalSlider_sweep_value->setEnabled(true);
 		ui->horizontalSlider_sweep_value->setValue(ui->horizontalSlider_sweep_value->minimum());
-		for(auto i = 0u;i<scalarDefs.size();i++){
-			scalarDefIdsMap.insert(std::make_pair(i,scalarDefs[i]));
-			ui->comboBox_prop_select->addItem(QString::fromStdString(scalarDefs[i]->getName()), QVariant(i));
+		for(decltype(scalarFields.size()) i = 0;i<scalarFields.size();i++){
+			//scalarDefIdsMap.insert(std::make_pair(i,scalarDefs[i]));
+			ui->comboBox_prop_select->addItem(QString::fromStdString(scalarFields[i]->getName()), QVariant(i));
 		}
-		selectedScalarRModelDef = rmodel->loadPropertyField(std::dynamic_pointer_cast<ScalarFieldDef>(scalarDefs[0]));
-		ui->label_sweep_value->setText(QString::number(selectedScalarRModelDef->getPropertyFieldDef()->getMin()));
+		//selectedScalarRModelDef = rmodel->loadPropertyField((VertexCloud*)model, std::dynamic_pointer_cast<ScalarFieldDef>(scalarDefs[0]));
+		ui->label_sweep_value->setText(QString::number(scalarFields[0]->getMin()));
 	} else {
 		ui->comboBox_prop_select->setEnabled(false);
 		ui->horizontalSlider_sweep_value->setEnabled(false);
 		ui->label_sweep_value->setText(QString(""));
-		selectedScalarRModelDef = nullptr;
+		//selectedScalarRModelDef = nullptr;
 	}
 }
 
-//bool IsolineRendererConfig::setModel(Model* model) {
-//	scalarDefs.clear();
-//	scalarDefIdsMap.clear();
-//	ui->comboBox_prop_select->clear();
-//}
-
-//void IsolineRendererConfig::loadScalarDefs() {
-	//scalarDefs.clear();
-	//this->model->addPropertyDefsTo((PropertyFieldDefList<PropertyFieldDef>&)scalarDefs);
-//
-
-void IsolineRendererConfig::loadScalarDefs() {
-	scalarDefs.clear();
-	ScalarFieldListAdderVisitor visitor(scalarDefs);
-	for(std::shared_ptr<PropertyFieldDef> prop : this->model->getPropertyFieldDefs()) {
-		prop->accept(visitor);
-	}
+void StepsRendererConfig::changeScalarPropFunc(int index){
+	if(index<0)
+		return;
+	selectedScalarDef = std::dynamic_pointer_cast<ScalarFieldDef>(scalarFields[index]);
+	//selectedScalarRModelDef = std::dynamic_pointer_cast<RModelPropertyFieldDef<ScalarFieldDef>>(rmodel->loadPropertyField(model, selectedScalarDef));
 }
 
-void IsolineRendererConfig::changeScalarPropFunc(int index){
-	int propertyIndex = this->ui->comboBox_prop_select->itemData(index).toInt();
-	std::shared_ptr<ScalarFieldDef> selectedScalarDef = std::dynamic_pointer_cast<ScalarFieldDef>(scalarDefs[propertyIndex]);
-	selectedScalarRModelDef = std::dynamic_pointer_cast<RModelPropertyFieldDef<ScalarFieldDef>>(rmodel->loadPropertyField(selectedScalarDef));
-}
-
-void IsolineRendererConfig::changeInputType(int tabIndex) {
+void StepsRendererConfig::changeInputType(int tabIndex) {
 	this->currentInputType = tabIndex;
 	if(tabIndex == INPUT_SWEEP) {
 		sweepValueChanged(ui->horizontalSlider_sweep_value->value());
@@ -89,22 +67,19 @@ void IsolineRendererConfig::changeInputType(int tabIndex) {
 	}
 }
 
-void IsolineRendererConfig::sweepValueChanged(int value) {
+void StepsRendererConfig::sweepValueChanged(int value) {
 	isolevels.clear();
+	float maxScalar = selectedScalarDef->getMax();
+	float minScalar = selectedScalarDef->getMin();
 	int maxSliderValue = ui->horizontalSlider_sweep_value->maximum();
 	int minSliderValue = ui->horizontalSlider_sweep_value->minimum();
-	//std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>> selected = std::dynamic_pointer_cast<RModelPropertyFieldDef<ScalarFieldDef>>(selectedScalarRModelDef->getPropertyFieldDef());
-	float minScalar = selectedScalarRModelDef->getPropertyFieldDef()->getMin();
-	float maxScalar = selectedScalarRModelDef->getPropertyFieldDef()->getMax();
-	float isolineValue = minScalar + 1.0*value*(maxScalar-minScalar)/(maxSliderValue-minSliderValue);
-	ui->label_sweep_value->setText(QString::number(isolineValue));
-	isolevels.push_back(-1);
-	isolevels.push_back(isolineValue);
+	float isolevel = minScalar + 1.0*value*(maxScalar-minScalar)/(maxSliderValue-minSliderValue);
+	ui->label_sweep_value->setText(QString::number(isolevel));
+	isolevels.push_back(isolevel);
 	forceUpdate();
 }
 
-void IsolineRendererConfig::readConfig(){
-
+void StepsRendererConfig::readConfig(){
 	gradientStartColor.x = QtUtils::readFloatFromQText(ui->lineEdit_gs_r->text(),0.0f);
 	gradientStartColor.y = QtUtils::readFloatFromQText(ui->lineEdit_gs_g->text(),0.0f);
 	gradientStartColor.z = QtUtils::readFloatFromQText(ui->lineEdit_gs_b->text(),1.0f);
@@ -119,15 +94,8 @@ void IsolineRendererConfig::readConfig(){
 	wireframeColor.w = QtUtils::readFloatFromQText(ui->lineEdit_wf_a->text(),1.0f);
 
 	if(this->currentInputType == INPUT_VALUES_LIST) {
-		isolevels.clear();
-		QString stepsStr = ui->lineEdit_steps->displayText();
-		QStringList parts = stepsStr.split(QString(","), QString::SkipEmptyParts);
-		foreach (const QString part, parts ) {
-			isolevels.push_back(atof(part.toStdString().c_str()));
-		}
 		readInputIsolevels();
 	}
-
 
 	if(ui->radioButton_wf_no->isChecked())
 		wireFrameOption = NO_WIREFRAME;
@@ -136,9 +104,15 @@ void IsolineRendererConfig::readConfig(){
 	if(ui->radioButton_wf_surface->isChecked())
 		wireFrameOption = SURFACE_WIREFRAME;
 
+	elementDrawnOption = DRAW_ALL;
+	if(ui->radioButton_selected->isChecked())
+		elementDrawnOption = DRAW_ONLY_SELECTED;
+	else if(ui->radioButton_unselected->isChecked())
+		elementDrawnOption = DRAW_ONLY_UNSELECTED;
+
 }
 
-void IsolineRendererConfig::readInputIsolevels() {
+void StepsRendererConfig::readInputIsolevels() {
 	isolevels.clear();
 	QString stepsStr = ui->lineEdit_steps->displayText();
 	QStringList parts = stepsStr.split(QString(","), QString::SkipEmptyParts);

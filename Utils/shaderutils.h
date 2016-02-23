@@ -30,22 +30,26 @@ class ShaderUtils
 		static const GLuint FAIL_CREATING_PROGRAM = 99998;
 		static GLuint CreateProgram(const std::vector<GLuint> &shaderList,
 									const std::vector<VertexAttributeBindingData> &attributes,
-									const std::vector<VertexAttributeBindingData> &fragData,
-									const TransformFeedbackData *transformFeedbackVaryings);
+									const std::vector<VertexAttributeBindingData> &fragData);
 		static GLuint CreateProgram(const std::vector<ShaderLoadingData> &shaderList);
 		static GLuint CreateProgram(const std::vector<ShaderLoadingData> &shaderList,
 									const std::vector<VertexAttributeBindingData> &attributes);
 		static GLuint CreateProgram(const std::vector<ShaderLoadingData> &shaderList,
 									const std::vector<VertexAttributeBindingData> &attributes,
+									const TransformFeedbackData& transformFeedbackVaryings);
+		static GLuint CreateProgram(const std::vector<ShaderLoadingData> &shaderList,
+									const std::vector<VertexAttributeBindingData> &attributes,
 									const std::vector<VertexAttributeBindingData> &fragAt);
 		static GLuint CreateProgram(const std::vector<ShaderLoadingData> &shaderList,
 									const std::vector<VertexAttributeBindingData> &attributes,
-									const TransformFeedbackData *transformFeedbackVaryings);
-		static GLuint CreateProgram(const std::vector<ShaderLoadingData> &shaderList,
-									const std::vector<VertexAttributeBindingData> &attributes,
 									const std::vector<VertexAttributeBindingData> &fragAt,
-									const TransformFeedbackData *transformFeedbackVaryings);
+									const TransformFeedbackData& transformFeedbackData);
+		static GLuint CreateProgram(const std::vector<GLuint> &shaderList,
+									const std::vector<VertexAttributeBindingData> &attributes,
+									const std::vector<VertexAttributeBindingData> &fragData,
+									const TransformFeedbackData &transformFeedbackData);
 		static GLuint CreateShader(ShaderLoadingData data);
+		static void setTransformFeedback(GLuint program, const TransformFeedbackData &transformFeedbackData);
 
 		//set uniforms
 		static bool setUniform(GLuint program,const char* uniformName, glm::vec4 val);
@@ -69,6 +73,13 @@ class ShaderUtils
 		static bool setDataBuffer(GLuint bufferHandle,std::vector<myType>&);
 	private:
 		ShaderUtils();
+		static GLuint LinkProgram(const GLuint program,
+								  const std::vector<GLuint> &shaderList);
+		static GLuint CreateProgramWithShaders(const std::vector<GLuint> &shaderList,
+											   const std::vector<VertexAttributeBindingData> &attributes,
+											   const std::vector<VertexAttributeBindingData> &fragData);
+		static std::vector<GLuint> compileShaders(const std::vector<ShaderLoadingData> &shaderList);
+		static void printErrors(const std::vector<ShaderLoadingData> &shaderList);
 };
 
 template <class myType>

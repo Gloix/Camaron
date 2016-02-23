@@ -6,6 +6,7 @@
 struct VertexData{
     vec3 VertexPosition;
     float VertexScalar;
+    uint VertexFlags;
 };
 
 layout(lines_adjacency) in;
@@ -21,6 +22,7 @@ out vec3 vertexPosition;
 out float scalarValue;
 uniform float[20] Isolevels;
 uniform int IsolevelsSize;
+uniform int ElementDrawOption;
 
 vec3 vertexInterp(float val, vec3 pos1, float v1, vec3 pos2, float v2) {
     return mix(pos1, pos2, (val-v1)/(v2-v1));
@@ -30,8 +32,27 @@ int triTableValue(int i, int j){
     return texelFetch(triTableTex, ivec2(j, i),0).r;
 }
 
+bool isFlagEnabled(uint f){
+    return (vertexData[0].VertexFlags&f)==f &&
+           (vertexData[1].VertexFlags&f)==f &&
+           (vertexData[2].VertexFlags&f)==f &&
+           (vertexData[3].VertexFlags&f)==f;
+}
+
+bool primitiveIsDrawn(){
+    if(ElementDrawOption == 3 && !isFlagEnabled(1u))
+        return false;
+    else if(ElementDrawOption == 4 && isFlagEnabled(1u))
+        return false;
+    else
+        return true;
+}
+
 void main()
 {
+    if(!primitiveIsDrawn()) {
+        return;
+    }
     for (int i=0 ; i < IsolevelsSize ; i++) {
         float isolevel = Isolevels[i];
         int tetindex = 0;

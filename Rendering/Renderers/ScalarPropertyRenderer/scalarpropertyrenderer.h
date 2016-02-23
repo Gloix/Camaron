@@ -14,9 +14,10 @@ class ScalarPropertyRenderer: public Renderer
 		BaseRendererConfig* getRendererConfigWidget();
 		bool hasRendererConfigWidget();
 		void applyConfigChanges(RModel * = (RModel*)0);
+		bool rmodelChanged(RModel* rmodel);
 
 	private:
-
+		Model* lastModel;
 		ScalarPropertyRendererConfig* config;
 
 		GLuint program;

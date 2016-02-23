@@ -47,7 +47,7 @@ void IsosurfaceRendererConfig::visit(PolyhedronMesh* model) {
 			scalarDefIdsMap.insert(std::make_pair(i,scalarDefs[i]));
 			ui->comboBox_prop_select->addItem(QString::fromStdString(scalarDefs[i]->getName()), QVariant(i));
 		}
-		selectedScalarRModelDef = rmodel->loadPropertyField((VertexCloud*)model, std::dynamic_pointer_cast<ScalarFieldDef>(scalarDefs[0]));
+		selectedScalarRModelDef = rmodel->loadPropertyField(std::dynamic_pointer_cast<ScalarFieldDef>(scalarDefs[0]));
 		ui->label_sweep_value->setText(QString::number(selectedScalarRModelDef->getPropertyFieldDef()->getMin()));
 	} else {
 		ui->comboBox_prop_select->setEnabled(false);
@@ -70,7 +70,7 @@ void IsosurfaceRendererConfig::loadScalarDefs() {
 void IsosurfaceRendererConfig::changeScalarPropFunc(int index){
 	int propertyIndex = this->ui->comboBox_prop_select->itemData(index).toInt();
 	std::shared_ptr<ScalarFieldDef> selectedScalarDef = std::dynamic_pointer_cast<ScalarFieldDef>(scalarDefs[propertyIndex]);
-	selectedScalarRModelDef = std::dynamic_pointer_cast<RModelPropertyFieldDef<ScalarFieldDef>>(rmodel->loadPropertyField(model, selectedScalarDef));
+	selectedScalarRModelDef = std::dynamic_pointer_cast<RModelPropertyFieldDef<ScalarFieldDef>>(rmodel->loadPropertyField(selectedScalarDef));
 }
 
 void IsosurfaceRendererConfig::changeInputType(int tabIndex) {
@@ -124,7 +124,7 @@ void IsosurfaceRendererConfig::readConfig(){
 
 }
 
-IsosurfaceRendererConfig::readInputIsolevels() {
+void IsosurfaceRendererConfig::readInputIsolevels() {
 	isolevels.clear();
 	QString stepsStr = ui->lineEdit_steps->displayText();
 	QStringList parts = stepsStr.split(QString(","), QString::SkipEmptyParts);

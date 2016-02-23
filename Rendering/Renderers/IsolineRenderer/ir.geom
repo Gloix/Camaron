@@ -16,6 +16,8 @@ uniform int WireFrameOption;
 uniform mat4 MVP;
 uniform float[20] Isolevels;
 uniform int IsolevelsSize;
+uniform float ScalarMin;
+uniform float ScalarMax;
 
 uniform vec4 GradientStartColor;
 uniform vec4 GradientEndColor;
@@ -42,6 +44,7 @@ void main()
     float triVal2 = vdata[2].ScalarValue;
 
     for (int i=0 ; i < IsolevelsSize ; i++) {
+
         float isolevel = Isolevels[i];
         int triindex = 0;
 
@@ -60,10 +63,9 @@ void main()
         vertlist[0] = vec4(vertexInterp(isolevel, vdata[1].VertexPositionWS, triVal1, vdata[0].VertexPositionWS, triVal0),1);
         vertlist[1] = vec4(vertexInterp(isolevel, vdata[1].VertexPositionWS, triVal1, vdata[2].VertexPositionWS, triVal2),1);
         vertlist[2] = vec4(vertexInterp(isolevel, vdata[0].VertexPositionWS, triVal0, vdata[2].VertexPositionWS, triVal2),1);
-
-        vec4 linecolor = mix(GradientStartColor, GradientEndColor,
-                      (isolevel-Isolevels[0])/(Isolevels[IsolevelsSize-1]-Isolevels[0]));
-
+        vec4 linecolor;
+        linecolor = mix(GradientStartColor, GradientEndColor,
+                  (isolevel-ScalarMin)/(ScalarMax-ScalarMin));
         if(triindex == 1 || triindex == 6) {
             gl_Position = MVP*vertlist[0];
             fcolor = linecolor;
@@ -90,7 +92,7 @@ void main()
             EndPrimitive();
         }
     }
-
+    return;
     //triangle
     if(WireFrameOption == 0){
         return;

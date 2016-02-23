@@ -184,7 +184,6 @@ SOURCES += main.cpp\
     PropertyFieldLoading/propertyfielddef.cpp \
     PropertyFieldLoading/scalarfielddef.cpp \
     PropertyFieldLoading/tqspropertyfielddef.cpp \
-    Rendering/RModel/rmodelpropertyfielddef.cpp \
     Exceptions/propertydefnotfoundexception.cpp \
     PropertyFieldLoading/scalarfieldlistaddervisitor.cpp \
     Rendering/Renderers/stepsrendererconfig.cpp

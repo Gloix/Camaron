@@ -60,6 +60,7 @@ void RModel::deleteData(){
 	scale = 1.0f;
 	originalModel = (Model*)0;
 	modelType = vis::CONSTANTS::NO_MODEL;
+	currentRModelPropertyFieldDef = nullptr;
 }
 
 Model* RModel::getOriginalModel(){

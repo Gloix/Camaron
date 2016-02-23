@@ -68,7 +68,12 @@ void IsolineRenderer::draw(RModel* rmodel){
 	ShaderUtils::setUniform(theProgram, "ScalarMax", config->selectedScalarDef->getMax());
 	ShaderUtils::setUniform(theProgram, "WireFrameColor", config->wireframeColor);
 	ShaderUtils::setUniform(theProgram, "WireFrameOption", config->wireFrameOption);
-	ShaderUtils::setUniform(theProgram, "ElementDrawOption",config->elementDrawnOption);
+
+    glEnable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendEquation(GL_FUNC_ADD);
+
 
 	//In the render function, bind to the vertex array object and call glDrawArrays to
 	// Enable the vertex attribute arrays
@@ -103,6 +108,9 @@ void IsolineRenderer::draw(RModel* rmodel){
 	glDisableVertexAttribArray(POSITION_ATTRIBUTE); // Vertex position
 	glDisableVertexAttribArray(VERTEX_SCALARPROP); // Vertex selection
 	glDisableVertexAttribArray(VERTEX_FLAGS); // Vertex selection
+
+    glDisable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
 
 	glBindBuffer(GL_ARRAY_BUFFER,0);
 	glUseProgram(0);

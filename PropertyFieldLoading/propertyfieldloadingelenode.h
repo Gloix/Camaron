@@ -14,7 +14,7 @@ class PropertyFieldLoadingEleNode: public PropertyFieldLoadingStrategy, public M
 		void visit(PolyhedronMesh* model);
 	protected:
 	private:
-		void readHeaderNode(std::ifstream& file);
+		void readHeaderNode(std::ifstream& file, std::vector<std::shared_ptr<PropertyFieldDef>>& vertexProperties);
 		bool readVertices( Model* );
 		bool readModelProperties( std::string filename, VertexCloud* vcloud, std::vector<std::shared_ptr<PropertyFieldDef>> selectedProperties);
 
@@ -25,7 +25,6 @@ class PropertyFieldLoadingEleNode: public PropertyFieldLoadingStrategy, public M
 		int dimensions;
 		int numberOfAttributesPerNode;
 		int numberOfBoundaryMarkers;
-		std::vector<std::shared_ptr<PropertyFieldDef>> vertexProperties;
 
 };
 

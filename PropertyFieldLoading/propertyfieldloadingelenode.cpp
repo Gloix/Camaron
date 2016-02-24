@@ -31,11 +31,12 @@ bool PropertyFieldLoadingEleNode::validate(std::string filename){
 }
 
 std::vector<std::shared_ptr<PropertyFieldDef>> PropertyFieldLoadingEleNode::loadDefs(std::string filename) {
+	std::vector<std::shared_ptr<PropertyFieldDef>> vertexProperties;
 	std::string filenameNoExt = FileUtils::getFileNameWithoutExtension(filename);
 	std::cout << "File name: "<< filename << std::endl;
 	std::cout << "File name No Ext: "<< filenameNoExt << std::endl;
 	std::ifstream fileNode(filenameNoExt+".node");
-	readHeaderNode(fileNode);
+	readHeaderNode(fileNode, vertexProperties);
 	return vertexProperties;
 }
 
@@ -53,7 +54,7 @@ void PropertyFieldLoadingEleNode::load(std::string filename,
 	}
 }
 
-void PropertyFieldLoadingEleNode::readHeaderNode(std::ifstream& file){
+void PropertyFieldLoadingEleNode::readHeaderNode(std::ifstream& file, std::vector<std::shared_ptr<PropertyFieldDef>>& vertexProperties){
 	//scanner.reset(fileSizeNode);
 	std::string line;
 	FileUtils::safeGetline(file, line);

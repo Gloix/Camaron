@@ -41,7 +41,6 @@ std::vector<std::shared_ptr<PropertyFieldDef>> PropertyFieldLoadingPly::loadDefs
 	int propertyIndex = 0;
 	std::vector<std::shared_ptr<PropertyFieldDef>> vertexProperties;
 	std::string line;
-	std::string word;
 	while(FileUtils::safeGetline(file, line)) {
 		//std::istringstream iss(line);
 		std::smatch sm;

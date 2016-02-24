@@ -51,7 +51,7 @@ void PropertyFieldLoadDialog::setupForPropertyFields(std::string filename, std::
 	propsList.insert(propsList.begin(), propertyFieldDefs.begin(), propertyFieldDefs.end());
 	ui->pushButton_close->setVisible(false);
 	ui->pushButton_load->setVisible(true);
-	ui->progressBar->setValue(0);
+	progress = 0;
 	ui->listWidget_select_property_field->clear();
 	ui->listWidget_select_property_field->setEnabled(true);
 	for(std::shared_ptr<PropertyFieldDef> field : propertyFieldDefs) {

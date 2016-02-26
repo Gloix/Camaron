@@ -459,7 +459,8 @@ OTHER_FILES += \
     Rendering/Renderers/IsosurfaceRenderer/is.frag \
     Rendering/Renderers/IsosurfaceRenderer/is_gen.geom \
     Rendering/Renderers/ScalarPropertyRenderer/spr.frag \
-    Rendering/Renderers/ScalarPropertyRenderer/spr.vert
+    Rendering/Renderers/ScalarPropertyRenderer/spr.vert \
+    Rendering/Renderers/ScalarPropertyRenderer/spr.geom
 RESOURCES += \
     images.qrc \
     shaders.qrc

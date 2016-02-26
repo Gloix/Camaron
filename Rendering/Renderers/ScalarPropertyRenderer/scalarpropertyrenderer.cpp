@@ -11,6 +11,7 @@
 
 #define POSITION_ATTRIBUTE 0
 #define VERTEX_SCALARPROP 1
+#define VERTEX_FLAGS_ATTRIBUTE 2
 
 ScalarPropertyRenderer::ScalarPropertyRenderer():Renderer("Scalar Property Coloring"){
 
@@ -25,27 +26,33 @@ ScalarPropertyRenderer::~ScalarPropertyRenderer(){
 void ScalarPropertyRenderer::glewIsReadyRenderer(){
 	//load shaders and initial values
 	config = new ScalarPropertyRendererConfig();
-	config->readConfig();
+	//config->readConfig();
 
-	ShaderLoadingData vertexShaderData1(GL_VERTEX_SHADER);
-	vertexShaderData1.addFile("Rendering/Renderers/ScalarPropertyRenderer/spr.vert");
-	ShaderLoadingData fragmentShaderData1(GL_FRAGMENT_SHADER);
-	fragmentShaderData1.addFile("Rendering/Renderers/ScalarPropertyRenderer/spr.frag");
+	ShaderLoadingData vertexShaderData(GL_VERTEX_SHADER);
+	vertexShaderData.addFile("Rendering/Renderers/ScalarPropertyRenderer/spr.vert");
+	ShaderLoadingData geometryShaderData(GL_GEOMETRY_SHADER);
+	geometryShaderData.addFile("Rendering/Renderers/ScalarPropertyRenderer/spr.geom");
+	ShaderLoadingData fragmentShaderData(GL_FRAGMENT_SHADER);
+	fragmentShaderData.addFile("Rendering/Renderers/ScalarPropertyRenderer/spr.frag");
 
-	std::vector<ShaderLoadingData> shaderList1;
-	shaderList1.push_back(vertexShaderData1);
-	shaderList1.push_back(fragmentShaderData1);
 
-	VertexAttributeBindingData positionAttr = {POSITION_ATTRIBUTE, "in_Position"};
-	VertexAttributeBindingData scalarPropAttr = {VERTEX_SCALARPROP, "in_ScalarProp"};
+	std::vector<ShaderLoadingData> shaderList;
+	shaderList.push_back(vertexShaderData);
+	shaderList.push_back(geometryShaderData);
+	shaderList.push_back(fragmentShaderData);
+
+	VertexAttributeBindingData positionAttr = {POSITION_ATTRIBUTE, "VertexPosition"};
+	VertexAttributeBindingData scalarPropAttr = {VERTEX_SCALARPROP, "VertexScalar"};
+	VertexAttributeBindingData flagsPropAttr = {VERTEX_FLAGS_ATTRIBUTE, "VertexFlags"};
+
 	std::vector<VertexAttributeBindingData> attributeList;
 	attributeList.push_back(positionAttr);
 	attributeList.push_back(scalarPropAttr);
+	attributeList.push_back(flagsPropAttr);
 
-	program = ShaderUtils::CreateProgram(shaderList1,attributeList);
+	program = ShaderUtils::CreateProgram(shaderList,attributeList);
 	if(program == ShaderUtils::FAIL_CREATING_PROGRAM){
 		this->ok = false;
-		return;
 	}
 
 }
@@ -54,18 +61,17 @@ void ScalarPropertyRenderer::draw(RModel* rmodel){
 	if(!rmodel || !config->selectedScalarDef)
 		return;
 
-	glEnable(GL_DEPTH_TEST);
-	glClear(GL_DEPTH_BUFFER_BIT);
-	// FIRST DRAW
 	glUseProgram(program);
-	ShaderUtils::setUniform(program,"u_TransformMatrix",rmodel->getMVP());
+	ShaderUtils::setUniform(program,"MVP",rmodel->getMVP());
 	ShaderUtils::setUniform(program,"coloring_type",config->coloring_type);
 	ShaderUtils::setUniform(program,"inverse_intensity",config->inverse_intensity);
 	ShaderUtils::setUniform(program,"min_bound",config->selectedBounds[(PropertyFieldDef*)config->selectedScalarDef.get()][0]);
 	ShaderUtils::setUniform(program,"max_bound",config->selectedBounds[(PropertyFieldDef*)config->selectedScalarDef.get()][1]);
+	ShaderUtils::setUniform(program, "ElementDrawOption",config->elementDrawnOption);
 
 	glEnableVertexAttribArray(POSITION_ATTRIBUTE); // Vertex position
 	glEnableVertexAttribArray(VERTEX_SCALARPROP); // Vertex scalars
+	glEnableVertexAttribArray(VERTEX_FLAGS_ATTRIBUTE); // Vertex flags
 	// Map index 0 to the position buffer
 	glBindBuffer(GL_ARRAY_BUFFER, rmodel->positionDataBufferObject);
 	glVertexAttribPointer( POSITION_ATTRIBUTE, 3, GL_FLOAT, GL_FALSE, 0,
@@ -77,12 +83,15 @@ void ScalarPropertyRenderer::draw(RModel* rmodel){
 	glBindBuffer(GL_ARRAY_BUFFER, currentRModelPropertyFieldDef->getBuffer());
 	glVertexAttribPointer( VERTEX_SCALARPROP, 1, GL_FLOAT, GL_FALSE, currentRModelPropertyFieldDef->getStride(),
 						   currentRModelPropertyFieldDef->getOffset());
-	if(rmodel->getModelType()== 0)//vis::CONSTANTS::VERTEX_CLOUD)
-		glDrawArrays(GL_POINTS, 0, rmodel->vertexFlagsAttribute.size() );
-	else
-		glDrawArrays(GL_TRIANGLES, 0, rmodel->vertexFlagsAttribute.size() );
+
+	glBindBuffer(GL_ARRAY_BUFFER, rmodel->vertexFlagsDataBufferObject);
+	glVertexAttribIPointer( VERTEX_FLAGS_ATTRIBUTE, 1, GL_UNSIGNED_INT, 0,
+							(GLubyte *)NULL );
+
+	glDrawArrays(GL_TRIANGLES, 0, rmodel->vertexFlagsAttribute.size() );
 	glDisableVertexAttribArray(POSITION_ATTRIBUTE); // Vertex position
 	glDisableVertexAttribArray(VERTEX_SCALARPROP); // Vertex position
+	glDisableVertexAttribArray(VERTEX_FLAGS_ATTRIBUTE); // Vertex flags
 	glBindBuffer(GL_ARRAY_BUFFER,0);
 	glUseProgram(0);
 }

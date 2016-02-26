@@ -33,6 +33,11 @@ class ScalarPropertyRendererConfig : public BaseRendererConfig//, public ModelVi
 		//virtual void visit(PolygonMesh* model);
 		//virtual void visit(PolyhedronMesh* model);
 		std::map<PropertyFieldDef*, std::vector<float>> selectedBounds;
+		int elementDrawnOption;
+
+		static const int DRAW_ALL = 0;
+		static const int DRAW_ONLY_SELECTED = 3;
+		static const int DRAW_ONLY_UNSELECTED = 4;
 
 	private:
 		Ui::ScalarPropertyRendererConfig *ui;

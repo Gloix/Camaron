@@ -56,5 +56,6 @@
         <file>Rendering/Renderers/AdditionalEdgesRenderer/aer.vert</file>
 		<file>Rendering/Renderers/ScalarPropertyRenderer/spr.frag</file>
         <file>Rendering/Renderers/ScalarPropertyRenderer/spr.vert</file>
+		<file>Rendering/Renderers/ScalarPropertyRenderer/spr.geom</file>
     </qresource>
 </RCC>

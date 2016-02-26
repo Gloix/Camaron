@@ -5,7 +5,6 @@ in float scalarIntensity;
 
 uniform int axis;
 uniform int coloring_type;
-uniform int inverse_intensity;
 uniform float min_x;
 uniform float min_y;
 uniform float min_z;
@@ -41,15 +40,15 @@ vec4 hsv_to_rgb(float h, float s, float v, float a)
 	return color;
 }
 
-void main(void){
+void main(){
         float v = clamp(scalarIntensity, 0.0, 1.0);
 	vec4 col=vec4(1.0, 0.0, 0.0, 1.0);
-	if (coloring_type == 0){ /*monochromatic*/
+        if (coloring_type == 0){ //monochromatic
 		col = vec4(v, v, v, 1.0);
 	}
 	else{
-                v = v * 2.0 / 3.0; /*when want the color scale from red to blue (not red-red)*/
+                v = v * 2.0 / 3.0; //when want the color scale from red to blue (not red-red)
                 col = hsv_to_rgb(v, 1.0, 1.0, 1.0);
 	}
-	out_Color = col;
+        out_Color = col;
 }

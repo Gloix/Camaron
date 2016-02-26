@@ -142,4 +142,10 @@ void ScalarPropertyRendererConfig::readConfig(){
 				QtUtils::readFloatFromQText(ui->lineEdit_max_bound->text(),selectedScalarDef->getMax());
 	}
 
+	elementDrawnOption = DRAW_ALL;
+	if(ui->radioButton_selected->isChecked())
+		elementDrawnOption = DRAW_ONLY_SELECTED;
+	else if(ui->radioButton_unselected->isChecked())
+		elementDrawnOption = DRAW_ONLY_UNSELECTED;
+
 }

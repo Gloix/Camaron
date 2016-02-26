@@ -34,8 +34,6 @@ void IsolineRenderer::glewIsReadyRenderer(){
 	shaderList.push_back(geometryShaderData);
 	shaderList.push_back(fragmentShaderData);
 
-
-	//VertexAttributeBindingData selectAttr = {VERTEX_NORMAL, "VertexNormal"};
 	VertexAttributeBindingData positionAttr = {POSITION_ATTRIBUTE, "VertexPosition"};
 	VertexAttributeBindingData flagAttr = {VERTEX_FLAGS, "VertexFlags"};
 	VertexAttributeBindingData scalarAttr = {VERTEX_SCALARPROP, "VertexScalar"};
@@ -80,14 +78,6 @@ void IsolineRenderer::draw(RModel* rmodel){
 	glVertexAttribPointer( POSITION_ATTRIBUTE, 3, GL_FLOAT, GL_FALSE, 0,
 						   (GLubyte *)NULL );
 
-	//if(!currentRModelPropertyFieldDef
-	//		|| currentRModelPropertyFieldDef->getPropertyFieldDef() != config->selectedScalarDef) {
-		// Make sure last property is deleted from the GPU
-		// the RModelPropertyFieldDef object will take care of that.
-	//	currentRModelPropertyFieldDef = nullptr;
-
-	//
-	//}
 	auto currentRModelPropertyFieldDef = rmodel->loadPropertyField(config->selectedScalarDef);
 
 	// Map index 1 to the scalar buffer

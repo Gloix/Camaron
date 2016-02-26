@@ -28,7 +28,7 @@ class IsosurfaceRenderer:public Renderer
 		Model* lastModel;
 		std::vector<float> lastConfigScalarLevels;
 		int lastConfigElementDrawnOption;
-		void generateIsosurface(RModel* rmodel, std::vector<float> values);
+		void generateIsosurface(RModel* rmodel, std::vector<float>& values);
 		bool buildIsosurfaceRenderProgram();
 		bool buildIsosurfaceGenerationProgram();
 };

@@ -184,7 +184,7 @@ void IsosurfaceRenderer::draw(RModel* rmodel){
 
 }
 
-void IsosurfaceRenderer::generateIsosurface(RModel* rmodel, std::vector<float> values){
+void IsosurfaceRenderer::generateIsosurface(RModel* rmodel, std::vector<float>& values){
 	glUseProgram(generateProgram);
 
 	glEnable(GL_TEXTURE_2D);

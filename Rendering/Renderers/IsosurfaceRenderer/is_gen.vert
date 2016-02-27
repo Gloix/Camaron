@@ -5,13 +5,11 @@ in vec3 VertexPosition;
 in float VertexScalar;
 in uint VertexFlags;
 
-struct VertexData{
+out VertexData{
     vec3 VertexPosition;
     float VertexScalar;
     uint VertexFlags;
-};
-
-out VertexData vertexData;
+} vertexData;
 
 void main()
 {

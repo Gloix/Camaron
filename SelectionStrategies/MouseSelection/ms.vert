@@ -10,15 +10,14 @@ uniform mat4 VP;
 uniform mat4 MVP;
 uniform mat3 NormalMatrix;
 uniform int orthoProjection;
-struct VertexData{
+out VertexData{
     int Id;
     vec2 Position;
     uint Flag;
     vec3 Normal;
-};
+} vdata;
 
 uniform vec2 viewPortOriginalSize;
-out VertexData vdata;
 
 void main()
 {

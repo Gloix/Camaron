@@ -1,14 +1,13 @@
 #version 400
 
-struct VertexData{
+in VertexData{
     vec4 VertexTailPosition;
     vec4 VertexHeadPosition;
     uint VertexFlags;
-};
+} vdata[3];
 layout(triangles) in;
 layout(line_strip, max_vertices = 10) out;
 
-in VertexData vdata[3];
 uniform vec4 NormalHeadColor;
 uniform vec4 NormalTailColor;
 out vec4 fcolor;

@@ -6,14 +6,12 @@ in float VertexScalar;
 
 uniform int WireFrameOption;
 uniform mat4 MVP;
-struct VertexData{
+out VertexData{
     vec4 VertexPosition;
     vec3 VertexPositionWS;
     uint VertexFlags;
     float ScalarValue;
-};
-
-out VertexData vdata;
+} vdata;
 
 void main()
 {

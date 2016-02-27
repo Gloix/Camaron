@@ -3,11 +3,11 @@
 
 //Adaptation of implementation (http://www.icare3d.org/codes-and-projects/codes/opengl_geometry_shader_marching_cubes.html)
 
-struct VertexData{
+in VertexData{
     vec3 VertexPosition;
     float VertexScalar;
     uint VertexFlags;
-};
+} vertexData[4];
 
 layout(lines_adjacency) in;
 layout(points, max_vertices = 120) out;
@@ -15,9 +15,6 @@ layout(points, max_vertices = 120) out;
 //Triangles table texture
 uniform isampler2D triTableTex;
 
-in VertexData vertexData[4];
-//in vec3 VertexPosition[4];
-//in float VertexScalar[4];
 out vec3 vertexPosition;
 out float scalarValue;
 uniform float[20] Isolevels;

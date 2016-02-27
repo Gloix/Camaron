@@ -7,13 +7,11 @@ in vec3 VertexNormal;
 uniform int WireFrameOption;
 uniform mat4 MVP;
 uniform float NormalLength;
-struct VertexData{
+out VertexData{
     vec4 VertexTailPosition;
     vec4 VertexHeadPosition;
     uint VertexFlags;
-};
-
-out VertexData vdata;
+} vdata;
 
 void main()
 {

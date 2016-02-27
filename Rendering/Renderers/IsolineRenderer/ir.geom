@@ -1,15 +1,14 @@
 #version 400
 
-struct VertexData{
+in VertexData{
     vec4 VertexPosition;
     vec3 VertexPositionWS;
     uint VertexFlags;
     float ScalarValue;
-};
+} vdata[3];
 layout(triangles) in;
 layout(line_strip, max_vertices = 23) out;
 
-in VertexData vdata[3];
 out vec4 fcolor;
 uniform vec4 WireFrameColor;
 uniform int WireFrameOption;

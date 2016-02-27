@@ -1,10 +1,10 @@
 #version 400
-struct VertexData{
+in VertexData{
     int Id;
     vec2 Position;
     uint Flag;
     vec3 Normal;
-};
+} vdata[3];
 struct ConfigurationData{
     int onlySurface, onlyInterior, onlyFront, onlyBack,closestToCamera;
     int elementsType;//polygon, vertex or polyhedron
@@ -20,11 +20,10 @@ uniform ConfigurationData config;
 layout(triangles) in;
 layout(points, max_vertices = 3) out;
 
-in VertexData vdata[3];
 flat out uint fcolor;
 
 void getPosition(int id,out vec4 position);
-bool selectVertex(VertexData vda);
+bool selectVertex(vec2 position, uint flag);
 bool selectPolygon();
 uint getMask(int id);
 void main()
@@ -58,19 +57,19 @@ void getPosition(int id,out vec4 position){
 //POLYHEDRON = 2;
 
 
-bool selectVertex(VertexData vda){
+bool selectVertex(vec2 position, uint flags){
     //se podria chequear con la normal si la cara ta apuntando pa atras
-    if(config.onlySurface == 1 && config.elementsType == 0 && (vda.Flag&8u)==0u)
+    if(config.onlySurface == 1 && config.elementsType == 0 && (flags&8u)==0u)
 	return false;
     if(config.rectSelection==1){
-	if(vda.Position.x>=config.start.x &&
-		vda.Position.y>=config.start.y &&
-		vda.Position.x<=config.end.x &&
-		vda.Position.y<=config.end.y)
+        if(position.x>=config.start.x &&
+                position.y>=config.start.y &&
+                position.x<=config.end.x &&
+                position.y<=config.end.y)
 	    return true;
 	return false;
     }
-    if(distance(vda.Position,config.start)<(config.pixelTolerance))
+    if(distance(position,config.start)<(config.pixelTolerance))
 	return true;
     return false;
 }
@@ -107,7 +106,7 @@ bool selectPolygon(){
 
     if(config.rectSelection == 1){
 	for(int i = 0; i<3;i++){
-	    if(!selectVertex(vdata[i]))
+            if(!selectVertex(vdata[i].Position, vdata[i].Flag))
 		return false;//there is one unselected vertex
 	}
 	return true;

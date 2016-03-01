@@ -25,7 +25,6 @@ class IsosurfaceRenderer:public Renderer
 		GLuint isosurfacesBuffer;
 		GLuint triTableTex;
 		StepsRendererConfig* config;
-		Model* lastModel;
 		std::vector<float> lastConfigScalarLevels;
 		int lastConfigElementDrawnOption;
 		void generateIsosurface(RModel* rmodel, std::vector<float>& values);

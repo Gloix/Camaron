@@ -36,7 +36,6 @@ IsosurfaceRenderer::IsosurfaceRenderer():
 {
 	config = (StepsRendererConfig*)0;
 	rendererWeight = RENDERER_WEIGHT_BASE+1.0f;
-	lastModel = NULL;
 }
 
 IsosurfaceRenderer::~IsosurfaceRenderer(){
@@ -121,16 +120,9 @@ void IsosurfaceRenderer::draw(RModel* rmodel){
 	if(rModelChanged || config->isolevels != lastConfigScalarLevels
 			|| lastConfigElementDrawnOption != config->elementDrawnOption) {
 		if(rModelChanged) {
-			lastModel = rmodel->getOriginalModel();
 			glBindBuffer(GL_ARRAY_BUFFER, isosurfacesBuffer);
 			glBufferData(GL_ARRAY_BUFFER, rmodel->numberOfTetrahedrons*2*3*16, NULL, GL_STATIC_DRAW);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			std::vector<std::shared_ptr<ScalarFieldDef>> scalarFields;
-			ScalarFieldListAdderVisitor visitor(scalarFields);
-			for(std::shared_ptr<PropertyFieldDef> prop : lastModel->getPropertyFieldDefs()) {
-				prop->accept(visitor);
-			}
-			config->setScalarFields(scalarFields);
 			rModelChanged = false;
 		}
 		lastConfigElementDrawnOption = config->elementDrawnOption;
@@ -268,6 +260,16 @@ bool IsosurfaceRenderer::rmodelChanged(RModel* rmodel){
 			rmodel->getModelType()==vis::CONSTANTS::LIGHT_WEIGHT_VERTEX_CLOUD ||
 			rmodel->getModelType()==vis::CONSTANTS::NO_MODEL)
 		return false;
+
+	std::vector<std::shared_ptr<ScalarFieldDef>> scalarFields;
+	ScalarFieldListAdderVisitor visitor(scalarFields);
+	for(std::shared_ptr<PropertyFieldDef> prop : rmodel->getOriginalModel()->getPropertyFieldDefs()) {
+		prop->accept(visitor);
+	}
+	if(scalarFields.size() == 0) {
+		return false;
+	}
+	config->setScalarFields(scalarFields);
 	return true;
 }
 

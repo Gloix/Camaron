@@ -119,20 +119,20 @@ void IsosurfaceRenderer::draw(RModel* rmodel){
 
 	if(rModelChanged || config->isolevels != lastConfigScalarLevels
 			|| lastConfigElementDrawnOption != config->elementDrawnOption) {
-		if(rModelChanged) {
-			glBindBuffer(GL_ARRAY_BUFFER, isosurfacesBuffer);
-			glBufferData(GL_ARRAY_BUFFER, rmodel->numberOfTetrahedrons*2*3*16, NULL, GL_STATIC_DRAW);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			rModelChanged = false;
-		}
-		lastConfigElementDrawnOption = config->elementDrawnOption;
-		lastConfigScalarLevels = config->isolevels;
 		std::vector<float> isosurfaceSteps = config->isolevels;
 		if(isosurfaceSteps.size() != 0) {
+			if(rModelChanged || lastConfigScalarLevels.size()!=config->isolevels.size()) {
+				glBindBuffer(GL_ARRAY_BUFFER, isosurfacesBuffer);
+				glBufferData(GL_ARRAY_BUFFER, rmodel->numberOfTetrahedrons*2*3*16*isosurfaceSteps.size(), NULL, GL_STATIC_DRAW);
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+				rModelChanged = false;
+			}
 			generateIsosurface(rmodel, isosurfaceSteps);
 		} else {
 			return;
 		}
+		lastConfigElementDrawnOption = config->elementDrawnOption;
+		lastConfigScalarLevels = config->isolevels;
 	}
 	if(!config->selectedScalarDef || config->isolevels.size() == 0) {
 		return;

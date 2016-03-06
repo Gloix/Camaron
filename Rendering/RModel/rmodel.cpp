@@ -307,6 +307,7 @@ void RModel::loadVertexPolygonPolyhedronIds(PolygonMesh* mesh){
 			ids.push_back(id2);
 		}
 	}
+	numberOfTriangles = ids.size()/3;
 	polygonPolyhedronIdsBufferObject = ShaderUtils::createDataBuffer<int>(ids);
 	for(int i = 0;i<nVertices;++i)
 		ids[i]=i;

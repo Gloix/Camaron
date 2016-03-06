@@ -452,8 +452,9 @@ OTHER_FILES += \
     Rendering/Renderers/HeightRenderer/height_shader.vert \
     Rendering/Renderers/HeightRenderer/height_shader.frag \
     Rendering/Renderers/IsolineRenderer/ir.vert \
+    Rendering/Renderers/IsolineRenderer/ir_gen.vert \
     Rendering/Renderers/IsolineRenderer/ir.frag \
-    Rendering/Renderers/IsolineRenderer/ir.geom \
+    Rendering/Renderers/IsolineRenderer/ir_gen.geom \
     Rendering/Renderers/IsosurfaceRenderer/is.vert \
     Rendering/Renderers/IsosurfaceRenderer/is_gen.vert \
     Rendering/Renderers/IsosurfaceRenderer/is.frag \

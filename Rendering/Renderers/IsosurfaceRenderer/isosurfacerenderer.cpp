@@ -7,9 +7,11 @@
 #include "PropertyFieldLoading/scalarfielddef.h"
 #include "PropertyFieldLoading/scalarfieldlistaddervisitor.h"
 #include "Utils/openglutils.h"
+#include "Utils/crosstimer.h"
 #define POSITION_ATTRIBUTE 0
 #define VERTEX_SCALARPROP 1
 #define VERTEX_FLAGS_ATTRIBUTE 2
+#define VERTEX_NORMAL 3
 
 char triTable[16][8] = {
 	{-1, -1, -1, -1, -1, -1, -1, -1}, //0000
@@ -74,14 +76,15 @@ bool IsosurfaceRenderer::buildIsosurfaceRenderProgram() {
 	shaderList.push_back(fragmentShaderData);
 
 
-	//VertexAttributeBindingData selectAttr = {VERTEX_NORMAL, "VertexNormal"};
+
 	VertexAttributeBindingData positionAttr = {POSITION_ATTRIBUTE, "VertexPosition"};
 	//VertexAttributeBindingData flagAttr = {VERTEX_FLAGS, "VertexFlags"};
 	VertexAttributeBindingData scalarAttr = {VERTEX_SCALARPROP, "VertexScalar"};
+	VertexAttributeBindingData normalAttr = {VERTEX_NORMAL, "VertexNormal"};
 	std::vector<VertexAttributeBindingData> attributeList;
 	attributeList.push_back(positionAttr);
 	attributeList.push_back(scalarAttr);
-	//attributeList.push_back(flagAttr);
+	attributeList.push_back(normalAttr);
 
 	renderProgram = ShaderUtils::CreateProgram(shaderList,attributeList);
 	return renderProgram != ShaderUtils::FAIL_CREATING_PROGRAM;
@@ -107,7 +110,7 @@ bool IsosurfaceRenderer::buildIsosurfaceGenerationProgram() {
 	attributeList.push_back(scalarAttr);
 	attributeList.push_back(flagsAttr);
 
-	TransformFeedbackData tfData = {{"vertexPosition", "scalarValue"},GL_INTERLEAVED_ATTRIBS};
+	TransformFeedbackData tfData = {{"vertexPosition", "scalarValue","vertexNormal"},GL_INTERLEAVED_ATTRIBS};
 
 	generateProgram = ShaderUtils::CreateProgram(shaderList,attributeList,tfData);
 	return generateProgram != ShaderUtils::FAIL_CREATING_PROGRAM;
@@ -123,11 +126,16 @@ void IsosurfaceRenderer::draw(RModel* rmodel){
 		if(isosurfaceSteps.size() != 0) {
 			if(rModelChanged || lastConfigScalarLevels.size()!=config->isolevels.size()) {
 				glBindBuffer(GL_ARRAY_BUFFER, isosurfacesBuffer);
-				glBufferData(GL_ARRAY_BUFFER, rmodel->numberOfTetrahedrons*2*3*16*isosurfaceSteps.size(), NULL, GL_STATIC_DRAW);
+				glBufferData(GL_ARRAY_BUFFER, rmodel->numberOfTetrahedrons*2*3*28*isosurfaceSteps.size(), NULL, GL_STATIC_DRAW);
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
 				rModelChanged = false;
 			}
-			generateIsosurface(rmodel, isosurfaceSteps);
+			CrossTimer timer;
+			for(int i=0;i<10;i++){
+				generateIsosurface(rmodel, isosurfaceSteps);
+			}
+			std::cout << "ISOURFACE GENERATION: " << isosurfaceSteps[0] << "\t" <<
+					  timer.getTranscurredNanoseconds() << std::endl;
 		} else {
 			return;
 		}
@@ -139,11 +147,14 @@ void IsosurfaceRenderer::draw(RModel* rmodel){
 	}
 	glUseProgram(renderProgram);
 
+	glm::mat3 normalMatrix = glm::mat3(rmodel->getMV());
+
 	ShaderUtils::setUniform(renderProgram, "MVP",rmodel->getMVP());
 	ShaderUtils::setUniform(renderProgram, "GradientStartColor", config->gradientStartColor);
 	ShaderUtils::setUniform(renderProgram, "GradientEndColor", config->gradientEndColor);
 	ShaderUtils::setUniform(renderProgram, "ScalarMin", config->selectedScalarDef->getMin());
 	ShaderUtils::setUniform(renderProgram, "ScalarMax", config->selectedScalarDef->getMax());
+	ShaderUtils::setUniform(renderProgram, "NormalMatrix", normalMatrix);
 	//ShaderUtils::setUniform(renderProgram, "WireFrameColor", config->wireframeColor);
 	//ShaderUtils::setUniform(renderProgram, "WireFrameOption", config->wireFrameOption);
 
@@ -151,25 +162,25 @@ void IsosurfaceRenderer::draw(RModel* rmodel){
 	// Enable the vertex attribute arrays
 	glEnableVertexAttribArray(POSITION_ATTRIBUTE); // Vertex position
 	glEnableVertexAttribArray(VERTEX_SCALARPROP); // Vertex scalars
-	//glEnableVertexAttribArray(VERTEX_FLAGS); // Vertex flags
-	// Map index 0 to the position buffer
+	glEnableVertexAttribArray(VERTEX_NORMAL); // Vertex flags
+	// Map index 0 to the position
 	glBindBuffer(GL_ARRAY_BUFFER, isosurfacesBuffer);
-	glVertexAttribPointer( POSITION_ATTRIBUTE, 3, GL_FLOAT, GL_FALSE, 16,
+	glVertexAttribPointer( POSITION_ATTRIBUTE, 3, GL_FLOAT, GL_FALSE, 28,
 						   (const GLvoid *)NULL );
-	// Map index 1 to the scalar buffer
+	// Map index 1 to the scalar value
 	glBindBuffer(GL_ARRAY_BUFFER, isosurfacesBuffer);
-	glVertexAttribPointer( VERTEX_SCALARPROP, 1, GL_FLOAT, GL_FALSE, 16,
+	glVertexAttribPointer( VERTEX_SCALARPROP, 1, GL_FLOAT, GL_FALSE, 28,
 						   (const GLvoid *)12 );
-	// Map index 2 to the flags buffer
-	//glBindBuffer(GL_ARRAY_BUFFER, rmodel->vertexFlagsDataBufferObject);
-	//glVertexAttribIPointer( VERTEX_FLAGS, 1, GL_UNSIGNED_INT, 0,
-	//						(GLubyte *)NULL );
+	// Map index 2 to the normals
+	glBindBuffer(GL_ARRAY_BUFFER, isosurfacesBuffer);
+	glVertexAttribPointer( VERTEX_NORMAL, 3, GL_FLOAT, GL_FALSE, 28,
+							(const GLvoid *)16 );
 	glDrawTransformFeedback(GL_TRIANGLES, transformFeedback);
 	//glDrawArrays(GL_TRIANGLES, 0, rmodel->vertexFlagsAttribute.size() );
 
 	glDisableVertexAttribArray(POSITION_ATTRIBUTE); // Vertex position
 	glDisableVertexAttribArray(VERTEX_SCALARPROP); // Vertex selection
-	//glDisableVertexAttribArray(VERTEX_FLAGS); // Vertex selection
+	glDisableVertexAttribArray(VERTEX_NORMAL); // Vertex normal
 
 	glBindBuffer(GL_ARRAY_BUFFER,0);
 	glUseProgram(0);

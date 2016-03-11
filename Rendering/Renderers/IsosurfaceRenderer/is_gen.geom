@@ -17,6 +17,7 @@ uniform isampler2D triTableTex;
 
 out vec3 vertexPosition;
 out float scalarValue;
+out vec3 vertexNormal;
 uniform float[20] Isolevels;
 uniform int IsolevelsSize;
 uniform int ElementDrawOption;
@@ -98,21 +99,31 @@ void main()
                 //continue;
                 //Generate first vertex of triangle//
                 //Fill position varying attribute for fragment shader
-                vertexPosition = vertlist[triTableValue(tetindex, j)];
+                vec3[3] vertexPositions;
+                vertexPositions[0] = vertlist[triTableValue(tetindex, j)];
+                vertexPositions[1] = vertlist[triTableValue(tetindex, j+1)];
+                vertexPositions[2] = vertlist[triTableValue(tetindex, j+2)];
+                vec3 normal = normalize(cross(vertexPositions[1]-vertexPositions[0],
+                                        vertexPositions[2]-vertexPositions[0]));
+
+                vertexPosition = vertexPositions[0];
                 //vertexPosition = vertlist[0];
                 scalarValue = isolevel;
+                vertexNormal = normal;
                 EmitVertex();
                 //Generate second vertex of triangle//
                 //Fill position varying attribute for fragment shader
-                vertexPosition = vertlist[triTableValue(tetindex, j+1)];
+                vertexPosition = vertexPositions[1];
                 //vertexPosition = vertlist[1];
                 scalarValue = isolevel;
+                vertexNormal = normal;
                 EmitVertex();
                 //Generate last vertex of triangle//
                 //Fill position varying attribute for fragment shader
-                vertexPosition = vertlist[triTableValue(tetindex, j+2)];
+                vertexPosition = vertexPositions[2];
                 //vertexPosition = vertlist[4];
                 scalarValue = isolevel;
+                vertexNormal = normal;
                 EmitVertex();
                 //End triangle strip at firts triangle
                 EndPrimitive();

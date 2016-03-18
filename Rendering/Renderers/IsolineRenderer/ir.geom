@@ -17,6 +17,7 @@ uniform float[20] Isolevels;
 uniform int IsolevelsSize;
 uniform float ScalarMin;
 uniform float ScalarMax;
+uniform int ElementDrawOption;
 
 uniform vec4 GradientStartColor;
 uniform vec4 GradientEndColor;
@@ -36,8 +37,26 @@ vec3 vertexInterp(float val, vec3 pos1, float v1, vec3 pos2, float v2) {
     return mix(pos1, pos2, (val-v1)/(v2-v1));
 }
 
+bool isFlagEnabled(uint f){
+    return (vdata[0].VertexFlags&f)==f &&
+           (vdata[1].VertexFlags&f)==f &&
+           (vdata[2].VertexFlags&f)==f;
+}
+
+bool primitiveIsDrawn(){
+    if(ElementDrawOption == 3 && !isFlagEnabled(1u))
+        return false;
+    else if(ElementDrawOption == 4 && isFlagEnabled(1u))
+        return false;
+    else
+        return true;
+}
+
 void main()
 {
+    if(!primitiveIsDrawn()) {
+        return;
+    }
     float triVal0 = vdata[0].ScalarValue;
     float triVal1 = vdata[1].ScalarValue;
     float triVal2 = vdata[2].ScalarValue;

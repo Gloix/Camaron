@@ -110,30 +110,5 @@ void main()
             EndPrimitive();
         }
     }
-    return;
-    //triangle
-    if(WireFrameOption == 0){
-        return;
-    }
-    else{
-        bool draw = false;
-        if(WireFrameOption==1)
-            draw = true;
-        else if((vdata[0].VertexFlags&8u)==8u)
-            draw = true;
-
-        if(draw){
-            for (int i = 0; i < 3; i++)
-            {
-                gl_Position = vdata[i].VertexPosition;
-                fcolor = WireFrameColor;
-                EmitVertex();
-            }
-            gl_Position = vdata[0].VertexPosition;
-            fcolor = WireFrameColor;
-            EmitVertex();
-            EndPrimitive();
-        }
-    }
 }
 

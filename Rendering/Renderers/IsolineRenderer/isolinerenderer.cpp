@@ -64,8 +64,8 @@ void IsolineRenderer::draw(RModel* rmodel){
 	ShaderUtils::setUniform(theProgram, "GradientEndColor", config->gradientEndColor);
 	ShaderUtils::setUniform(theProgram, "ScalarMin", config->selectedScalarDef->getMin());
 	ShaderUtils::setUniform(theProgram, "ScalarMax", config->selectedScalarDef->getMax());
-	ShaderUtils::setUniform(theProgram, "WireFrameColor", config->wireframeColor);
-	ShaderUtils::setUniform(theProgram, "WireFrameOption", config->wireFrameOption);
+	//ShaderUtils::setUniform(theProgram, "WireFrameColor", config->wireframeColor);
+	//ShaderUtils::setUniform(theProgram, "WireFrameOption", config->wireFrameOption);
 	ShaderUtils::setUniform(theProgram, "ElementDrawOption",config->elementDrawnOption);
 
 	//In the render function, bind to the vertex array object and call glDrawArrays to

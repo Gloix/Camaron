@@ -23,11 +23,9 @@ class StepsRendererConfig : public BaseRendererConfig
 		~StepsRendererConfig();
 		glm::vec4 gradientStartColor;
 		glm::vec4 gradientEndColor;
-		glm::vec4 wireframeColor;
 		//std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>> selectedScalarRModelDef;
 		std::shared_ptr<ScalarFieldDef> selectedScalarDef;
 		std::vector<float> isolevels;
-		int wireFrameOption;
 		void readConfig();
 		//void setRModel(RModel*);
 		void setScalarFields(std::vector<std::shared_ptr<ScalarFieldDef>>&);

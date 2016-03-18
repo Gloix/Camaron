@@ -88,21 +88,10 @@ void StepsRendererConfig::readConfig(){
 	gradientEndColor.y = QtUtils::readFloatFromQText(ui->lineEdit_ge_g->text(),1.0f);
 	gradientEndColor.z = QtUtils::readFloatFromQText(ui->lineEdit_ge_b->text(),0.0f);
 	gradientEndColor.w = QtUtils::readFloatFromQText(ui->lineEdit_ge_a->text(),1.0f);
-	wireframeColor.x = QtUtils::readFloatFromQText(ui->lineEdit_wf_r->text(),1.0f);
-	wireframeColor.y = QtUtils::readFloatFromQText(ui->lineEdit_wf_g->text(),1.0f);
-	wireframeColor.z = QtUtils::readFloatFromQText(ui->lineEdit_wf_b->text(),0.0f);
-	wireframeColor.w = QtUtils::readFloatFromQText(ui->lineEdit_wf_a->text(),1.0f);
 
 	if(this->currentInputType == INPUT_VALUES_LIST) {
 		readInputIsolevels();
 	}
-
-	if(ui->radioButton_wf_no->isChecked())
-		wireFrameOption = NO_WIREFRAME;
-	if(ui->radioButton_wf_complete->isChecked())
-		wireFrameOption = COMPLETE_WIREFRAME;
-	if(ui->radioButton_wf_surface->isChecked())
-		wireFrameOption = SURFACE_WIREFRAME;
 
 	elementDrawnOption = DRAW_ALL;
 	if(ui->radioButton_selected->isChecked())

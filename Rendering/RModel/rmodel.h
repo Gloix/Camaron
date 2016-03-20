@@ -52,6 +52,7 @@ class RModel
 		std::vector<float> bounds;
 
 		int numberOfTetrahedrons;
+		int numberOfTriangles;
 
 		//std::vector<std::shared_ptr<RModelPropertyFieldDef<>>> &getRModelPropertyFieldDefs();
 

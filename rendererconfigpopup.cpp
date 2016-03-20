@@ -1,5 +1,10 @@
 #include "rendererconfigpopup.h"
 #include "ui_rendererconfigpopup.h"
+#include "Utils/crosstimer.h"
+#include <iostream>
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include "Common/Constants.h"
 
 RendererConfigPopUp::RendererConfigPopUp(QWidget *parent) :
 	QWidget(parent,Qt::Tool| Qt::Window | Qt::CustomizeWindowHint| Qt::WindowMinimizeButtonHint |Qt::WindowCloseButtonHint ),
@@ -33,5 +38,14 @@ void RendererConfigPopUp::cleanConfigQWidget(){
 	}
 }
 void RendererConfigPopUp::applyChangesPushButtonClicked(){
+	#ifdef DEBUG_MOD
+	glFinish();
+	CrossTimer timer;
 	emit applyChangesPushButton();
+	glFinish();
+	long nanos = timer.getTranscurredNanoseconds();
+	std::cout << "UPDATE: " << nanos << std::endl;
+	#else
+	emit applyChangesPushButton();
+	#endif
 }

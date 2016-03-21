@@ -25,7 +25,9 @@ CustomGLViewer::CustomGLViewer(RModel* renModel,MainConfiguration& m,
 							   RenderersList& renderers,QWidget *parent)
 	: QGLWidget(QGLFormat(QGL::SampleBuffers), parent),
 	  secondaryRenderers(renderers),
+	  lastFps(0),
 	  mainConfiguration(m)
+
 {
 	averageOITfboHandle = 0;
 	glewInitiatedState = false;
@@ -542,16 +544,16 @@ void CustomGLViewer::paintEvent(QPaintEvent *)
 	if(drawBox)
 		paintScreenshotAsBackground(painter);
 	else{
-		float secsTot = crr.getTranscurredSeconds();
-		paintFrameRateDisplay(painter,1.0f/secsTot);
-		// std::cout << "CustomGLViewer::paintEvent: " << 1.0f/secsTot << " fps" << std::endl;
+		paintFrameRateDisplay(painter,lastFps);
 	}
 	paintSelectBoxOverlay(painter);
 	painter.end();
 
-	//glFinish();
 	swapBuffers();
-	//std::cout << "CustomGLViewer::paintEvent: " << 1.0f/secsTot << " fps" << std::endl;
+	glFinish();
+	float secsTot = crr.getTranscurredSeconds();
+	lastFps = 1.0f/secsTot;
+	std::cout << "CustomGLViewer::paintEvent: " << 1.0f/secsTot << " fps" << std::endl;
 }
 void CustomGLViewer::applyRendererConfigChanges(){
 	if(renderer)

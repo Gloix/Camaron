@@ -71,6 +71,7 @@ class CustomGLViewer: public QGLWidget
 		glm::vec2 viewportSize;
 		float zoom;
 		QPoint lastPos;
+		float lastFps;
 		//from parent
 		Renderer* renderer;
 		RenderersList& secondaryRenderers;

@@ -108,6 +108,7 @@ void IsolineRenderer::draw(RModel* rmodel){
 	if(!config->selectedScalarDef || config->isolevels.size() == 0) {
 		return;
 	}
+	CrossTimer renderTimer;
 	glUseProgram(renderProgram);
 
 	ShaderUtils::setUniform(renderProgram, "MVP",rmodel->getMVP());
@@ -142,6 +143,7 @@ void IsolineRenderer::draw(RModel* rmodel){
 
 	glBindBuffer(GL_ARRAY_BUFFER,0);
 	glUseProgram(0);
+	std::cout << "Isolines Render: " << renderTimer.getTranscurredNanoseconds() << std::endl;
 
 }
 

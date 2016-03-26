@@ -6,7 +6,7 @@ in VertexData{
     float ScalarValue;
 } vdata[3];
 layout(triangles) in;
-layout(points, max_vertices = 23) out;
+layout(points, max_vertices = 40) out;
 
 out vec3 vertexPosition;
 out float scalarValue;

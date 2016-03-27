@@ -1,5 +1,4 @@
 #version 400
-in float ScalarValue;
 in vec3 Normal;
 out vec4 outputColor;
 
@@ -8,6 +7,7 @@ uniform float ScalarMax;
 uniform vec4 GradientStartColor;
 uniform vec4 GradientEndColor;
 uniform mat3 NormalMatrix;
+uniform float ScalarValue;
 
 
 void main()

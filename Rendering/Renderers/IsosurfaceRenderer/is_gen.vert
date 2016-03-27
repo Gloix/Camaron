@@ -1,7 +1,6 @@
 #version 400
 
 in vec3 VertexPosition;
-//in uint VertexFlags;
 in float VertexScalar;
 in uint VertexFlags;
 

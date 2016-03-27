@@ -16,13 +16,11 @@ class IsosurfaceRenderer:public Renderer
 		void applyConfigChanges(RModel * = (RModel*)0);
 		bool rmodelChanged(RModel* rmodel);
 	private:
-		//std::shared_ptr<RModelPropertyFieldDef<PropertyFieldDef>> currentRModelPropertyFieldDef;
 		bool rModelChanged;
 		GLuint renderProgram;
 		GLuint generateProgram;
-		GLuint transformFeedback;
-		//std::vector<GLuint> isosurfaceBuffers;
-		GLuint isosurfacesBuffer;
+		std::vector<GLuint> isosurfacesBuffers;
+		std::vector<long> isosurfaceBuffersGeomCounts;
 		GLuint triTableTex;
 		StepsRendererConfig* config;
 		std::vector<float> lastConfigScalarLevels;

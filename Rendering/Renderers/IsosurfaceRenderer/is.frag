@@ -15,5 +15,5 @@ void main()
     vec3 lightDirection = vec3(1,1,1);
     outputColor = mix(GradientStartColor, GradientEndColor, (ScalarValue-ScalarMin)/(ScalarMax-ScalarMin));
     float diffuseFactor = abs(dot(lightDirection, normalize(NormalMatrix*Normal)));
-    outputColor = vec4(outputColor.rgb*(0.2+0.8*diffuseFactor),outputColor.a);
+    outputColor = vec4(outputColor.rgb*(0.8+0.2*diffuseFactor),outputColor.a);
 }

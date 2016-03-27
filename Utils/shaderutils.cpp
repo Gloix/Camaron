@@ -135,6 +135,9 @@ bool ShaderUtils::setUniform(GLuint program,const char* uniformName, glm::vec4 v
 		glUniform4fv(loc, 1, glm::value_ptr(val));
 		return true;
 	}
+	#ifdef DEBUG_MOD
+	std::cerr << "Uniform location not found: " << uniformName << std::endl;
+	#endif
 	return false;
 }
 bool ShaderUtils::setUniform(GLuint program,const char* uniformName, glm::vec3 val){
@@ -143,6 +146,9 @@ bool ShaderUtils::setUniform(GLuint program,const char* uniformName, glm::vec3 v
 		glUniform3fv(loc, 1, glm::value_ptr(val));
 		return true;
 	}
+	#ifdef DEBUG_MOD
+	std::cerr << "Uniform location not found: " << uniformName << std::endl;
+	#endif
 	return false;
 }
 bool ShaderUtils::setUniform(GLuint program,const char* uniformName, glm::vec2 val){
@@ -151,6 +157,9 @@ bool ShaderUtils::setUniform(GLuint program,const char* uniformName, glm::vec2 v
 		glUniform2fv(loc, 1, glm::value_ptr(val));
 		return true;
 	}
+	#ifdef DEBUG_MOD
+	std::cerr << "Uniform location not found: " << uniformName << std::endl;
+	#endif
 	return false;
 }
 bool ShaderUtils::setUniform(GLuint program,const char* uniformName, glm::mat4 val){
@@ -159,6 +168,9 @@ bool ShaderUtils::setUniform(GLuint program,const char* uniformName, glm::mat4 v
 		glUniformMatrix4fv(loc, 1, GL_FALSE,glm::value_ptr(val));
 		return true;
 	}
+	#ifdef DEBUG_MOD
+	std::cerr << "Uniform location not found: " << uniformName << std::endl;
+	#endif
 	return false;
 }
 bool ShaderUtils::setUniform(GLuint program,const char* uniformName, glm::mat3 val){
@@ -167,6 +179,9 @@ bool ShaderUtils::setUniform(GLuint program,const char* uniformName, glm::mat3 v
 		glUniformMatrix3fv(loc, 1, GL_FALSE,glm::value_ptr(val));
 		return true;
 	}
+	#ifdef DEBUG_MOD
+	std::cerr << "Uniform location not found: " << uniformName << std::endl;
+	#endif
 	return false;
 }
 bool ShaderUtils::setUniform(GLuint program,const char* uniformName, float val){
@@ -175,6 +190,9 @@ bool ShaderUtils::setUniform(GLuint program,const char* uniformName, float val){
 		glUniform1f(loc, val);
 		return true;
 	}
+	#ifdef DEBUG_MOD
+	std::cerr << "Uniform location not found: " << uniformName << std::endl;
+	#endif
 	return false;
 }
 bool ShaderUtils::setUniform(GLuint program,const char* uniformName, std::vector<float> val){
@@ -183,6 +201,9 @@ bool ShaderUtils::setUniform(GLuint program,const char* uniformName, std::vector
 		glUniform1fv(loc, val.size(),val.data());
 		return true;
 	}
+	#ifdef DEBUG_MOD
+	std::cerr << "Uniform location not found: " << uniformName << std::endl;
+	#endif
 	return false;
 }
 bool ShaderUtils::setUniform(GLuint program,const char* uniformName, int val){
@@ -191,6 +212,9 @@ bool ShaderUtils::setUniform(GLuint program,const char* uniformName, int val){
 		glUniform1i(loc, val);
 		return true;
 	}
+	#ifdef DEBUG_MOD
+	std::cerr << "Uniform location not found: " << uniformName << std::endl;
+	#endif
 	return false;
 }
 

@@ -1,6 +1,17 @@
 #version 400
-struct MaterialInfo1D;
-struct LightInfo1D;
+struct MaterialInfo1D {
+    float Ka; // Ambient reflectivity
+    float Kd; // Diffuse reflectivity
+    float Ks; // Specular reflectivity
+    float Shininess; // Specular shininess factor
+};
+
+struct LightInfo1D {
+    vec4 Position; // Light position in eye coords.
+    float La; // Ambient light intensity
+    float Ld; // Diffuse light intensity
+    float Ls; // Specular light intensity
+};
 float phongModel1D( vec3 VertexPosition,vec3 VertexNormal,mat3 NormalMatrix ,
 		 mat4 ModelViewMatrix,
 		 LightInfo1D light, MaterialInfo1D matInfo );

@@ -1,6 +1,17 @@
 #version 400
-struct MaterialInfo;
-struct LightInfo;
+struct MaterialInfo {
+    vec3 Ka; // Ambient reflectivity
+    vec3 Kd; // Diffuse reflectivity
+    vec3 Ks; // Specular reflectivity
+    float Shininess; // Specular shininess factor
+};
+
+struct LightInfo {
+    vec4 Position; // Light position in eye coords.
+    vec3 La; // Ambient light intensity
+    vec3 Ld; // Diffuse light intensity
+    vec3 Ls; // Specular light intensity
+};
 vec3 phongModelPreMultiplied( vec4 VertexPosition,vec3 VertexNormal,
 			      LightInfo light, MaterialInfo matInfo );
 uniform MaterialInfo Material;

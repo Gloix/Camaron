@@ -47,7 +47,8 @@
         <file>Rendering/Renderers/HeightRenderer/height_shader.vert</file>
         <file>Rendering/Renderers/IsolineRenderer/ir.frag</file>
         <file>Rendering/Renderers/IsolineRenderer/ir.vert</file>
-        <file>Rendering/Renderers/IsolineRenderer/ir.geom</file>
+        <file>Rendering/Renderers/IsolineRenderer/ir_gen.vert</file>
+        <file>Rendering/Renderers/IsolineRenderer/ir_gen.geom</file>
         <file>Rendering/Renderers/IsosurfaceRenderer/is.frag</file>
         <file>Rendering/Renderers/IsosurfaceRenderer/is.vert</file>
         <file>Rendering/Renderers/IsosurfaceRenderer/is_gen.vert</file>

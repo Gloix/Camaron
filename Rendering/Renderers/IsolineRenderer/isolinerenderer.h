@@ -17,9 +17,19 @@ class IsolineRenderer:public Renderer
 		bool rmodelChanged(RModel* rmodel);
 	private:
 		//std::shared_ptr<RModelPropertyFieldDef<PropertyFieldDef>> currentRModelPropertyFieldDef;
-		GLuint theProgram;
+		bool rModelChanged;
+		GLuint renderProgram;
+		GLuint generateProgram;
+		GLuint transformFeedback;
+		GLuint isolinesBuffer;
 		StepsRendererConfig* config;
 		float sizeRatio;
+		bool buildIsolineRenderProgram();
+		bool buildIsolineGenerationProgram();
+		std::vector<float> lastConfigScalarLevels;
+		std::shared_ptr<ScalarFieldDef> lastSelectedScalarDef;
+		int lastConfigElementDrawnOption;
+		void generateIsolines(RModel* rmodel, std::vector<float>& values);
 };
 
 #endif // ISOLINERENDERER_H

@@ -242,7 +242,8 @@ void RModel::loadVertexPositionAndNormals(VertexCloud* model){
 std::shared_ptr<RModelPropertyFieldDef<PropertyFieldDef>> RModel::loadPropertyField(std::shared_ptr<ScalarFieldDef> pfd){
 	VertexCloud *model = static_cast<VertexCloud*>(originalModel);
 	// First check if the current property field is the one we're asked for
-	if(currentRModelPropertyFieldDef && currentRModelPropertyFieldDef->getPropertyFieldDef() == std::dynamic_pointer_cast<PropertyFieldDef>(pfd)) {
+	if(currentRModelPropertyFieldDef && currentRModelPropertyFieldDef->getPropertyFieldDef()
+			== std::dynamic_pointer_cast<PropertyFieldDef>(pfd)) {
 		return currentRModelPropertyFieldDef;
 	}
 	// Delete the currently loaded property field

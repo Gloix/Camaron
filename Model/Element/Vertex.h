@@ -4,7 +4,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-#define SCALAR_PROPERTY_START_INDEX 192
+#define SCALAR_PROPERTY_START_INDEX 128
 
 namespace vis{
 class Polygon;

@@ -244,14 +244,9 @@ std::shared_ptr<RModelPropertyFieldDef<PropertyFieldDef>> RModel::loadPropertyFi
 	// First check if the current property field is the one we're asked for
 	if(currentRModelPropertyFieldDef && currentRModelPropertyFieldDef->getPropertyFieldDef() == std::dynamic_pointer_cast<PropertyFieldDef>(pfd)) {
 		return currentRModelPropertyFieldDef;
-		//return std::shared_ptr<RModelPropertyFieldDef<ScalarFieldDef>>(currentRModelPropertyFieldDef, static_cast<RModelPropertyFieldDef<ScalarFieldDef>*>(currentRModelPropertyFieldDef.get()));
 	}
 	// Delete the currently loaded property field
 	currentRModelPropertyFieldDef = nullptr;
-	//if(currentRModelPropertyFieldDef) {
-	//	GLuint buffer = currentRModelPropertyFieldDef->getBuffer();
-	//	glDeleteBuffers(1,&buffer);
-	//}
 	// Load the new RModelPropertyFieldDef
 	unsigned char pfdposition = model->getPropertyFieldPosition(pfd.get());
 	std::vector<float> floatContainer;
@@ -259,7 +254,6 @@ std::shared_ptr<RModelPropertyFieldDef<PropertyFieldDef>> RModel::loadPropertyFi
 	std::vector<vis::Vertex*>& vertices = model->getVertices();
 	//coords
 	for( vis::Vertex* currentVertex : vertices ) {
-		//std::vector<VScalar> scalarProps = currentVertex->getScalarProperties();
 		std::vector<int>& rmodelPos = currentVertex->getRmodelPositions();
 		for( int pos : rmodelPos )
 			floatContainer[pos] = currentVertex->getScalarProperty(pfdposition);
@@ -271,30 +265,12 @@ std::shared_ptr<RModelPropertyFieldDef<PropertyFieldDef>> RModel::loadPropertyFi
 													0,
 													(GLvoid*)0);
 	return currentRModelPropertyFieldDef;
-	//currentRModelPropertyFieldDef = std::shared_ptr<RModelPropertyFieldDef>(new RModelPropertyFieldDef<ScalarFieldDef>(
-	//												pfd,
-	//												buffer,
-	//												0,
-	//												0));
-	//currentRModelPropertyFieldDef = std::static_pointer_cast<RModelPropertyFieldDef<PropertyFieldDef>>(ret);
-	//return ret;
 }
 
 void RModel::loadVertexPolygonPolyhedronIds(PolygonMesh* mesh){
 	std::vector<int> ids;
 	std::vector<vis::Polygon*>& polygons = mesh->getPolygons();
-	/*
-	std::vector<glm::vec3> vecContainer;
-	vecContainer.resize(nVertices);
-	for(std::vector<vis::Polygon*>::size_type i = 0;i<polygons.size();i++){
-		vis::Polygon* currentVertex = polygons[i];
-		std::vector<int>& rmodelPos = currentVertex->getRmodelPositions();
-		for(std::vector<int>::size_type j = 0;j<rmodelPos.size();j++)
-			vecContainer[rmodelPos[j]] = currentVertex->getNormal();
-	}
 
-	vertexNormalDataBufferObject = ShaderUtils::createDataBuffer<glm::vec3>(vecContainer);
-//*/
 	for( vis::Polygon* polygon : polygons ){
 		int npoltriangles = polygon->getRmodelPositions().size()/3;
 		vis::Polyhedron** neighbors = polygon->getNeighborPolyhedron();

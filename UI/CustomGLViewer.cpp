@@ -164,6 +164,7 @@ void CustomGLViewer::initializeGL()
 				 mainConfiguration.backgroundColor.y,
 				 mainConfiguration.backgroundColor.z,
 				 mainConfiguration.backgroundColor.w);
+	glDepthRange (0.00001, 1.0);
 	//glEnable(GL_DEPTH_TEST);
 }
 

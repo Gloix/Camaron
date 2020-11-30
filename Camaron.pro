@@ -4,7 +4,6 @@
 #
 #-------------------------------------------------
 
-
 QT       += core gui
 QT       += opengl
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -466,5 +465,17 @@ RESOURCES += \
     images.qrc \
     shaders.qrc
 
-win32: LIBS += -lglew32
-unix: LIBS += -lGLEW
+win32 {
+    INCLUDEPATH += $$PWD/libs/win32/glew/include
+    INCLUDEPATH += $$PWD/libs/win32/glm
+    LIBS += -Llib/libQt5OpenGL.a -lopengl32
+    LIBS += $$PWD/libs/win32/glew/bin/Release/x64/glew32.dll
+    LIBS += -Lglew32
+}
+
+unix {
+    INCLUDEPATH += $$PWD/libs/unix/glew/include
+    INCLUDEPATH += $$PWD/libs/unix/glm
+    LIBS += -L$$PWD/libs/unix/glew/lib
+    LIBS += -lGLEW
+}

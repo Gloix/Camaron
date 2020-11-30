@@ -2,6 +2,7 @@
 #define SELECTIONTABLEVIEW_H
 
 #include <QWidget>
+#include <QAction>
 
 namespace Ui {
 class SelectionTableView;

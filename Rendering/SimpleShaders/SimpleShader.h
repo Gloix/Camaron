@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <GL/glew.h>
 #include <glm/ext.hpp>
+#include <iostream>
 class SimpleShader{
 
 private:

@@ -1,6 +1,6 @@
 #ifndef RMODELPROPERTYFIELDDEF_H
 #define RMODELPROPERTYFIELDDEF_H
-#include <GL/glew.h>
+#include "GL/glew.h"
 #include <memory>
 
 class PropertyFieldDef;

@@ -20,7 +20,7 @@ void MatrixTransformationUtils::setUpRotationMatrix(glm::mat4& m,float xRot,floa
 }
 
 glm::mat4 MatrixTransformationUtils::generateXRotationMatrix(float xRot){
-	glm::mat4 matrix;
+	glm::mat4 matrix = glm::mat4(1.0);
 	float sinxRot = std::sin(xRot);
 	float cosxRot = std::cos(xRot);
 	matrix[1].y = cosxRot;
@@ -32,7 +32,7 @@ glm::mat4 MatrixTransformationUtils::generateXRotationMatrix(float xRot){
 }
 
 glm::mat4 MatrixTransformationUtils::generateYRotationMatrix(float yRot){
-	glm::mat4 matrix;
+	glm::mat4 matrix = glm::mat4(1.0);
 	float sinxRot = std::sin(yRot);
 	float cosxRot = std::cos(yRot);
 	matrix[0].x = cosxRot;
@@ -44,7 +44,7 @@ glm::mat4 MatrixTransformationUtils::generateYRotationMatrix(float yRot){
 }
 
 glm::mat4 MatrixTransformationUtils::generateZRotationMatrix(float zRot){
-	glm::mat4 matrix;
+	glm::mat4 matrix = glm::mat4(1.0);
 	float sinxRot = std::sin(zRot);
 	float cosxRot = std::cos(zRot);
 	matrix[0].x = cosxRot;
@@ -54,21 +54,21 @@ glm::mat4 MatrixTransformationUtils::generateZRotationMatrix(float zRot){
 	return matrix;
 }
 glm::mat4 MatrixTransformationUtils::generateScaleMatrix(float scale){
-	glm::mat4 matrix;
+	glm::mat4 matrix = glm::mat4(1.0);
 	matrix[0].x = scale;
 	matrix[1].y = scale;
 	matrix[2].z = scale;
 	return matrix;
 }
 glm::mat4 MatrixTransformationUtils::generateTranslationMatrix(glm::vec3 traslation){
-	glm::mat4 translationMatrix;
+	glm::mat4 translationMatrix = glm::mat4(1.0);
 	translationMatrix[3].x = -traslation.x;
 	translationMatrix[3].y = -traslation.y;
 	translationMatrix[3].z = -traslation.z;
 	return translationMatrix;
 }
 glm::mat4 MatrixTransformationUtils::generateViewPortMatrix(int x, int y, int w, int h, float n, float f){
-	glm::mat4 viewport;
+	glm::mat4 viewport = glm::mat4(1.0);
 	viewport[0].x = w/2.0f;
 	viewport[1].y = h/2.0f;
 	viewport[2].z = (f-n)/2.0f;
@@ -79,7 +79,7 @@ glm::mat4 MatrixTransformationUtils::generateViewPortMatrix(int x, int y, int w,
 	return viewport;
 }
 glm::mat4 MatrixTransformationUtils::generateOrthoProjectionMatrix(float left, float right, float top, float bottom, float far, float near){
-	glm::mat4 proj;
+	glm::mat4 proj = glm::mat4(1.0);
 	proj[0].x = 2.0f/(right-left);
 	proj[1].y = 2.0f/(top-bottom);
 	proj[2].z = -2.0f/(far-near);
@@ -118,7 +118,7 @@ glm::mat4 MatrixTransformationUtils::generatePerspectiveProjectionMatrix(float f
 																		 float far, float near,
 																		 float top, float bottom,
 																		 float right, float left){
-	glm::mat4 proj;
+	glm::mat4 proj = glm::mat4(1.0);
 	proj[0].x = frustumScaleX;
 	proj[1].y = frustumScaleY;
 	proj[2].w = -1.0f;

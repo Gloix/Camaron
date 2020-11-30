@@ -1,3 +1,4 @@
+#define GLM_FORCE_CTOR_INIT
 #include "GL/glew.h"
 #include "visualizador.h"
 #include "ui_visualizador.h"

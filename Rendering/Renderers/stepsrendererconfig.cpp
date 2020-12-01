@@ -38,7 +38,7 @@ void StepsRendererConfig::setScalarFields(std::vector<std::shared_ptr<ScalarFiel
 		ui->horizontalSlider_sweep_value->setValue(ui->horizontalSlider_sweep_value->minimum());
 		for(decltype(scalarFields.size()) i = 0;i<scalarFields.size();i++){
 			//scalarDefIdsMap.insert(std::make_pair(i,scalarDefs[i]));
-			ui->comboBox_prop_select->addItem(QString::fromStdString(scalarFields[i]->getName()), QVariant(i));
+			ui->comboBox_prop_select->addItem(QString::fromStdString(scalarFields[i]->getName()), (int) i);
 		}
 		//selectedScalarRModelDef = rmodel->loadPropertyField((VertexCloud*)model, std::dynamic_pointer_cast<ScalarFieldDef>(scalarDefs[0]));
 		ui->label_sweep_value->setText(QString::number(scalarFields[0]->getMin()));

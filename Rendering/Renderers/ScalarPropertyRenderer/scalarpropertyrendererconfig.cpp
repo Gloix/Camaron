@@ -55,7 +55,7 @@ void ScalarPropertyRendererConfig::setScalarFields(std::vector<std::shared_ptr<S
 			selectedBounds[(PropertyFieldDef*)scalarFields[i].get()][0] = min;
 			selectedBounds[(PropertyFieldDef*)scalarFields[i].get()][1] = max;
 			//scalarDefIdsMap.insert(std::make_pair(i,scalarFields[i]));
-			ui->comboBox_prop_select->addItem(QString::fromStdString(scalarFields[i]->getName()), QVariant(i));
+			ui->comboBox_prop_select->addItem(QString::fromStdString(scalarFields[i]->getName()), (int) i);
 		}
 		selectedScalarDef = scalarFields[0];
 	} else {

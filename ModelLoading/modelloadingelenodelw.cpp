@@ -1,7 +1,7 @@
 #include "ModelLoading/modelloadingelenodelw.h"
 #include "PropertyFieldLoading/scalarfielddef.h"
 #include "Model/lightweightpolygonmesh.h"
-#include "Model/lightweightpolyhedronMesh.h"
+#include "Model/lightweightpolyhedronmesh.h"
 #include "Model/LWElements/lwvertex.h"
 #include "Model/LWElements/lwpolygon.h"
 #include "Utils/hashingtree.h"

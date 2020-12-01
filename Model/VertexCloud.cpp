@@ -1,7 +1,7 @@
 #include "Model/VertexCloud.h"
 #include "ModelGeneralStatics/modelgeneralstaticscollector.h"
 #include "Model/Element/Vertex.h"
-#include "Model/Element/edge.h"
+#include "Model/Element/Edge.h"
 #include "SelectionStrategies/SelectionStrategy.h"
 #include "SelectionStrategies/Selection.h"
 #include "EvaluationStrategies/EvaluationStrategy.h"

@@ -2,7 +2,7 @@
 #include "Model/Element/Polygon.h"
 #include "Model/Element/triangle.h"
 #include "Model/Element/Vertex.h"
-#include "Model/Element/edge.h"
+#include "Model/Element/Edge.h"
 #include "Model/PolygonMesh.h"
 #include "Utils/fileutils.h"
 #include "Utils/endianess.h"

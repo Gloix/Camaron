@@ -1,5 +1,5 @@
 #include "stepsrendererconfig.h"
-#include "ui_StepsRendererConfig.h"
+#include "ui_stepsrendererconfig.h"
 #include "Utils/qtutils.h"
 #include <iostream>
 #include "Rendering/RModel/rmodel.h"

@@ -1,4 +1,4 @@
-#include "edge.h"
+#include "Edge.h"
 #include "Model/Element/Vertex.h"
 #include "EvaluationStrategies/EvaluationStrategy.h"
 #include "SelectionStrategies/SelectionStrategy.h"

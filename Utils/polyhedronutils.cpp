@@ -3,7 +3,7 @@
 #include "Model/Element/Polyhedron.h"
 #include "Model/Element/Polygon.h"
 #include "Model/Element/Vertex.h"
-#include "Model/Element/Tetrahedron.h"
+#include "Model/Element/tetrahedron.h"
 #include "Utils/PolygonUtils.h"
 PolyhedronUtils::PolyhedronUtils(){}
 void addUniqueElement(vis::Vertex* vertex,std::vector<vis::Vertex*>& vertices){

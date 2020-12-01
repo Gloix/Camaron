@@ -356,7 +356,7 @@ HEADERS  += visualizador.h \
     #PropertyFieldLoading/propertyfieldloadingtqs.h \
     PropertyFieldLoading/propertyfieldloadingelenode.h \
     PropertyFieldLoading/propertyfieldloadingply.h \
-    Model/Element/edge.h \
+    Model/Element/Edge.h \
     UI/propertyfieldloaddialog.h \
     PropertyFieldLoading/propertyfielddef.h \
     PropertyFieldLoading/scalarfielddef.h \

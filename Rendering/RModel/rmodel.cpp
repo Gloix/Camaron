@@ -6,7 +6,7 @@
 #include "Model/lightweightpolygonmesh.h"
 #include "Model/lightweightpolyhedronmesh.h"
 #include "Model/Element/Vertex.h"
-#include "Model/Element/edge.h"
+#include "Model/Element/Edge.h"
 #include "Utils/PolygonUtils.h"
 #include "Utils/polyhedronutils.h"
 #include "Utils/matrixtransformationutils.h"
